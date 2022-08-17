@@ -1,25 +1,29 @@
 import logo from './logo.svg';
+import * as React from 'react';
 import './App.css';
+import { useTranslation } from 'react-i18next';
+
+function MyComponent() {
+	const { t, i18n } = useTranslation();
+	const [data, setData] = React.useState(null);
+	React.useEffect(() => {
+		fetch('/api')
+			.then((res) => res.json())
+			.then((data) => setData(data.message));
+	}, []);
+
+	return (
+		<div>
+			<button onClick={() => i18n.changeLanguage('vn')}>de</button>
+			<button onClick={() => i18n.changeLanguage('en')}>en</button>
+			<h1>{t('Welcome to React')}</h1>;
+			<p>{!data ? 'Loading...' : data}</p>
+		</div>
+	);
+}
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return <MyComponent></MyComponent>;
 }
 
 export default App;
