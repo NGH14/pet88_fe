@@ -70,6 +70,8 @@ export const Toastify = ({
 	);
 };
 
+
+
 Toastify.propTypes = {
 	message: PropTypes.string,
 	autoCloseAfter: PropTypes.number,

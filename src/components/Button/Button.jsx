@@ -36,14 +36,7 @@ export const Button = ({
 };
 
 
-Button.parameters = {
-	pseudo: { hover: true },
-	design: {
-		type: 'figma',
-		url: 'https://www.figma.com/file/uV4Pu1Aur6dWLs3BjAeIaL/Pet88?node-id=112%3A33',
-		accessToken: 'figd_uF41X_eGfKjTnf0TkOSGtajIJAhGuE4snznWiYzO'
-	},
-};
+
 
 
 Button.propTypes = {

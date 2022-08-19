@@ -9,7 +9,7 @@ module.exports = {
 		'@storybook/addon-interactions',
 		'@storybook/preset-create-react-app',
 		'storybook-addon-pseudo-states',
-		'storybook-addon-designs',
+		// 'storybook-addon-designs',
 	],
 	framework: '@storybook/react',
 	core: {
