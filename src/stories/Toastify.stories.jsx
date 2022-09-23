@@ -54,3 +54,11 @@ export const coloredMode = Template.bind({});
 coloredMode.args = {
 	theme: 'colored',
 };
+
+export const coloredMode2 = Template.bind({});
+coloredMode2.args = {
+	theme: 'colored',
+	newestOnTop: true,
+
+};
+
