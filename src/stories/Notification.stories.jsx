@@ -1,30 +1,19 @@
 import React from 'react';
 
-import { Toastify } from './../components/Toastify/';
+import { Notification } from './../components/Notification/';
+
 
 export default {
 	title: 'COMPONENTS/Notification',
-	component: Toastify,
+	component: Notification,
 	parameters: {
 		layout: 'centered',
 	},
 	argTypes: { onClick: { action: 'closed' } },
 };
 
-const Template = (args) => <Toastify {...args} />;
+const Template = (args) => <Notification {...args} />;
 export const defaultToast = Template.bind({});
-
-
-defaultToast.story = {
-  parameters: {
-         design: {
-            type: 'figma',
-            url: 'https://www.figma.com/file/uV4Pu1Aur6dWLs3BjAeIaL/Pet88?node-id=118%3A96'
-         }
-      }
-   }    
-
-
 
 
 export const warningToast = Template.bind({});
@@ -45,6 +34,7 @@ export const successToast = Template.bind({});
 successToast.args = {
 	types: 'success',
 };
+
 export const darkMode = Template.bind({});
 darkMode.args = {
 	theme: 'dark',
@@ -55,10 +45,4 @@ coloredMode.args = {
 	theme: 'colored',
 };
 
-export const coloredMode2 = Template.bind({});
-coloredMode2.args = {
-	theme: 'colored',
-	newestOnTop: true,
-
-};
 

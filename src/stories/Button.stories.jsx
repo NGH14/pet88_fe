@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from '../components/Button/Button';
+import { Button } from '../components/Button/';
 import { withDesign } from "storybook-addon-designs";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -29,15 +29,7 @@ Primary.args = {
   primary: true,
   label: 'Button',
 };
-
-Primary.story = {
-  parameters: {
-         design: {
-            type: 'figma',
-            url: 'https://www.figma.com/file/uV4Pu1Aur6dWLs3BjAeIaL/Pet88?node-id=104%3A96'
-         }
-      }
-   }    
+    
 
 
 
