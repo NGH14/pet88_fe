@@ -1,9 +1,10 @@
 import * as React from 'react';
-import './App.css';
-import { useTranslation } from 'react-i18next';
 import { Card } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { Layout } from 'antd';
-
+import { BrowserRouter, Routes } from 'react-router-dom';
+import { listRoute } from './utils/routes';
+import { routes } from './routes';
 import moment from 'moment';
 
 import {
@@ -25,11 +26,11 @@ import viVN from 'antd/es/locale/vi_VN';
 import enUS from 'antd/es/locale/en_US';
 import Test from './Test';
 import { Calendar } from './components/Calendar/';
+import './App.css';
 
 const { Header, Footer, Sider, Content } = Layout;
 
 function MyComponent() {
-	const { t, i18n } = useTranslation();
 	const [data, setData] = React.useState(null);
 	React.useEffect(() => {
 		console.log(process.env);
@@ -48,32 +49,35 @@ function MyComponent() {
 					<Footer>Footer</Footer>
 				</Layout>
 			</Layout> */}
-			<ConfigProvider locale={viVN}>
-				<div className='example'>
-					<Pagination defaultCurrent={1} total={50} showSizeChanger />
-				</div>
+			<div className='example'>
+				<Pagination defaultCurrent={1} total={50} showSizeChanger />
+			</div>
 
-				<TimePicker />
-				<Calendar></Calendar>
-				<h1>{t('Welcome to React')}</h1>
-				<p>{!data ? 'Loading...' : data}</p>
-				<p>{!data ? 'Loading...' : data}</p>
-				<Card
-					size='small'
-					title='Small size card'
-					extra={<a href='#'>More</a>}
-					style={{ width: 300 }}>
-					<p>Card content</p>
-					<p>Card content</p>
-					<p>Card content</p>
-				</Card>
-			</ConfigProvider>
+			<TimePicker />
+			<Calendar></Calendar>
+			<p>{!data ? 'Loading...' : data}</p>
+			<p>{!data ? 'Loading...' : data}</p>
+			<Card
+				size='small'
+				title='Small size card'
+				extra={<a href='#'>More</a>}
+				style={{ width: 300 }}>
+				<p>Card content</p>
+				<p>Card content</p>
+				<p>Card content</p>
+			</Card>
 		</div>
 	);
 }
 
 function App() {
-	return <MyComponent></MyComponent>;
+	return (
+		<BrowserRouter>
+			<ConfigProvider locale={viVN}>
+				<MyComponent></MyComponent>
+			</ConfigProvider>
+		</BrowserRouter>
+	);
 }
 
 export default App;

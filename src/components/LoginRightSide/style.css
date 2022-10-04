@@ -1,0 +1,69 @@
+.loginpage-rightside {
+	width: calc(70% - 5vw);
+	position: relative;
+}
+
+.loginpage-rightside img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	z-index: -1;
+}
+
+.loginpage-rightside::after {
+	content: "";
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-image: linear-gradient(95deg,
+			rgba(0, 0, 0, 0.65),
+			rgba(0, 0, 0, 0.5),
+			rgba(0, 0, 0, 0.35));
+	z-index: 1;
+}
+
+.loginpage-rightside_textoverlay {
+	position: absolute;
+	width: max-content;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+
+	color: #fff;
+
+	font-style: normal;
+	font-weight: bold;
+	font-size: 1.5em;
+	line-height: 42px;
+	text-align: center;
+}
+
+.loginpage-rightside_smalltext {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 0.55em;
+	line-height: 24px;
+	text-align: center;
+}
+
+
+@media only screen and (max-width: 1150px) {
+	.loginpage-rightside {
+		width: 40%;
+	}
+
+	.loginpage-rightside_textoverlay {
+		font-size: 1em;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.loginpage-rightside {
+		width: 0;
+		display: none;
+	}
+}
