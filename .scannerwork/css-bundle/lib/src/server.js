@@ -17,7 +17,7 @@ exports.setLogHandlersForTests = setLogHandlersForTests;
 function start(port = 0, host = "127.0.0.1") {
     return new Promise(resolve => {
         log("DEBUG starting stylelint-bridge server at port", port);
-        const app = express();
+        const app = express();`
         app.use(bodyParser.json({ limit: MAX_REQUEST_SIZE }));
         app.post("/analyze", analyzeWithStylelint);
         app.get("/status", (_, resp) => resp.send("OK!"));
