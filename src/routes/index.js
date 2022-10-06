@@ -1,32 +1,12 @@
-import React from 'react';
+import Login from '../container/Login';
+import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { MyComponent } from './../App';
+import NotMatchPage from './../container/NotMatchPage/';
 
-export const routes = [
-	{
-		path: '*',
-		component: React.lazy(() => import('../containers/NotFoundPage')),
-	},
+export const routers = createBrowserRouter([
 	{
 		path: '/',
-		component: React.lazy(() => import('../containers/Homepage')),
+		element: <MyComponent></MyComponent>,
+		errorElement: <NotMatchPage />,
 	},
-	{
-		path: '/products',
-		component: React.lazy(() => import('../containers/ProductList')),
-	},
-	{
-		path: '/search',
-		component: React.lazy(() => import('../components/Search/SearchList')),
-	},
-	{
-		path: '/products/:id',
-		component: React.lazy(() => import('../containers/ProductDetails')),
-	},
-	{
-		path: '/404',
-		component: React.lazy(() => import('../containers/NotFoundPage')),
-	},
-	{
-		path: '/inconstruction',
-		component: React.lazy(() => import('../containers/InconstructionPage')),
-	},
-];
+]);

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Card } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Layout } from 'antd';
-import { BrowserRouter, Routes } from 'react-router-dom';
-import { listRoute } from './utils/routes';
-import { routes } from './routes';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import './index.css';
 import moment from 'moment';
 
 import {
@@ -24,13 +24,17 @@ import {
 
 import viVN from 'antd/es/locale/vi_VN';
 import enUS from 'antd/es/locale/en_US';
-import Test from './Test';
 import { Calendar } from './components/Calendar/';
+
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import './App.css';
+import { routers } from './routes/index';
+
+import Login from './container/Login/';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function MyComponent() {
+export function MyComponent() {
 	const [data, setData] = React.useState(null);
 	React.useEffect(() => {
 		console.log(process.env);
@@ -72,11 +76,13 @@ function MyComponent() {
 
 function App() {
 	return (
-		<BrowserRouter>
-			<ConfigProvider locale={viVN}>
-				<MyComponent></MyComponent>
-			</ConfigProvider>
-		</BrowserRouter>
+		// // <BrowserRouter>
+		// <ConfigProvider locale={viVN}>
+		// 	<MyComponent></MyComponent>
+		// </ConfigProvider>
+		// // </BrowserRouter>
+
+		<RouterProvider router={routers} />
 	);
 }
 
