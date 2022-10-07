@@ -76,13 +76,9 @@ export function MyComponent() {
 
 function App() {
 	return (
-		// // <BrowserRouter>
-		// <ConfigProvider locale={viVN}>
-		// 	<MyComponent></MyComponent>
-		// </ConfigProvider>
-		// // </BrowserRouter>
-
-		<RouterProvider router={routers} />
+		<ConfigProvider locale={viVN}>
+			<RouterProvider router={routers} />
+		</ConfigProvider>
 	);
 }
 

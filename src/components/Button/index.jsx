@@ -6,6 +6,7 @@ import './button.css';
  * Primary UI component for user interaction
  */
 export const Button = ({
+	color,
 	primary,
 	backgroundColor,
 	size,
