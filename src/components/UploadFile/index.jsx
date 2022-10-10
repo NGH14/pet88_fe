@@ -11,7 +11,7 @@ const props = {
     const { status } = info.file;
 
     if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
+      (info.file, info.fileList);
     }
 
     if (status === 'done') {
@@ -22,7 +22,7 @@ const props = {
   },
 
   onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
+    ('Dropped files', e.dataTransfer.files);
   },
 };
 

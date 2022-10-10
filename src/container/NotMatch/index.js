@@ -3,9 +3,9 @@ import './style.css';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Button } from './../../components/Button/index';
+import { Button } from '../../components/Button/index';
 import CatVideo from '../../assets/video/pet_animation.mp4';
-import CatPoster from '../../assets/img/Kat_rhr_petsnl_krabpalen_webshop_free_shipping_1250x.webp';
+import CatPoster from '../../assets/images/cat_animation.webp';
 // import Icon404 from 'assets/images/MnQWcWb6SrY.svg';
 
 export default function NotMatchPage() {

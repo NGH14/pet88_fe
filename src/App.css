@@ -1,12 +1,3 @@
-#components-layout-demo-side .logo {
-	height: 32px;
-	margin: 16px;
-	background: rgba(255, 255, 255, 0.3);
-}
-  
-.site-layout .site-layout-background {
-	background: #fff;
-}
 
 .App {
 	text-align: center;
@@ -18,8 +9,9 @@
 }
 
 html {
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Poppins','Quicksand','Roboto' ,sans-serif;
 	scroll-behavior: smooth;
+	transition: ease-in-out 1s;
 }
 
 textarea {
@@ -34,8 +26,8 @@ textarea {
 }
 
 ::selection {
-	background: rgba(0, 1, 17, 0.8);
-	color: white;
+	background: #F76A1A;
+	color: black;
 }
 
 *::-webkit-scrollbar {

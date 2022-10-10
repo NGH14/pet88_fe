@@ -1,7 +1,7 @@
 import './style.css';
 
 // import logoBlack from 'assets/images/2021-Greenwich-Black-Eng.webp';
-// import loginImg from 'assets/images/Contact-CIC-Education-2-1024x858.webp';
+import loginImg from '../../assets/images/j-balla-photography-cMtiWjiAvq4-unsplash-_1_.webp';
 import LeftSideLogin from '../../components/LoginLeftSide';
 import RightSideLogin from '../../components/LoginRightSide';
 
@@ -12,9 +12,7 @@ export default function Login({ returnUrl }) {
 				// src={logoBlack}
 				returnUrl={returnUrl}
 			/>
-			<RightSideLogin
-			// src={loginImg}
-			/>
+			<RightSideLogin src={loginImg} />
 		</div>
 	);
 }

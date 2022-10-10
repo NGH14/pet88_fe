@@ -47,7 +47,7 @@ export const Notification = ({
 				Notify!
 			</Button>
 			<ToastContainer
-				onClick={(props) => console.log(props)}
+				onClick={(props) => (props)}
 				autoClose={autoCloseAfter}
 				transition={transition}
 				theme={theme}

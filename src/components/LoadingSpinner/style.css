@@ -1,0 +1,18 @@
+.loading_logo {
+	width: 100px;
+	min-height: 50px;
+	object-fit: cover;
+}
+
+.loading_page {
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	position: relative;
+}
+
+.loading_content {
+	position: relative;
+}

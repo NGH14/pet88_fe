@@ -1,16 +1,35 @@
-import Login from '../container/Login';
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
-import { MyComponent } from './../App';
-import NotMatch from '../container/NotMatch';
 
-export const routers = createBrowserRouter([
+import React from 'react';
+// const Homepage = React.lazy(() => import('../container/Homepage'));
+
+export const routes = [
+	{
+		path: '*',
+		element: React.lazy(() => {
+			return Promise.all([
+				import('../container/NotMatch'),
+				new Promise((resolve) => setTimeout(resolve, 300)),
+			]).then(([moduleExports]) => moduleExports);
+		}),
+	},
 	{
 		path: '/',
-		element: <MyComponent></MyComponent>,
-		errorElement: <NotMatch />,
+		element: React.lazy(() => {
+			return Promise.all([
+				import('../container/Homepage'),
+				new Promise((resolve) => setTimeout(resolve, 600)),
+			]).then(([moduleExports]) => moduleExports);
+		}),
 	},
+
 	{
-		path: '/test',
-		element: <MyComponent></MyComponent>,
+		path: '/signin',
+		element: React.lazy(() => {
+			return Promise.all([
+				import('../container/Login'),
+				new Promise((resolve) => setTimeout(resolve, 600)),
+			]).then(([moduleExports]) => moduleExports);
+		}),
 	},
-]);
+];
