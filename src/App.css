@@ -1,18 +1,16 @@
 
-.App {
-	text-align: center;
-}
-
-.App-logo {
-	height: 40vmin;
-	pointer-events: none;
-}
-
 html {
 	font-family: 'Poppins','Quicksand','Roboto' ,sans-serif;
 	scroll-behavior: smooth;
-	transition: ease-in-out 1s;
+	transition: all ease-in-out 1s;
+	font-size: 62.5%;
+
 }
+
+a {
+	font-family: 'Poppins',sans-serif;
+}
+
 
 textarea {
 	padding: 12px;
@@ -27,7 +25,7 @@ textarea {
 
 ::selection {
 	background: #F76A1A;
-	color: black;
+	color: #f5f5f5;
 }
 
 *::-webkit-scrollbar {

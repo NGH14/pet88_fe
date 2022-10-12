@@ -1,6 +1,7 @@
 .loginpage-rightside {
-	width: calc(70% - 5vw);
+	width: 57%;
 	position: relative;
+	font-family: 'Quicksand','Roboto' ,sans-serif;
 }
 
 .loginpage-rightside .loginpage-rightside_image {
@@ -28,7 +29,6 @@
 }
 
 .loginpage-rightside_textoverlay {
-	display: inline !important;
 	position: absolute;
 	left: 50%;
 	top: 50%;

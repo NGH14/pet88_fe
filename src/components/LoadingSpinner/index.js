@@ -1,9 +1,18 @@
 import './style.css';
-import { Space, Spin } from 'antd';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import React from 'react';
 
-// import UniLogo from 'assets/images/logo-500.webp';
+const antIcon = (
+	<LoadingOutlined
+		style={{
+			fontSize: 75,
+			color: '#F76A1A',
+		}}
+		spin
+	/>
+);
 
 function LoadingSpinner(props) {
 	const { inputHeight } = props;
@@ -12,17 +21,7 @@ function LoadingSpinner(props) {
 			className='loading_page'
 			style={{ height: inputHeight ? inputHeight : '100vh' }}>
 			<div className='loading_content'>
-				<Spin
-					size={100}
-					sx={{
-						position: 'absolute',
-						// top: -6,
-						// left: -10,
-						// zIndex: 1,
-					}}
-				/>
-
-				{/* <img className='loading_logo' src={UniLogo} alt='' /> */}
+				<Spin indicator={antIcon} />
 			</div>
 		</div>
 	);

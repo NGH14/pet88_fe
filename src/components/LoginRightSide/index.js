@@ -7,10 +7,11 @@ const RightSideLogin = ({ src }) => {
 			<div className='loginpage-rightside'>
 				<img src={src} alt='' className='loginpage-rightside_image' />
 				<p className='loginpage-rightside_textoverlay'>
-					WELCOME BACK!
+					You will be so happy with our paw-sitively adorable pet
+					sitting service.
 					<br></br>
 					<span className='loginpage-rightside_smalltext'>
-						Pet88 is made with ❤️ in Vietnam
+						Pet88 is made with ❤️ for pets in Vietnam
 					</span>
 				</p>
 			</div>

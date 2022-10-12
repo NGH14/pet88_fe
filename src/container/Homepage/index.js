@@ -20,6 +20,7 @@ import {
 import viVN from 'antd/es/locale/vi_VN';
 import enUS from 'antd/es/locale/en_US';
 import { Calendar } from '../../components/Calendar';
+import SignInOut from './../../components/SignInOutButton/index';
 
 function Homepage() {
 	const [data, setData] = React.useState(null);
@@ -39,6 +40,7 @@ function Homepage() {
 					<Footer>Footer</Footer>
 				</Layout>
 			</Layout> */}
+			<SignInOut></SignInOut>
 			<div className='example'>
 				<Pagination defaultCurrent={1} total={50} showSizeChanger />
 			</div>

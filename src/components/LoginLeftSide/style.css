@@ -1,17 +1,19 @@
 .loginpage-leftside {
-	width: calc(40% + 5vw);
-	margin: 10px;
+	width: 43%;
+	margin: 15px;
 	overflow-y: auto;
-
 	height: 100%;
+	position: relative;
+
 }
 
-.leftside_logo {
-	width: 120px;
-	min-height: 50px;
 
-	margin: 15px auto 3rem 30px;
+.leftside_logo {
+	width: 30px;
+    min-height: 30px;
+	margin: 15px 15px 30px;
 	object-fit: cover;
+	display: block;
 }
 @media only screen and (max-width: 1150px) {
 	.loginpage-leftside {
