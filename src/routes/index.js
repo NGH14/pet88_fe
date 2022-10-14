@@ -12,7 +12,7 @@ export const routes = [
 				new Promise((resolve) => setTimeout(resolve, 300)),
 			]).then(([moduleExports]) => moduleExports);
 		}),
-		type: 'public',
+		private: false,
 	},
 	{
 		path: '/',
@@ -22,18 +22,18 @@ export const routes = [
 				new Promise((resolve) => setTimeout(resolve, 600)),
 			]).then(([moduleExports]) => moduleExports);
 		}),
-		type: 'public',
+		private: false,
 	},
 
 	{
-		path: '/signin',
+		path: '/auth',
 		element: React.lazy(() => {
 			return Promise.all([
-				import('../container/Login'),
+				import('../container/AuthPage'),
 				new Promise((resolve) => setTimeout(resolve, 600)),
 			]).then(([moduleExports]) => moduleExports);
 		}),
-		type: 'public',
+		private: false,
 	},
 	{
 		path: '/account',
@@ -43,6 +43,6 @@ export const routes = [
 				new Promise((resolve) => setTimeout(resolve, 600)),
 			]).then(([moduleExports]) => moduleExports);
 		}),
-		type: 'private',
+		private: true,
 	},
 ];

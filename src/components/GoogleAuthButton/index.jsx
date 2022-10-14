@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext';
 
-const SignInOut = () => {
-	const { user, googleSignOut } = UserAuth();
+const GoogleAuthButton = () => {
+	const { user, SignOut } = UserAuth();
 
 	const handleSignOut = async () => {
 		try {
-			await googleSignOut();
+			await SignOut();
 		} catch (error) {
 			console.log(error);
 		}
@@ -16,15 +16,15 @@ const SignInOut = () => {
 	return (
 		<div className='flex justify-between bg-gray-200 w-full p-4'>
 			<h1 className='text-center text-2xl font-bold'>
-				hi, {user?.displayName}{' '}
+				 {user && `hi ${user?.displayName}`}
 			</h1>
-			{user?.displayName ? (
+			{user ? (
 				<button onClick={handleSignOut}>Logout</button>
 			) : (
-				<Link to='/signin'>Sign in</Link>
+				<Link to='/auth'>Sign in</Link>
 			)}
 		</div>
 	);
 };
 
-export default SignInOut;
+export default GoogleAuthButton;

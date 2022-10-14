@@ -2,7 +2,7 @@ import './style.css';
 
 import logoBlack from '../../assets/images/logo-text.png';
 import loginImg from '../../assets/images/j-balla-photography-cMtiWjiAvq4-unsplash-_1_.webp';
-import LeftSideLogin from '../../components/LoginLeftSide';
+import LeftSideLogin from '../../components/SignInLeftSide';
 import RightSideLogin from '../../components/LoginRightSide';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

@@ -15,12 +15,7 @@ export default function SignInGoogle({ ...props }) {
 		}
 	};
 
-    useEffect(() => {
-        if (user !== null) {
-            navigate('/')
-        }
-    },[user])
-    
+
 
 	return <GoogleButton {...props} onClick={handleGoogleSignIn} />;
 }

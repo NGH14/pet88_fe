@@ -1,21 +1,29 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import './style.css';
-import SignInGoogle from './../SigninGoogle/index';
+import SignInGoogle from '../SignInGoogle/index';
+import { useState } from 'react';
+import { UserAuth } from '../../context/AuthContext';
 
-const LoginForm = () => {
-	const { register, handleSubmit } = useForm();
+const LoginForm = ({ SetSignIn }) => {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
+	const navigate = useNavigate();
+	const { emailSignIn } = UserAuth();
 
-	const onSubmit = (data) => {
-		alert(JSON.stringify(data));
-	};
-
-	const onFinish = (values) => {
-		console.log('Success:', values);
+	const onFinish = async (e) => {
+		try {
+			await emailSignIn(email, password);
+			navigate('/');
+		} catch (e) {
+			setError(e.message);
+			console.log(e.message);
+		}
 	};
 
 	const onFinishFailed = (errorInfo) => {
@@ -23,8 +31,13 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div className='loginform'>
-			<h1 className='loginform-heading'> Welcome back! </h1>
+		<motion.div
+			className='loginform'
+			initial={{ x: -100, opacity: 0 }}
+			animate={{ x: 0, opacity: 1 }}
+			exit={{ x: 100, opacity: 0 }}
+			transition={{ duration: 1 }}>
+			<h1 className='loginform-heading'>Welcome back!</h1>
 			<span className='loginform-subtext'>
 				It's great to have you back in Pet88 🥰
 			</span>
@@ -36,6 +49,7 @@ const LoginForm = () => {
 					borderRadius: 5,
 				}}
 			/>
+
 			<div className='loginform-loginby'>
 				<span className='textwithline'>or Sign in with Email</span>
 			</div>
@@ -47,13 +61,17 @@ const LoginForm = () => {
 				}}
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
-				autoComplete='off'>
+				autoComplete='on'>
 				<Form.Item
 					name='username'
 					rules={[
 						{
+							type: 'email',
+							message: 'The input is not valid E-mail!',
+						},
+						{
 							required: true,
-							message: 'Please enter your email!',
+							message: 'Please input your E-mail!',
 						},
 					]}>
 					<Input
@@ -61,9 +79,10 @@ const LoginForm = () => {
 						prefix={
 							<UserOutlined className='site-form-item-icon' />
 						}
+						onChange={(e) => setEmail(e.target.value)}
 					/>
 				</Form.Item>
-				<br />
+				<br style={{ pointerEvents: 'none' }} />
 				<Form.Item
 					name='password'
 					rules={[
@@ -77,6 +96,7 @@ const LoginForm = () => {
 							<LockOutlined className='site-form-item-icon' />
 						}
 						placeholder='Password'
+						onChange={(e) => setPassword(e.target.value)}
 					/>
 				</Form.Item>
 				<br />
@@ -98,10 +118,12 @@ const LoginForm = () => {
 					</Button>
 				</Form.Item>
 			</Form>
+
 			<span className='loginform-subtext_bottom'>
-				Not a Pet88 member? <NavLink to='/'>Sign up for free</NavLink>
+				Not a Pet88 member?{' '}
+				<a onClick={() => SetSignIn(false)}>Sign up for free</a>
 			</span>
-		</div>
+		</motion.div>
 	);
 };
 
