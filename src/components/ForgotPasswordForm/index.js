@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { MailOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,19 +9,15 @@ import SignInGoogle from '../SignInGoogle/index';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 
-const SignInForm = ({ SetSignIn }) => {
+const ForgotPasswordForm = () => {
 	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [error, setError] = useState('');
 	const navigate = useNavigate();
-	const { emailSignIn } = UserAuth();
+	const { forgotPassword } = UserAuth();
 
 	const onFinish = async (e) => {
 		try {
-			await emailSignIn(email, password);
-			navigate('/');
+			await forgotPassword(email);
 		} catch (e) {
-			setError(e.message);
 			console.log(e.message);
 		}
 	};
@@ -32,28 +28,19 @@ const SignInForm = ({ SetSignIn }) => {
 
 	return (
 		<motion.div
-			className='loginform'
+			className='forgotpassword'
 			initial={{ x: -100, opacity: 0 }}
 			animate={{ x: 0, opacity: 1 }}
 			exit={{ x: 100, opacity: 0 }}
 			transition={{ duration: 0.5 }}>
-			<h1 className='loginform-heading'>Welcome back!</h1>
-			<span className='loginform-subtext'>
-				It's great to have you back in Pet88 🥰
+			<span className='forgotpassword-back'>
+				<NavLink to='/sign-in'> &#8592; Back</NavLink>
 			</span>
-			<SignInGoogle
-				style={{
-					width: '100%',
-					backgroundColor: '#fff',
-					color: '#000',
-					borderRadius: 5,
-					fontSize: 14,
-				}}
-			/>
-
-			<div className='loginform-loginby'>
-				<span className='textwithline'>or</span>
-			</div>
+			<h1 className='forgotpassword-heading'>Forgot Your Password?</h1>
+			<span className='forgotpassword-subtext'>
+				Don't worry! please enter the email address associated with your
+				account
+			</span>
 
 			<Form
 				name='basic'
@@ -78,32 +65,11 @@ const SignInForm = ({ SetSignIn }) => {
 					<Input
 						placeholder='Email'
 						prefix={
-							<UserOutlined className='site-form-item-icon' />
+							<MailOutlined className='site-form-item-icon' />
 						}
 						onChange={(e) => setEmail(e.target.value)}
 					/>
 				</Form.Item>
-				<Form.Item
-					name='password'
-					rules={[
-						{
-							required: true,
-							message: 'Please enter your password!',
-						},
-					]}>
-					<Input.Password
-						prefix={
-							<LockOutlined className='site-form-item-icon' />
-						}
-						placeholder='Password'
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-				</Form.Item>
-				<NavLink
-					className='loginform-forgotpassword'
-					to='/forgot-password'>
-					Forgot Password?
-				</NavLink>
 
 				<Form.Item>
 					<Button
@@ -112,25 +78,18 @@ const SignInForm = ({ SetSignIn }) => {
 						style={{
 							height: 'fit-content',
 							width: '100%',
-							fontSize: 16,
-							lineHeight: 1.8,
-
+							fontSize: 15,
 							backgroundColor: '#000',
 							borderColor: '#000',
-							borderRadius: 5,
+							borderRadius: 45,
 							boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 						}}>
-						Sign in
+						Send
 					</Button>
 				</Form.Item>
 			</Form>
-
-			<span className='loginform-subtext_bottom'>
-				Not a Pet88 member?{' '}
-				<NavLink to='/sign-up'>Sign up for free</NavLink>
-			</span>
 		</motion.div>
 	);
 };
 
-export default SignInForm;
+export default ForgotPasswordForm;

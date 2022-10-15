@@ -4,6 +4,7 @@ html {
 	scroll-behavior: smooth;
 	transition: all ease-in-out 1s;
 	font-size: 62.5%;
+	height: 100%;
 
 }
 
@@ -64,3 +65,7 @@ textarea {
 	color: #61dafb;
 }
 
+.ant-form-item-explain-error{
+	font-size: 13px !important;
+	padding-left: 5px;
+}

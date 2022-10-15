@@ -1,20 +1,19 @@
 import './style.css';
 
 import logoBlack from '../../assets/images/logo-text.png';
-import loginImg from '../../assets/images/j-balla-photography-cMtiWjiAvq4-unsplash-_1_.webp';
-import LeftSideLogin from '../../components/SignInLeftSide';
-import RightSideLogin from '../../components/LoginRightSide';
+import LeftSideLogin from '../../components/LoginLeft';
+import RightSideLogin from '../../components/LoginRight';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext';
 
-export default function Login({ returnUrl }) {
+export default function SignIn() {
 	const { user } = UserAuth();
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (user !== null) {
+		if (user) {
 			navigate('/');
 		}
 	}, [user]);
@@ -23,8 +22,8 @@ export default function Login({ returnUrl }) {
 		<>
 			{!user && (
 				<div className='loginpage-wrapper'>
-					<LeftSideLogin src={logoBlack} returnUrl={returnUrl} />
-					<RightSideLogin src={loginImg} />
+					<LeftSideLogin src={logoBlack} />
+					<RightSideLogin />
 				</div>
 			)}
 		</>

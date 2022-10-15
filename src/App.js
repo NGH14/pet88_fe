@@ -15,9 +15,9 @@ import './index.css';
 import './App.css';
 import { AuthContextProvider } from './context/AuthContext';
 
-const { Header, Footer, Sider, Content } = Layout;
-
 function App() {
+	console.log(process.env);
+
 	return (
 		<ConfigProvider locale={viVN}>
 			<AuthContextProvider>

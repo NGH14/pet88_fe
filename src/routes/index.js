@@ -6,43 +6,38 @@ import React from 'react';
 export const routes = [
 	{
 		path: '*',
-		element: React.lazy(() => {
-			return Promise.all([
-				import('../container/NotMatch'),
-				new Promise((resolve) => setTimeout(resolve, 300)),
-			]).then(([moduleExports]) => moduleExports);
-		}),
+		element: React.lazy(() => import('../container/NotMatch')),
 		private: false,
 	},
 	{
 		path: '/',
-		element: React.lazy(() => {
-			return Promise.all([
-				import('../container/Homepage'),
-				new Promise((resolve) => setTimeout(resolve, 600)),
-			]).then(([moduleExports]) => moduleExports);
-		}),
+		element: React.lazy(() => import('../container/Homepage')),
 		private: false,
 	},
 
 	{
-		path: '/auth',
-		element: React.lazy(() => {
-			return Promise.all([
-				import('../container/AuthPage'),
-				new Promise((resolve) => setTimeout(resolve, 600)),
-			]).then(([moduleExports]) => moduleExports);
-		}),
+		path: '/sign-in',
+		element: React.lazy(() => import('../container/Login')),
+		private: false,
+	},
+	{
+		path: '/sign-up',
+		element: React.lazy(() => import('../container/Login')),
+		private: false,
+	},
+	{
+		path: '/forgot-password',
+		element: React.lazy(() => import('../container/Login')),
+		private: false,
+	},
+	{
+		path: '/reset-password',
+		element: React.lazy(() => import('../container/ResetPassword')),
 		private: false,
 	},
 	{
 		path: '/account',
-		element: React.lazy(() => {
-			return Promise.all([
-				import('../container/Account'),
-				new Promise((resolve) => setTimeout(resolve, 600)),
-			]).then(([moduleExports]) => moduleExports);
-		}),
+		element: React.lazy(() => import('../container/Account')),
 		private: true,
 	},
 ];

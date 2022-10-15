@@ -1,75 +1,76 @@
 .loginform {
-	display: flex;
-	flex-direction: column;
-	-webkit-box-align: center;
-	/* align-items: center; */
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    /* align-items: center; */
 	margin: 0px 4.5em;
+
 	max-width: 100%;
 	padding: 10px 15px;
-	font-family: 'Poppins', sans-serif !important;
+	font-family: "Poppins", sans-serif !important;
 	max-width: 500px;
-	margin: auto;
+    margin: auto;
+
 }
-.loginform a {
+.loginform  a {
 	color: #000 !important;
 }
 
-
-.loginform > input,
-select,
-label {
-	display: block;
+.loginform > input,select,label {
+    display: block;
 }
 .loginform .ant-input {
 	font-size: 16px;
 	line-height: 1.8;
 	height: 2.5em;
+
 }
 
 .loginform .ant-input-prefix {
 	margin-right: 8px;
+	
 }
 
-.loginform .ant-input-affix-wrapper {
+.loginform .ant-input-affix-wrapper{
 	border-radius: 5px;
 }
 
 .loginform-heading {
-	font-family: 'Poppins', sans-serif;
+	font-family: "Poppins", sans-serif;
 	font-style: normal;
 	font-weight: 600;
-	font-size: 2.5em;
+	font-size: 3em;
 	line-height: 42px;
-	display: block;
-	margin-block: 1.5em 0.5em;
+    display: block;
+    margin-block: 1.5em 0.5em;
 }
 
 .loginform-subtext {
 	font-style: normal;
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 16px;
 	line-height: 24px;
 	color: #777;
-	margin-bottom: 3em;
+    margin-bottom: 3em;
 }
 .loginform-loginby {
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 24px;
 	position: relative;
 	color: rgba(153, 153, 153, 0.9);
 	width: 100%;
 	text-align: center;
-	margin-block: 2em 2em;
+    margin-block: 2em 3em;
 }
 
 .loginform-loginby::after {
-	content: '';
+	content: "";
 	width: 100%;
 	height: 1px;
 	left: 0;
-	top: 50%;
+	top: 50%;   
 	background-color: rgb(191, 191, 191);
 	position: absolute;
 	z-index: 0;
@@ -82,20 +83,11 @@ label {
 	background-color: white;
 	z-index: 2;
 }
-.loginform-subtext_bottom {
+.loginform-subtext_bottom{
 	text-align: center;
 	color: #999;
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 24px;
 	font-family: 'Poppins', sans-serif;
-	font-weight: 500;
-}
-
-.loginform-forgotpassword {
-	margin-block: calc(-1em) 1.5em;
-	text-align: right;
-	padding-left: 5px;
-	display: block;
-	font-size: 13px;
 	font-weight: 500;
 }

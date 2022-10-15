@@ -1,0 +1,69 @@
+.forgotpassword {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    /* align-items: center; */
+	justify-content: center;
+	height: 60vh;
+	padding: 10px 15px;
+	font-family: "Poppins", sans-serif !important;
+	max-width: 500px;
+    margin: auto;
+}
+.forgotpassword  a {
+	color: #000 !important;
+}
+
+.forgotpassword > input,select,label {
+    display: block;
+}
+.forgotpassword .ant-input {
+	font-size: 16px;
+	line-height: 1.8;
+	height: 2.5em;
+}
+
+.forgotpassword .ant-input-prefix {
+	margin-right: 8px;
+}
+
+.forgotpassword .ant-input-affix-wrapper{
+	border-radius: 5px;
+}
+
+.forgotpassword-heading {
+	font-family: "Poppins", sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 2.3em;
+	line-height: 42px;
+    display: block;
+    margin-block: 0.5em 0.5em;
+}
+
+.forgotpassword-subtext {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 24px;
+	color: #777;
+    margin-bottom: 2em;
+}
+
+
+.forgotpassword-subtext_bottom{
+	text-align: center;
+	color: #999;
+	font-size: 14px;
+	line-height: 24px;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+}
+
+.forgotpassword-back {
+	color: #999;
+	font-size: 13px;
+	line-height: 24px;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { UserAuth } from '../../context/AuthContext';
+import UpdatePasswordForm from './../../components/UpdatePasswordForm/index';
 
 const Account = () => {
 	const { googleSignOut, user } = UserAuth();
@@ -21,6 +22,8 @@ const Account = () => {
 			<button onClick={handleSignOut} className='border py-2 px-5 mt-10'>
 				Logout
 			</button>
+
+			<UpdatePasswordForm></UpdatePasswordForm>
 		</div>
 	);
 };

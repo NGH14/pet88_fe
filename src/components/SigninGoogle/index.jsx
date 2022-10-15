@@ -17,5 +17,5 @@ export default function SignInGoogle({ ...props }) {
 
 
 
-	return <GoogleButton {...props} onClick={handleGoogleSignIn} />;
+	return <GoogleButton {...props} onClick={() => handleGoogleSignIn()} />;
 }

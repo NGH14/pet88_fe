@@ -1,16 +1,13 @@
 import './style.css';
 
 import React from 'react';
-const RightSideLogin = ({ src }) => {
+import a from '../../assets/images/j-balla-photography-cMtiWjiAvq4-unsplash-_1_.webp';
+
+const RightSideLogin = () => {
 	return (
 		<>
 			<div className='loginpage-rightside'>
-				<img
-					src={src}
-					loading='lazy'
-					alt=''
-					className='loginpage-rightside_image'
-				/>
+				<img src={a} alt='' className='loginpage-rightside_image' />
 				<p className='loginpage-rightside_textoverlay'>
 					You will be so happy with our paw-positively adorable pet
 					care service.

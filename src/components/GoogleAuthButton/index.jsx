@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext';
 
-const GoogleAuthButton = () => {
+const AuthButton = () => {
 	const { user, SignOut } = UserAuth();
 
 	const handleSignOut = async () => {
@@ -21,10 +21,10 @@ const GoogleAuthButton = () => {
 			{user ? (
 				<button onClick={handleSignOut}>Logout</button>
 			) : (
-				<Link to='/auth'>Sign in</Link>
+				<Link to='/sign-in'>Sign in</Link>
 			)}
 		</div>
 	);
 };
 
-export default GoogleAuthButton;
+export default AuthButton;

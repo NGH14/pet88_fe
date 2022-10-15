@@ -1,24 +1,22 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { UserAuth } from '../../context/AuthContext';
 import './style.css';
-import { Link, useNavigate } from 'react-router-dom';
+import SignInGoogle from '../SignInGoogle/index';
+import { useState } from 'react';
+import { UserAuth } from '../../context/AuthContext';
 
-const SignUpForm = ({ SetSignIn }) => {
-	const [email, setEmail] = React.useState('');
-	const [password, setPassword] = React.useState('');
-	const { createUser } = UserAuth();
+const UpdatePasswordForm = () => {
+	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
+	const { UpdatePassword } = UserAuth();
 
 	const onFinish = async (e) => {
 		try {
-			await createUser(email, password);
-			navigate('/account');
+			await UpdatePassword(password);
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -30,15 +28,27 @@ const SignUpForm = ({ SetSignIn }) => {
 
 	return (
 		<motion.div
-			className='signupform'
-			initial={{ x: 100, opacity: 0 }}
+			className='loginform'
+			initial={{ x: -100, opacity: 0 }}
 			animate={{ x: 0, opacity: 1 }}
-			exit={{ x: -100, opacity: 0 }}
+			exit={{ x: 100, opacity: 0 }}
 			transition={{ duration: 0.5 }}>
-			<h1 className='signupform-heading'>Welcome! </h1>
-			<span className='signupform-subtext'>
-				Xin chào, It's great to have you join in Pet88 🥰
+			<h1 className='loginform-heading'>Welcome back!</h1>
+			<span className='loginform-subtext'>
+				It's great to have you back in Pet88 🥰
 			</span>
+			<SignInGoogle
+				style={{
+					width: '100%',
+					backgroundColor: '#fff',
+					color: '#000',
+					borderRadius: 5,
+				}}
+			/>
+
+			<div className='loginform-loginby'>
+				<span className='textwithline'>or Sign in with Email</span>
+			</div>
 
 			<Form
 				name='basic'
@@ -47,27 +57,7 @@ const SignUpForm = ({ SetSignIn }) => {
 				}}
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
-				autoComplete='off'>
-				<Form.Item
-					name='username'
-					rules={[
-						{
-							required: true,
-							message: 'Please enter your email!',
-						},
-						{
-							type: 'email',
-							message: 'Please enter your email!',
-						},
-					]}>
-					<Input
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder='Email'
-						prefix={
-							<UserOutlined className='site-form-item-icon' />
-						}
-					/>
-				</Form.Item>
+				autoComplete='on'>
 				<Form.Item
 					onChange={(e) => setPassword(e.target.value)}
 					name='password'
@@ -116,7 +106,7 @@ const SignUpForm = ({ SetSignIn }) => {
 						}
 					/>
 				</Form.Item>
-				<br />
+
 				<Form.Item>
 					<Button
 						type='primary'
@@ -131,17 +121,17 @@ const SignUpForm = ({ SetSignIn }) => {
 							borderRadius: 5,
 							boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 						}}>
-						Sign Up
+						Reset Password
 					</Button>
 				</Form.Item>
 			</Form>
 
 			<span className='loginform-subtext_bottom'>
-				Already a Pet88 member?
-				<NavLink to='/sign-in'> Sign in</NavLink>
+				Not a Pet88 member?{' '}
+				<NavLink to='/signup'>Sign up for free</NavLink>
 			</span>
 		</motion.div>
 	);
 };
 
-export default SignUpForm;
+export default UpdatePasswordForm;
