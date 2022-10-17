@@ -11,7 +11,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 import './style.css';
-import SignInGoogle from '../SignInGoogle/index';
+import SignInGoogle from '../SigninGoogle/index';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -24,10 +24,9 @@ function useQuery() {
 }
 
 const ResetPasswordForm = ({ state }) => {
-	const [counter, setCounter] = useState(15);
-	const [runCounter, setRunCounter] = useState(false);
-	const [success, setSuccess] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [counter, setCounter] = React.useState(15);
+	const [runCounter, setRunCounter] = React.useState(false);
+	const [success, setSuccess] = React.useState(true);
 
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
@@ -57,16 +56,12 @@ const ResetPasswordForm = ({ state }) => {
 	});
 
 	const onFinish = async (e) => {
-		setLoading(true);
 		try {
 			await ConfirmResetPassword(oobCode, password);
-			setRunCounter(true);
+			// setRunCounter(true);
 			setSuccess(true);
-			setLoading(false);
 		} catch (e) {
 			console.log(e.message);
-			setSuccess(false);
-			setLoading(false);
 		}
 	};
 
@@ -75,47 +70,7 @@ const ResetPasswordForm = ({ state }) => {
 	};
 
 	return success ? (
-		<motion.div
-			initial={{ x: -100, opacity: 0 }}
-			animate={{ x: 0, opacity: 1 }}
-			exit={{ x: 100, opacity: 0 }}
-			transition={{ duration: 0.5 }}
-			className='resetpasswordform'
-			style={{ textAlign: 'center' }}>
-			<img
-				src={completedImg}
-				alt=''
-				style={{ width: 180, margin: '10px auto' }}
-			/>
-			<h1 className='resetpasswordform-heading'>Password Updated</h1>
-			<span className='resetpasswordform-subtext'>
-				You have successfully reset the password <br />
-				You will be redirect to the sign-in page in {counter} seconds
-			</span>
-			<Button
-				onClick={() => navigate('/sign-in')}
-				type='primary'
-				htmlType='submit'
-				style={{
-					fontWeight: 'bold',
-					fontSize: 14,
-					lineHeight: 1.8,
-					backgroundColor: 'RGB(109, 156, 145)',
-					borderColor: 'RGB(109, 156, 145)',
-					borderRadius: 50,
-					boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
-					marginBottom: 10,
-				}}>
-				BACK TO SIGN IN
-			</Button>
-		</motion.div>
-	) : (
-		<motion.div
-			initial={{ x: -100, opacity: 0 }}
-			animate={{ x: 0, opacity: 1 }}
-			exit={{ x: 100, opacity: 0 }}
-			transition={{ duration: 0.5 }}
-			className='resetpasswordform'>
+		<div className='resetpasswordform'>
 			<h1 className='resetpasswordform-heading'>Create New Password!</h1>
 			<span className='resetpasswordform-subtext'>
 				Your new password should be different from others app &#128274;
@@ -185,15 +140,52 @@ const ResetPasswordForm = ({ state }) => {
 
 				<Form.Item>
 					<Button
-						className='resetpassword-submit'
-						loading={loading}
 						type='primary'
-						htmlType='submit'>
+						htmlType='submit'
+						style={{
+							height: 'fit-content',
+							width: '100%',
+							fontSize: 16,
+							lineHeight: 1.8,
+							backgroundColor: '#000',
+							borderColor: '#000',
+							borderRadius: 5,
+							boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
+						}}>
 						RESET PASSWORD
 					</Button>
 				</Form.Item>
 			</Form>
-		</motion.div>
+		</div>
+	) : (
+		<div className='resetpasswordform' style={{ textAlign: 'center' }}>
+			<img
+				src={completedImg}
+				alt=''
+				style={{ width: 180, margin: '10px auto' }}
+			/>
+			<h1 className='resetpasswordform-heading'>Password Updated</h1>
+			<span className='resetpasswordform-subtext'>
+				You have successfully reset the password <br />
+				You will be redirect to the sign-in page in {counter} seconds
+			</span>
+			<Button
+				onClick={() => navigate('/sign-in')}
+				type='primary'
+				htmlType='submit'
+				style={{
+					fontWeight: 'bold',
+					fontSize: 14,
+					lineHeight: 1.8,
+					backgroundColor: 'RGB(109, 156, 145)',
+					borderColor: 'RGB(109, 156, 145)',
+					borderRadius: 50,
+					boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
+					marginBottom: 10,
+				}}>
+				BACK TO SIGN IN
+			</Button>
+		</div>
 	);
 };
 

@@ -8,19 +8,32 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UserAuth } from '../../context/AuthContext';
 import './style.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const SignUpForm = ({ SetSignIn }) => {
+const SignUpForm = () => {
 	const [email, setEmail] = React.useState('');
+	const [emailStatus, setEmailStatus] = React.useState();
 	const [password, setPassword] = React.useState('');
+	const [loading, setLoading] = React.useState(false);
 	const { createUser } = UserAuth();
 	const navigate = useNavigate();
+	console.log(emailStatus);
 
+	const handleEmail = (e) => {
+		setEmail(e);
+		setEmailStatus();
+	};
 	const onFinish = async (e) => {
+		setLoading(true);
 		try {
 			await createUser(email, password);
 			navigate('/account');
+			setLoading(false);
 		} catch (e) {
+			toast.error('The email already in use');
+			setEmailStatus('error');
 			console.log(e.message);
+			setLoading(false);
 		}
 	};
 
@@ -47,8 +60,10 @@ const SignUpForm = ({ SetSignIn }) => {
 				}}
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
+				validateTrigger='onBlur'
 				autoComplete='off'>
 				<Form.Item
+					validateStatus={emailStatus}
 					name='username'
 					rules={[
 						{
@@ -57,11 +72,12 @@ const SignUpForm = ({ SetSignIn }) => {
 						},
 						{
 							type: 'email',
-							message: 'Please enter your email!',
+							message: 'Invalid enter your email!',
 						},
-					]}>
+					]}
+					help={emailStatus && 'Email is already used'}>
 					<Input
-						onChange={(e) => setEmail(e.target.value)}
+						onChange={(e) => handleEmail(e.target.value)}
 						placeholder='Email'
 						prefix={
 							<UserOutlined className='site-form-item-icon' />
@@ -75,6 +91,10 @@ const SignUpForm = ({ SetSignIn }) => {
 						{
 							required: true,
 							message: 'Please enter your password!',
+						},
+						{
+							min: 6,
+							message: 'Password must be minimum 6 characters.',
 						},
 					]}>
 					<Input.Password
@@ -116,27 +136,40 @@ const SignUpForm = ({ SetSignIn }) => {
 						}
 					/>
 				</Form.Item>
+				<Form.Item
+					name='agreement'
+					valuePropName='checked'
+					rules={[
+						{
+							validator: (_, value) =>
+								value
+									? Promise.resolve()
+									: Promise.reject(
+											new Error(
+												'Should accept agreement',
+											),
+									  ),
+						},
+					]}>
+					<Checkbox>
+						I have read and agreed to the{' '}
+						<a href=''>terms and conditions</a>
+					</Checkbox>
+				</Form.Item>
 				<br />
 				<Form.Item>
 					<Button
+						loading={loading}
+						className='signupform-submit'
+						disabled={emailStatus}
 						type='primary'
-						htmlType='submit'
-						style={{
-							height: 'fit-content',
-							width: '100%',
-							fontSize: 16,
-							lineHeight: 1.8,
-							backgroundColor: '#000',
-							borderColor: '#000',
-							borderRadius: 5,
-							boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
-						}}>
+						htmlType='submit'>
 						Sign Up
 					</Button>
 				</Form.Item>
 			</Form>
 
-			<span className='loginform-subtext_bottom'>
+			<span className='signupform-subtext_bottom'>
 				Already a Pet88 member?
 				<NavLink to='/sign-in'> Sign in</NavLink>
 			</span>

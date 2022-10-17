@@ -18,22 +18,18 @@ const LeftSideSignin = ({ src }) => {
 				<NavLink to='/'>
 					<img src={src} alt='' className='leftside_logo' />
 				</NavLink>
-				{user ? (
-					<div>logged</div>
-				) : (
-					(() => {
-						switch (locate.pathname) {
-							case '/sign-in':
-								return <LoginForm />;
-							case '/sign-up':
-								return <SignUpForm />;
-							case '/forgot-password':
-								return <ForgotPasswordForm />;
-							default:
-								return null;
-						}
-					})()
-				)}
+				{(() => {
+					switch (locate.pathname) {
+						case '/sign-in':
+							return <LoginForm />;
+						case '/sign-up':
+							return <SignUpForm />;
+						case '/forgot-password':
+							return <ForgotPasswordForm />;
+						default:
+							return null;
+					}
+				})()}
 			</div>
 		</>
 	);

@@ -14,6 +14,8 @@ import viVN from 'antd/es/locale/vi_VN';
 import './index.css';
 import './App.css';
 import { AuthContextProvider } from './context/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 	console.log(process.env);
@@ -22,6 +24,18 @@ function App() {
 		<ConfigProvider locale={viVN}>
 			<AuthContextProvider>
 				<BrowserRouter>
+					<ToastContainer
+						position='top-right'
+						autoClose={5000}
+						hideProgressBar={false}
+						newestOnTop={false}
+						closeOnClick
+						rtl={false}
+						pauseOnFocusLoss
+						draggable
+						pauseOnHover
+						theme='light'
+					/>
 					<Routes>{listRoute(routes)}</Routes>
 				</BrowserRouter>
 			</AuthContextProvider>

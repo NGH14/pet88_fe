@@ -4,35 +4,60 @@ import DogImg from '../../assets/images/Wallpaper-Linz-Doggies-Turquiose-1.webp'
 import './style.css';
 import { motion } from 'framer-motion';
 import { UserAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import InValidDisplay from './../../components/InvalidCodeReset/index';
+import LoadingSpinner from '../../components/LoadingSpinner';
+function useQuery() {
+	return new URLSearchParams(useLocation().search);
+}
 
 export default function ResetPassword() {
-	const { user } = UserAuth();
+	const { user, VerifyPasswordResetCode } = UserAuth();
+	const [verified, setVerified] = React.useState();
+	const [loading, setLoading] = React.useState(true);
 
 	const navigate = useNavigate();
+	const query = useQuery();
+
+	const oobCode = query.get('oobCode');
+	console.log(verified);
+	const onFinish = async () => {
+		try {
+			await VerifyPasswordResetCode(oobCode);
+			setVerified(true);
+		} catch (e) {
+			console.log(e.message);
+		}
+	};
 
 	useEffect(() => {
-		if (user) {
+		setTimeout(() => {
+			setLoading(false);
+		}, 2000);
+	});
+
+	useEffect(() => {
+		onFinish();
+		if (!oobCode) {
 			navigate('/');
 		}
-	}, [user]);
+	}, []);
 
 	return (
-		!user && (
-			<div
-				style={{
-					backgroundImage: ` linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url(${DogImg})`,
-				}}
-				className='resetpasswordpage'>
-				<motion.div
-					initial={{ y: -100, opacity: 0 }}
-					animate={{ y: 0, opacity: 1 }}
-					exit={{ y: 100, opacity: 0 }}
-					transition={{ duration: 0.5 }}
-					className='resetpasswordpage-form'>
-					<ResetPasswordForm />;
-				</motion.div>
-			</div>
-		)
+		<>
+			{loading ? (
+				<LoadingSpinner />
+			) : (
+				<div
+					style={{
+						backgroundImage: ` linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url(${DogImg})`,
+					}}
+					className='resetpasswordpage'>
+					<div className='resetpasswordpage-form'>
+						{verified ? <ResetPasswordForm /> : <InValidDisplay />}
+					</div>
+				</div>
+			)}
+		</>
 	);
 }

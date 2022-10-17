@@ -8,21 +8,28 @@ import './style.css';
 import SignInGoogle from '../SignInGoogle/index';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
 
-const SignInForm = ({ SetSignIn }) => {
+const SignInForm = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
+	const [emailSignInloadings, setEmailSignInloadings] = useState(false);
+
 	const navigate = useNavigate();
 	const { emailSignIn } = UserAuth();
 
 	const onFinish = async (e) => {
+		setEmailSignInloadings(true);
+
 		try {
 			await emailSignIn(email, password);
-			navigate('/');
+			setEmailSignInloadings(false);
+			navigate('/', { replace: true });
 		} catch (e) {
-			setError(e.message);
+			toast.error('Invalid user ID or password.');
 			console.log(e.message);
+			setEmailSignInloadings(false);
 		}
 	};
 
@@ -62,6 +69,7 @@ const SignInForm = ({ SetSignIn }) => {
 				}}
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
+				validateTrigger='onBlur'
 				autoComplete='on'>
 				<Form.Item
 					name='username'
@@ -107,6 +115,7 @@ const SignInForm = ({ SetSignIn }) => {
 
 				<Form.Item>
 					<Button
+						loading={emailSignInloadings}
 						type='primary'
 						htmlType='submit'
 						style={{

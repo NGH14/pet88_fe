@@ -1,5 +1,6 @@
 import React, { useContext, createContext } from 'react';
 import {
+	verifyPasswordResetCode,
 	sendPasswordResetEmail,
 	GoogleAuthProvider,
 	signInWithPopup,
@@ -16,10 +17,10 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = React.useState({});
 	console.log(user);
-	const provider = new GoogleAuthProvider();
 
-	const googleSignIn = (redirect) => {
-		signInWithPopup(auth, provider, redirect);
+	const googleSignIn = () => {
+		const provider = new GoogleAuthProvider();
+		return signInWithPopup(auth, provider);
 	};
 	const createUser = (email, password) => {
 		return createUserWithEmailAndPassword(auth, email, password);
@@ -30,6 +31,9 @@ export const AuthContextProvider = ({ children }) => {
 	};
 	const UpdatePassword = (password) => {
 		return updatePassword(user, password);
+	};
+	const VerifyPasswordResetCode = (code) => {
+		return verifyPasswordResetCode(auth, code);
 	};
 
 	const SignOut = () => {
@@ -59,6 +63,7 @@ export const AuthContextProvider = ({ children }) => {
 	return (
 		<AuthContext.Provider
 			value={{
+				VerifyPasswordResetCode,
 				googleSignIn,
 				SignOut,
 				createUser,

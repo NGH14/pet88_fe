@@ -1,8 +1,6 @@
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 
 import React from 'react';
-// const Homepage = React.lazy(() => import('../container/Homepage'));
-
 export const routes = [
 	{
 		path: '*',
@@ -35,6 +33,7 @@ export const routes = [
 		element: React.lazy(() => import('../container/ResetPassword')),
 		private: false,
 	},
+
 	{
 		path: '/account',
 		element: React.lazy(() => import('../container/Account')),

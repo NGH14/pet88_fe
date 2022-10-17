@@ -16,12 +16,15 @@ const AuthButton = () => {
 	return (
 		<div className='flex justify-between bg-gray-200 w-full p-4'>
 			<h1 className='text-center text-2xl font-bold'>
-				 {user && `hi ${user?.displayName}`}
+				 {user?.displayName && `hi ${user?.displayName}`}
 			</h1>
 			{user ? (
 				<button onClick={handleSignOut}>Logout</button>
 			) : (
+				<>
 				<Link to='/sign-in'>Sign in</Link>
+				<Link to='/sign-up'>Sign up</Link>
+				</>
 			)}
 		</div>
 	);

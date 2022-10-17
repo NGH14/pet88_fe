@@ -1,4 +1,4 @@
-.resetpasswordform {
+.invalidpage {
     display: flex;
     flex-direction: column;
     -webkit-box-align: center;
@@ -11,65 +11,48 @@
     margin: auto;
 
 }
-
-.resetpasswordform .ant-btn-primary:hover, .ant-btn-primary:focus {
-	color: white;
-    border-color: #333;
-    background: #333;
-}
-
-.resetpasswordform .ant-btn-primary[disabled], .ant-btn-primary[disabled]:hover, .ant-btn-primary[disabled]:focus, .ant-btn-primary[disabled]:active {
-    color: rgba(0, 0, 0, 0.25);
-    border-color: #d9d9d9;
-    background: #f5f5f5;
-    text-shadow: none;
-    box-shadow: none;
-}
-
-
-
-.resetpasswordform  a {
+.invalidpage  a {
 	color: #000 !important;
 }
 
-.resetpasswordform > input,select,label {
+.invalidpage > input,select,label {
     display: block;
 }
-.resetpasswordform .ant-input {
+.invalidpage .ant-input {
 	font-size: 14px;
 	line-height: 1.8;
 	height: 2.5em;
 
 }
 
-.resetpasswordform .ant-input-prefix {
+.invalidpage .ant-input-prefix {
 	margin-right: 8px;
 	
 }
 
-.resetpasswordform .ant-input-affix-wrapper{
+.invalidpage .ant-input-affix-wrapper{
 	border-radius: 5px;
 }
 
-.resetpasswordform-heading {
+.invalidpage-heading {
 	font-family: "Poppins", sans-serif;
 	font-style: normal;
 	font-weight: 600;
-	font-size: 2.5em;
+	font-size: 2em;
 	line-height: 42px;
     display: block;
     margin-block: 1.5em 0.5em;
 }
 
-.resetpasswordform-subtext {
+.invalidpage-subtext {
 	font-style: normal;
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 16px;
 	line-height: 24px;
-	color: #777;
+	color: #333;
     margin-bottom: 3em;
 }
-.resetpasswordform-loginby {
+.invalidpage-loginby {
 	font-style: normal;
 	font-weight: normal;
 	font-size: 14px;
@@ -81,7 +64,7 @@
     margin-block: 2em 3em;
 }
 
-.resetpasswordform-loginby::after {
+.invalidpage-loginby::after {
 	content: "";
 	width: 100%;
 	height: 1px;
@@ -92,29 +75,18 @@
 	z-index: 0;
 }
 
-.resetpasswordform-loginby .textwithline {
+.invalidpage-loginby .textwithline {
 	width: 100%;
 	padding-inline: 10px;
 	position: relative;
 	background-color: white;
 	z-index: 2;
 }
-.resetpasswordform-subtext_bottom{
+.invalidpage-subtext_bottom{
 	text-align: center;
 	color: #999;
 	font-size: 14px;
 	line-height: 24px;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 500;
-}
-.resetpassword-submit{
-	color: white;
-	height: fit-content;
-	width: 100%;
-	font-size: 16px;
-	line-height: 1.8;
-	background-color: #000;
-	border-color: #000;
-	border-radius: 5px;
-	box-shadow: rgb(0 0 0 / 25%) 0px 2px 4px 0px;
 }

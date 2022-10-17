@@ -12,7 +12,9 @@ import 'moment/locale/vi';
 import 'moment/locale/en-gb';
 
 
-moment.locale('en-gb'); 
+// moment.locale('en-gb');
+moment.locale('vi'); 
+
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 
