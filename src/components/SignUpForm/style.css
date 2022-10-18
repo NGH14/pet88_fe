@@ -7,13 +7,13 @@
 
 	max-width: 100%;
 	padding: 10px 15px;
-	font-family: "Poppins", sans-serif !important;
+	font-family: 'Nunito Sans', sans-serif;
 	max-width: 500px;
     margin: auto;
 
 }
 .signupform  a {
-	color: #000 !important;
+	color: #000;
 }
 
 .signupform > input,select,label {
@@ -45,6 +45,10 @@
 }
 
 
+.signupform .ant-checkbox-checked .ant-checkbox-inner {
+	background-color: rgb(238, 77, 45) !important;
+	border-color: rgb(238, 77, 45) !important;
+  }
 
 
 .signupform .ant-input-affix-wrapper{
@@ -52,9 +56,8 @@
 }
 
 .signupform-heading {
-	font-family: "Poppins", sans-serif;
 	font-style: normal;
-	font-weight: 600;
+	font-weight: 700;
 	font-size: 3em;
 	line-height: 42px;
     display: block;
@@ -104,7 +107,6 @@
 	color: #999;
 	font-size: 14px;
 	line-height: 24px;
-	font-family: 'Poppins', sans-serif;
 	font-weight: 500;
 }
 
@@ -118,4 +120,16 @@
 	 	border-color: #000;
 	 	border-radius: 5px;
 	 	box-shadow: rgb(0 0 0 / 25%) 0px 2px 4px 0px;
+}
+
+.signupform-term {
+	font-family: 'Nunito Sans', sans-serif;
+
+	font-size: 14px;
+}
+
+.signupform-term a {
+	font-family: 'Nunito Sans', sans-serif;
+	height: 100%;
+	color: rgb(238, 77, 45);
 }

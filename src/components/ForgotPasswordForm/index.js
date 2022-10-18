@@ -9,10 +9,12 @@ import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import MailBoxImg from '../../assets/svg/undraw_mailbox_re_dvds.svg';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPasswordForm = () => {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+	const [t, i18n] = useTranslation();
 
 	const [sendedEmail, setSendedEmail] = useState(false);
 
@@ -49,13 +51,15 @@ const ForgotPasswordForm = () => {
 				alt=''
 			/>
 
-			<h1 className='forgotpassword-heading'>Check Your Email!</h1>
+			<h1 className='forgotpassword-heading'>{t('Check Your Email')}!</h1>
 			<span className='forgotpassword-subtext'>
-				A Verification email has been sent to this email address: <br />{' '}
-				<b>{email}</b>
+				{t('A Verification email has been sent to this email address')}:{' '}
+				<br /> <b>{email}</b>
 				<br /> <br />
-				If you haven't receieved the email within a few minutes, please
-				check your spam folder.
+				{t(
+					'If you have not received the email within a few minutes, please check your spam folder',
+				)}
+				.
 			</span>
 
 			<Button
@@ -72,7 +76,7 @@ const ForgotPasswordForm = () => {
 					borderRadius: 45,
 					boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 				}}>
-				Ok
+				{t('Ok')}
 			</Button>
 		</motion.div>
 	) : (
@@ -84,14 +88,18 @@ const ForgotPasswordForm = () => {
 			transition={{ duration: 0.5 }}>
 			<span className='forgotpassword-back'>
 				<NavLink to='/sign-in'>
-					<span style={{ fontSize: 16 }}>&#8592;</span> Back to
-					Sign-in
+					<span style={{ fontSize: 16 }}>&#8592;</span>{' '}
+					{t('Back to Sign-in')}
 				</NavLink>
 			</span>
-			<h1 className='forgotpassword-heading'>Forgot Your Password?</h1>
+			<h1 className='forgotpassword-heading'>
+				{t('Forgot Your Password')}?
+			</h1>
 			<span className='forgotpassword-subtext'>
-				Don't worry! please enter the email address associated with your
-				account.
+				{t(
+					'Do not worry! please enter the email address associated with your account',
+				)}
+				.
 			</span>
 
 			<Form
@@ -116,7 +124,7 @@ const ForgotPasswordForm = () => {
 						},
 					]}>
 					<Input
-						placeholder='Email'
+						placeholder={t('Email')}
 						prefix={
 							<MailOutlined className='site-form-item-icon' />
 						}
@@ -138,7 +146,7 @@ const ForgotPasswordForm = () => {
 							borderRadius: 45,
 							boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 						}}>
-						Send
+						{t('Send')}
 					</Button>
 				</Form.Item>
 			</Form>

@@ -17,8 +17,6 @@ import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { textAlign } from '@mui/system';
 
-import completedImg from '../../assets/svg/undraw_complete_design_re_h75h.svg';
-
 const InValidDisplay = (state) => {
 	const navigate = useNavigate();
 	return (
@@ -29,7 +27,7 @@ const InValidDisplay = (state) => {
 				</h1>
 				<span className='invalidpage-subtext'>
 					Your request to reset your password has expired or the link
-					has already been used.
+					has already been used. Please try again!
 				</span>
 				<Button
 					onClick={() => navigate('/forgot-password')}

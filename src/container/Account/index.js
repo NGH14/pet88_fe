@@ -1,13 +1,16 @@
 import React from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import UpdatePasswordForm from './../../components/UpdatePasswordForm/index';
+import { useNavigate } from 'react-router-dom';
 
 const Account = () => {
-	const { googleSignOut, user } = UserAuth();
+	const { SignOut, user } = UserAuth();
+	const navigate = useNavigate();
 
 	const handleSignOut = async () => {
 		try {
-			await googleSignOut();
+			await SignOut();
+			navigate('/');
 		} catch (error) {
 			console.log(error);
 		}
@@ -17,9 +20,11 @@ const Account = () => {
 		<div className='w-[300px] m-auto'>
 			<h1 className='text-center text-2xl font-bold pt-12'>Account</h1>
 			<div>
-				<p>Welcome, {user?.displayName}</p>
+				<p>Welcome, {user?.displayName?.split(' ').slice(-1)[0]}</p>
 			</div>
-			<button onClick={handleSignOut} className='border py-2 px-5 mt-10'>
+			<button
+				onClick={() => handleSignOut()}
+				className='border py-2 px-5 mt-10'>
 				Logout
 			</button>
 

@@ -2,22 +2,24 @@ import React from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 import './style.css';
 import SignInGoogle from '../SignInGoogle/index';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const SignInForm = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const [emailSignInloadings, setEmailSignInloadings] = useState(false);
+	const [t, i18n] = useTranslation();
+	const { emailSignIn } = UserAuth();
 
 	const navigate = useNavigate();
-	const { emailSignIn } = UserAuth();
 
 	const onFinish = async (e) => {
 		setEmailSignInloadings(true);
@@ -44,11 +46,12 @@ const SignInForm = () => {
 			animate={{ x: 0, opacity: 1 }}
 			exit={{ x: 100, opacity: 0 }}
 			transition={{ duration: 0.5 }}>
-			<h1 className='loginform-heading'>Welcome back!</h1>
+			<h1 className='loginform-heading'>{t('Welcome Back')}!</h1>
 			<span className='loginform-subtext'>
-				It's great to have you back in Pet88 🥰
+				{t("It's great to have you back in Pet88")} 🥰
 			</span>
 			<SignInGoogle
+				label={t('Sign in with Google')}
 				style={{
 					width: '100%',
 					backgroundColor: '#fff',
@@ -59,7 +62,7 @@ const SignInForm = () => {
 			/>
 
 			<div className='loginform-loginby'>
-				<span className='textwithline'>or</span>
+				<span className='textwithline'>{t('or')}</span>
 			</div>
 
 			<Form
@@ -92,7 +95,7 @@ const SignInForm = () => {
 					/>
 				</Form.Item>
 				<Form.Item
-					name='password'
+					name={t('password')}
 					rules={[
 						{
 							required: true,
@@ -103,14 +106,14 @@ const SignInForm = () => {
 						prefix={
 							<LockOutlined className='site-form-item-icon' />
 						}
-						placeholder='Password'
+						placeholder={t('Password')}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 				</Form.Item>
 				<NavLink
 					className='loginform-forgotpassword'
 					to='/forgot-password'>
-					Forgot Password?
+					{t('Forgot Password')}?
 				</NavLink>
 
 				<Form.Item>
@@ -129,14 +132,14 @@ const SignInForm = () => {
 							borderRadius: 5,
 							boxShadow: 'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 						}}>
-						Sign in
+						{t('Sign in')}
 					</Button>
 				</Form.Item>
 			</Form>
 
 			<span className='loginform-subtext_bottom'>
-				Not a Pet88 member?{' '}
-				<NavLink to='/sign-up'>Sign up for free</NavLink>
+				{t('Not a Pet88 member?')}{' '}
+				<NavLink to='/sign-up'>{t('Sign up for free')}</NavLink>
 			</span>
 		</motion.div>
 	);

@@ -2,21 +2,26 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { UserAuth } from '../../context/AuthContext';
 import './style.css';
-import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const SignUpForm = () => {
+	const [displayName, setDisplayName] = React.useState('');
+
 	const [email, setEmail] = React.useState('');
+
 	const [emailStatus, setEmailStatus] = React.useState();
 	const [password, setPassword] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
-	const { createUser } = UserAuth();
+	const { createUser, updateProfile } = UserAuth();
 	const navigate = useNavigate();
+	const [t, i18n] = useTranslation();
+
 	console.log(emailStatus);
 
 	const handleEmail = (e) => {
@@ -26,7 +31,11 @@ const SignUpForm = () => {
 	const onFinish = async (e) => {
 		setLoading(true);
 		try {
-			await createUser(email, password);
+			const { user } = await createUser(email, password);
+			await updateProfile(user, {
+				displayName,
+			});
+
 			navigate('/account');
 			setLoading(false);
 		} catch (e) {
@@ -48,9 +57,10 @@ const SignUpForm = () => {
 			animate={{ x: 0, opacity: 1 }}
 			exit={{ x: -100, opacity: 0 }}
 			transition={{ duration: 0.5 }}>
-			<h1 className='signupform-heading'>Welcome! </h1>
+			<h1 className='signupform-heading'> {t('Welcome')}! </h1>
 			<span className='signupform-subtext'>
-				Xin chào, It's great to have you join in Pet88 🥰
+				{t('Its great to have you join Pet88')}
+				🥰
 			</span>
 
 			<Form
@@ -63,8 +73,24 @@ const SignUpForm = () => {
 				validateTrigger='onBlur'
 				autoComplete='off'>
 				<Form.Item
-					validateStatus={emailStatus}
 					name='username'
+					rules={[
+						{
+							required: true,
+							message: 'Please enter your email!',
+						},
+					]}>
+					<Input
+						onChange={(e) => setDisplayName(e.target.value)}
+						placeholder={t('Fullname')}
+						prefix={
+							<UserOutlined className='site-form-item-icon' />
+						}
+					/>
+				</Form.Item>
+				<Form.Item
+					validateStatus={emailStatus}
+					name='email'
 					rules={[
 						{
 							required: true,
@@ -78,7 +104,7 @@ const SignUpForm = () => {
 					help={emailStatus && 'Email is already used'}>
 					<Input
 						onChange={(e) => handleEmail(e.target.value)}
-						placeholder='Email'
+						placeholder={t('Email')}
 						prefix={
 							<UserOutlined className='site-form-item-icon' />
 						}
@@ -101,7 +127,7 @@ const SignUpForm = () => {
 						prefix={
 							<LockOutlined className='site-form-item-icon' />
 						}
-						placeholder='Password'
+						placeholder={t('Password')}
 					/>
 				</Form.Item>
 				<Form.Item
@@ -130,7 +156,7 @@ const SignUpForm = () => {
 						}),
 					]}>
 					<Input.Password
-						placeholder='Confirm Password'
+						placeholder={t('Confirm Password')}
 						prefix={
 							<LockOutlined className='site-form-item-icon' />
 						}
@@ -151,12 +177,11 @@ const SignUpForm = () => {
 									  ),
 						},
 					]}>
-					<Checkbox>
-						I have read and agreed to the{' '}
-						<a href=''>terms and conditions</a>
+					<Checkbox className='signupform-term'>
+						{t('I have read and agreed to the')}{' '}
+						<NavLink to='./'>{t('terms and conditions')}</NavLink>
 					</Checkbox>
 				</Form.Item>
-				<br />
 				<Form.Item>
 					<Button
 						loading={loading}
@@ -164,14 +189,14 @@ const SignUpForm = () => {
 						disabled={emailStatus}
 						type='primary'
 						htmlType='submit'>
-						Sign Up
+						{t('Sign up')}
 					</Button>
 				</Form.Item>
 			</Form>
 
 			<span className='signupform-subtext_bottom'>
-				Already a Pet88 member?
-				<NavLink to='/sign-in'> Sign in</NavLink>
+				{t('Already a Pet88 member')}?
+				<NavLink to='/sign-in'> {t('Sign in')}</NavLink>
 			</span>
 		</motion.div>
 	);

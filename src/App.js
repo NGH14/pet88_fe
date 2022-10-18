@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes } from 'react-router-dom';
 
@@ -16,30 +16,35 @@ import './App.css';
 import { AuthContextProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import i18n from 'i18next';
+import {
+	LanguageContextProvider,
+	UserLanguage,
+} from './context/LanguageContext';
 
 function App() {
-	console.log(process.env);
-
 	return (
-		<ConfigProvider locale={viVN}>
-			<AuthContextProvider>
-				<BrowserRouter>
-					<ToastContainer
-						position='top-right'
-						autoClose={5000}
-						hideProgressBar={false}
-						newestOnTop={false}
-						closeOnClick
-						rtl={false}
-						pauseOnFocusLoss
-						draggable
-						pauseOnHover
-						theme='light'
-					/>
-					<Routes>{listRoute(routes)}</Routes>
-				</BrowserRouter>
-			</AuthContextProvider>
-		</ConfigProvider>
+		<AuthContextProvider>
+			<LanguageContextProvider>
+				<I18nextProvider i18n={i18n}>
+					<BrowserRouter>
+						<ToastContainer
+							position='top-right'
+							autoClose={5000}
+							hideProgressBar={false}
+							newestOnTop={false}
+							closeOnClick
+							rtl={false}
+							pauseOnFocusLoss
+							draggable
+							pauseOnHover
+							theme='light'
+						/>
+						<Routes>{listRoute(routes)}</Routes>
+					</BrowserRouter>
+				</I18nextProvider>
+			</LanguageContextProvider>
+		</AuthContextProvider>
 	);
 }
 

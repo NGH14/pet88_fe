@@ -6,7 +6,7 @@
 	margin: 0px 4.5em;
 	max-width: 100%;
 	padding: 10px 15px;
-	font-family: 'Poppins', sans-serif !important;
+	font-family: 'Nunito Sans', sans-serif;
 	max-width: 500px;
 	margin: auto;
 }
@@ -35,10 +35,9 @@ label {
 }
 
 .loginform-heading {
-	font-family: 'Poppins', sans-serif;
 	font-style: normal;
-	font-weight: 600;
-	font-size: 2.5em;
+	font-weight: 800;
+	font-size: 3em;
 	line-height: 42px;
 	display: block;
 	margin-block: 1.5em 0.5em;
@@ -47,7 +46,7 @@ label {
 .loginform-subtext {
 	font-style: normal;
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 16px;
 	line-height: 24px;
 	color: #777;
 	margin-bottom: 3em;
@@ -81,21 +80,23 @@ label {
 	position: relative;
 	background-color: white;
 	z-index: 2;
+
 }
 .loginform-subtext_bottom {
 	text-align: center;
-	color: #999;
+	color: #555;
 	font-size: 13px;
-	line-height: 24px;
-	font-family: 'Poppins', sans-serif;
-	font-weight: 500;
+	line-height: 24px;	font-weight: 500;
+
 }
 
 .loginform-forgotpassword {
+	font-family: 'Nunito Sans', sans-serif;
+
 	margin-block: calc(-1em) 1.5em;
 	text-align: right;
 	padding-left: 5px;
 	display: block;
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: 600;
 }

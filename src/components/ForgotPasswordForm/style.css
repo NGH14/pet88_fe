@@ -6,7 +6,7 @@
 	justify-content: center;
 	height: 60vh;
 	padding: 10px 15px;
-	font-family: "Poppins", sans-serif !important;
+	font-family: 'Nunito Sans', sans-serif;
 	max-width: 500px;
     margin: auto;
 }
@@ -32,10 +32,10 @@
 }
 
 .forgotpassword-heading {
-	font-family: "Poppins", sans-serif;
+	font-family: 'Nunito Sans', sans-serif;
 	font-style: normal;
-	font-weight: 600;
-	font-size: 2.3em;
+	font-weight: 700;
+	font-size: 2.5em;
 	line-height: 42px;
     display: block;
     margin-block: 0.5em 0.5em;
@@ -56,7 +56,7 @@
 	color: #999;
 	font-size: 14px;
 	line-height: 24px;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Nunito Sans', sans-serif;
 	font-weight: 500;
 }
 
@@ -64,6 +64,6 @@
 	color: #999;
 	font-size: 13px;
 	line-height: 24px;
-	font-family: 'Poppins', sans-serif;
-	font-weight: 500;
+	font-family: 'Nunito Sans', sans-serif !important;
+	font-weight: 400;
 }

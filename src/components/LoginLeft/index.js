@@ -8,6 +8,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import SignUpForm from '../SignUpForm';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 import { UserAuth } from '../../context/AuthContext';
+import ChangeLanguage from './../ChangeLanguage/index';
 
 const LeftSideSignin = ({ src }) => {
 	const locate = useLocation();
@@ -15,9 +16,18 @@ const LeftSideSignin = ({ src }) => {
 	return (
 		<>
 			<div className='loginpage-leftside'>
-				<NavLink to='/'>
-					<img src={src} alt='' className='leftside_logo' />
-				</NavLink>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'space-between',
+						marginInline: 10,
+					}}>
+					<NavLink to='/'>
+						<img src={src} alt='' className='leftside_logo' />
+					</NavLink>
+					<ChangeLanguage />
+				</div>
 				{(() => {
 					switch (locate.pathname) {
 						case '/sign-in':

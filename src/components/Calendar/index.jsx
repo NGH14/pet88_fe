@@ -10,12 +10,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment'; 
 import 'moment/locale/vi';
 import 'moment/locale/en-gb';
+import { UserLanguage } from '../../context/LanguageContext';
 
 
-// moment.locale('en-gb');
-moment.locale('vi'); 
-
-const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 
 const events = [
@@ -40,6 +37,26 @@ const events = [
 export const Calendar = () => {
 	const [newEvent, setNewEvent] = useState({ title: '', start: '', end: '' });
 	const [allEvents, setAllEvents] = useState(events);
+	const { SetLanguage, lang } = UserLanguage();
+	
+	switch (lang) {
+		case "en":
+	moment.locale('en-gb');
+			
+			break;
+			case "vi":
+				moment.locale('vi'); 
+						
+						break;
+	
+	default: 
+	moment.locale('en-gb');
+			break;
+	}
+
+	
+	const localizer = momentLocalizer(moment) 
+	
 
 	function handleAddEvent() {
 		for (let i = 0; i < allEvents.length; i++) {

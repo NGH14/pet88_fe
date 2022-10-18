@@ -7,6 +7,7 @@ import { UserAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import InValidDisplay from './../../components/InvalidCodeReset/index';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useTranslation } from 'react-i18next';
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
 }
@@ -15,6 +16,7 @@ export default function ResetPassword() {
 	const { user, VerifyPasswordResetCode } = UserAuth();
 	const [verified, setVerified] = React.useState();
 	const [loading, setLoading] = React.useState(true);
+	const [t] = useTranslation();
 
 	const navigate = useNavigate();
 	const query = useQuery();
