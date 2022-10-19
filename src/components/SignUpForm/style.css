@@ -104,7 +104,7 @@
 }
 .signupform-subtext_bottom{
 	text-align: center;
-	color: #999;
+	color: #666;
 	font-size: 14px;
 	line-height: 24px;
 	font-weight: 500;
@@ -122,14 +122,3 @@
 	 	box-shadow: rgb(0 0 0 / 25%) 0px 2px 4px 0px;
 }
 
-.signupform-term {
-	font-family: 'Nunito Sans', sans-serif;
-
-	font-size: 14px;
-}
-
-.signupform-term a {
-	font-family: 'Nunito Sans', sans-serif;
-	height: 100%;
-	color: rgb(238, 77, 45);
-}

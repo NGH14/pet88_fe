@@ -9,10 +9,13 @@ import SignUpForm from '../SignUpForm';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 import { UserAuth } from '../../context/AuthContext';
 import ChangeLanguage from './../ChangeLanguage/index';
+import { useTranslation } from 'react-i18next';
 
 const LeftSideSignin = ({ src }) => {
 	const locate = useLocation();
 	const { user } = UserAuth();
+	const [t, i18n] = useTranslation();
+
 	return (
 		<>
 			<div className='loginpage-leftside'>
@@ -28,18 +31,27 @@ const LeftSideSignin = ({ src }) => {
 					</NavLink>
 					<ChangeLanguage />
 				</div>
-				{(() => {
-					switch (locate.pathname) {
-						case '/sign-in':
-							return <LoginForm />;
-						case '/sign-up':
-							return <SignUpForm />;
-						case '/forgot-password':
-							return <ForgotPasswordForm />;
-						default:
-							return null;
-					}
-				})()}
+				<div style={{ width: '100%' }}>
+					{(() => {
+						switch (locate.pathname) {
+							case '/sign-in':
+								return <LoginForm />;
+							case '/sign-up':
+								return <SignUpForm />;
+							case '/forgot-password':
+								return <ForgotPasswordForm />;
+							default:
+								return null;
+						}
+					})()}
+				</div>
+
+				<p className='termofuse'>
+					{t('By continue using the webiste, you agree to the')}{' '}
+					<NavLink to='/' target='_blank'>
+						{t('Terms of use')}
+					</NavLink>
+				</p>
 			</div>
 		</>
 	);

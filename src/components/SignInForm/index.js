@@ -16,7 +16,7 @@ const SignInForm = () => {
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const [emailSignInloadings, setEmailSignInloadings] = useState(false);
-	const [t, i18n] = useTranslation();
+	const [t] = useTranslation();
 	const { emailSignIn } = UserAuth();
 
 	const navigate = useNavigate();

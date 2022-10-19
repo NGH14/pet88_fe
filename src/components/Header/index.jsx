@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { Button } from '../Button';
 import './header.css';
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }) => (
+export const Header = ({ user="Nghia", onLogin, onLogout, onCreateAccount }) => (
   <header>
-    <div className="wrapper">
+    <div className="header-wrapper">
       <div>
         <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
           <g fill="none" fillRule="evenodd">
@@ -45,11 +45,13 @@ export const Header = ({ user, onLogin, onLogout, onCreateAccount }) => (
   </header>
 );
 
+export default Header;
+
 Header.propTypes = {
   user: PropTypes.shape({}),
-  onLogin: PropTypes.func.isRequired,
-  onLogout: PropTypes.func.isRequired,
-  onCreateAccount: PropTypes.func.isRequired,
+  onLogin: PropTypes.func,
+  onLogout: PropTypes.func,
+  onCreateAccount: PropTypes.func,
 };
 
 Header.defaultProps = {

@@ -25,6 +25,7 @@ import { Calendar } from '../../components/Calendar';
 import GoogleAuthButton from '../../components/GoogleAuthButton/';
 import { UserLanguage } from '../../context/LanguageContext';
 import { momentLocalizer } from 'react-big-calendar';
+import { Link } from 'react-router-dom';
 // translation catalog
 
 // initialize i18next with catalog and language to use

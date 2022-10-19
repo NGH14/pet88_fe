@@ -6,7 +6,9 @@
   "Sign in with Google": "Đăng nhập bằng Google",
   "Sign in": "Đăng nhập",
   "Sign up": "Đăng ký",
-  "Fullname": "Tên",
+  "Fullname": "Họ và tên của bạn",
+"Name": "Tên",
+
   "Send": "Gửi",
 
 
@@ -16,7 +18,6 @@
   "Not a Pet88 member?": "Chưa là thành viên của Pet88?",
 "Welcome": "Xin Chào",
 "Its great to have you join Pet88": "Ôi thật tuyệt khi bạn tham gia Pet88",
-"Name": "Tên",
 "Confirm Password": "Xác nhận mật khẩu",
     "I have read and agreed to the":"Tôi đã đọc và đồng ý với",
    "terms and conditions": " các điều khoản và điều kiện",
@@ -26,6 +27,10 @@
     "Do not worry! please enter the email address associated with your account": "Đừng lo! Vui lòng nhập địa chỉ email liên kết với tài khoản",
     "Check Your Email": "Hãy Kiểm Tra Email",
     "A Verification email has been sent to this email address": "Email xác minh đã được gửi đến địa chỉ email này",
-    "If you have not received the email within a few minutes, please check your spam folder": "Nếu bạn không nhận được email trong vòng vài phút, vui lòng kiểm tra thư mục spam"
+    "If you have not received the email within a few minutes, please check your spam folder": "Nếu bạn không nhận được email trong vòng vài phút, vui lòng kiểm tra thư mục spam",
+    "You will be so happy with our paw-positively adorable pet care service": "Tôi tin rằng bạn sẽ rất hài lòng với dịch vụ chăm sóc thú cưng của chúng tôi",
+    "Pet88 is made with ❤️ for pets": "Pet88 xuất phát từ ❤️ dành cho thú cưng",
+    "By continue using the webiste, you agree to the": "Việc bạn tiếp tục sử dụng trang web này đồng nghĩa bạn đồng ý với",
+    "Terms of use": "Điều khoản sử dụng"
 
   }

@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MailOutlined } from '@ant-design/icons';
 
 import { UserAuth } from '../../context/AuthContext';
 import './style.css';
@@ -106,7 +107,7 @@ const SignUpForm = () => {
 						onChange={(e) => handleEmail(e.target.value)}
 						placeholder={t('Email')}
 						prefix={
-							<UserOutlined className='site-form-item-icon' />
+							<MailOutlined className='site-form-item-icon' />
 						}
 					/>
 				</Form.Item>
@@ -162,26 +163,7 @@ const SignUpForm = () => {
 						}
 					/>
 				</Form.Item>
-				<Form.Item
-					name='agreement'
-					valuePropName='checked'
-					rules={[
-						{
-							validator: (_, value) =>
-								value
-									? Promise.resolve()
-									: Promise.reject(
-											new Error(
-												'Should accept agreement',
-											),
-									  ),
-						},
-					]}>
-					<Checkbox className='signupform-term'>
-						{t('I have read and agreed to the')}{' '}
-						<NavLink to='./'>{t('terms and conditions')}</NavLink>
-					</Checkbox>
-				</Form.Item>
+
 				<Form.Item>
 					<Button
 						loading={loading}
