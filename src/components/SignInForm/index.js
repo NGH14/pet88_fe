@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -34,6 +34,10 @@ const SignInForm = () => {
 			setEmailSignInloadings(false);
 		}
 	};
+
+	useEffect(() => {
+		document.title = `${t('Sign in')} | Pet88`;
+	});
 
 	const onFinishFailed = (errorInfo) => {
 		console.log('Failed:', errorInfo);

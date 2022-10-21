@@ -11,7 +11,7 @@ export const routes = [
 		path: '/',
 		element: React.lazy(() => import('../container/Homepage')),
 		private: false,
-		header: React.lazy(() => import('../components/Header')),
+		// header: React.lazy(() => import('../components/Navbar/')),
 	},
 
 	{
@@ -38,7 +38,7 @@ export const routes = [
 		path: '/terms',
 		element: React.lazy(() => import('../container/Terms')),
 		private: false,
-		header: React.lazy(() => import('../components/Header')),
+		header: React.lazy(() => import('../components/Navbar')),
 	},
 	{
 		path: '/account',

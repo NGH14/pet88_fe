@@ -4,7 +4,7 @@ import React from 'react';
 export const Card = () => (
   <>
     <AntdCard
-      
+        id='card'
       title="Default size card"
       extra={<a href="#">More</a>}
       style={{

@@ -1,0 +1,36 @@
+
+.flexleft {
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
+    gap: 20px;
+    margin-right: auto;
+}
+
+.flexleft a:hover,.flexleft {
+  color: rgb(249,107,24) !important;
+}
+
+.pet88-menu .ant-drawer-body{
+    display: flex !important;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    /* justify-content: space-between; */
+
+    /* background-color: red; */
+}
+.pet88-menu .drawer-auth {
+    margin-block: auto 10px;
+}
+
+@media only screen and (max-width: 767px) {
+
+    .flexleft {
+        margin-inline: auto;
+    }
+    
+  
+  }
