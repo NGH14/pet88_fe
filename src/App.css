@@ -69,3 +69,7 @@ textarea {
 	font-size: 13px !important;
 	padding-left: 5px;
 }
+
+.ant-layout-footer{
+	margin-top: 50px;
+}

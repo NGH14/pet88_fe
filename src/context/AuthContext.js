@@ -11,13 +11,14 @@ import {
 	updatePassword,
 	confirmPasswordReset,
 	updateProfile,
+	getIdToken,
 } from 'firebase/auth';
 import { auth } from '../utils/firebase';
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = React.useState({});
-	console.log(user);
+	const [token, setToken] = React.useState('');
 
 	const googleSignIn = () => {
 		const provider = new GoogleAuthProvider();
@@ -54,6 +55,13 @@ export const AuthContextProvider = ({ children }) => {
 	React.useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
 			setUser(currentUser);
+			if (currentUser) {
+				currentUser.getIdToken().then(function (idToken) {
+					// <------ Check this line
+					console.log(idToken); // It shows the Firebase token now
+					setToken(idToken);
+				});
+			}
 		});
 		return () => {
 			unsubscribe();
@@ -63,12 +71,13 @@ export const AuthContextProvider = ({ children }) => {
 	return (
 		<AuthContext.Provider
 			value={{
+				user,
+				token,
 				VerifyPasswordResetCode,
 				googleSignIn,
 				SignOut,
 				createUser,
 				emailSignIn,
-				user,
 				forgotPassword,
 				UpdatePassword,
 				ConfirmResetPassword,
