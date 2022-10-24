@@ -2,108 +2,38 @@
 general 
 -------
 */
-.title-homepage{
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 1em;
-  color: #999;
-  margin: 15px;
-  padding: 10px 5px;
-}
 
-.wrap-content{
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 1em;
-  color: #999;
-  margin: 15px;
-  padding: 10px 5px;
-}
-
-.swiper {
-  width: 100%;
-  height: 100%;
-  max-width: 1200px;
+.account-page {
   border-radius: 45px;
-  border: 0.5px solid #999;
-  padding: 20px;
+  padding: 50px;
   display: flex;
-  justify-content: center;
-}
-
-.swiper-slide {
-  text-align: center;
-  font-size: 18px;
-  background: #fff;
-  margin-inline: auto;
-  /* Center slide text vertically */
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  max-width: 80px;
+  justify-content: space-around;
+  flex-direction: column;
   height: 100%;
-  object-fit: cover;
+  gap: 15px;
 }
 
-.slider-beforeafter {
- margin: 0 auto 80px auto; 
-  padding: 10px;
- display: flex;
- align-items: center;
- flex-wrap: wrap;
- justify-content: center;
- gap: 35px;
+.account-page_title {
+  text-transform: capitalize;
+  font-size: 3rem;
+  font-weight: bold;
 }
 
-.slider-contain {
- max-width: 400px !important;
+.form-account {
+  width: 100%;
 
-}
-.slider-text_header{
-font-weight: 600;
-color: #777;
-font-size: 25px;
-font-style: italic;
-}
-
-.slider-text_span{
-  text-align: right;
-font-weight: 600;
-
-  }
-
-.slider-contain img {
-  border-radius: 45px;
-  height: 400px;
-}
-
-
-
-
-
-.grey {
-  background-color: rgb(245, 242, 240);
-  padding: 30px 15px;
-  border-radius:  45px;
-  margin-top: 30px;
-}
- .countup-container{ 
   
-  display: flex;
+  background-color: white;
+  padding: 30px 20px 10px;
+}
+
+
+
+
+
+
+ .countup-container{ 
+  display:flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
@@ -131,19 +61,18 @@ font-weight: 600;
 
  .countup-text{
   font-family: 'Nunito Sans', sans-serif;
-
   font-size: 1.6rem;
   font-weight: 600;
 
  }
 
 
-  .ant-layout {
-    background: #fff !important;
+  .accountLayout {
+    background-color: rgb(248, 249, 255) !important;
   }
   
-  .mainLayout .ant-layout-header {
-    background-color: transparent;
+  .accountLayout .ant-layout-header {
+    background-color: rgb(248, 249, 255);
     padding: 0;
     height: auto;
     line-height: 1.6;
@@ -320,7 +249,7 @@ font-weight: 600;
   }
   
   @media only screen and (max-width: 767px) {
-    .mainLayout {
+    .accountLayout {
       font-size: 12px;
     }
     .swiper-slide img {

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-export default function ListOfUser({ token }) {
+import { UserAuth } from '../../context/AuthContext';
+export default function ListOfUser() {
+	const { token } = UserAuth();
 	useEffect(() => {
 		if (token) {
 			fetchData(token);

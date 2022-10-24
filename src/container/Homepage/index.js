@@ -32,8 +32,7 @@ import GoogleAuthButton from '../../components/GoogleAuthButton/';
 import { UserLanguage } from '../../context/LanguageContext';
 import { momentLocalizer } from 'react-big-calendar';
 import { Link } from 'react-router-dom';
-import HomeBanner from './../../components/HomeBanner/index';
-import HeroImage from './../../components/HeroImage/index';
+import HeroImage from '../../components/HeroImageHomepage/index';
 // translation catalog
 import 'react-before-after-slider-component/dist/build.css';
 
@@ -215,6 +214,7 @@ function Homepage() {
 						</div>
 					</div>
 					<div className='grey'>
+						<ListOfUser></ListOfUser>
 						<ScrollTrigger onEnter={() => setCountUp(true)}>
 							{countUp && (
 								<div className='countup-container'>

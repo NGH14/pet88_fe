@@ -15,7 +15,6 @@ import SignInGoogle from '../SignInGoogle/index';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { textAlign } from '@mui/system';
 
 const InValidDisplay = (state) => {
 	const navigate = useNavigate();

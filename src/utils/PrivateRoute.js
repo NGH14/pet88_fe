@@ -4,7 +4,7 @@ import { UserAuth } from '../context/AuthContext';
 export const PrivateRoute = ({ children }) => {
 	const { user } = UserAuth();
 	if (!user) {
-		return <Navigate to='/signin' />;
+		return <Navigate to='/sign-in' />;
 	}
 
 	return children;

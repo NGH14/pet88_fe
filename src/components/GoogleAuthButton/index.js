@@ -1,9 +1,9 @@
-import { Button } from 'antd';
-import React from 'react';
+import { Button, Dropdown, Menu, message, Space, Tooltip } from 'antd';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext';
 import { ArrowRightOutlined } from '@ant-design/icons';
-
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import './style.css';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
@@ -35,8 +35,22 @@ margin-bottom: 0;
 
 `;
 
-function AuthButton({ TextColor }) {
+const handleButtonClick = (e) => {
+	message.info('Click on left button.');
+	console.log('click left button', e);
+};
+const handleMenuClick = (e) => {
+	console.log(e);
+
+	e.action();
+};
+
+function AuthButton({ TextColor, FullWitdh }) {
 	console.log(TextColor);
+	const [collapsed, setCollapsed] = useState(false);
+	const toggleCollapsed = () => {
+		setCollapsed(!collapsed);
+	};
 	const { user, SignOut } = UserAuth();
 	const [t] = useTranslation();
 
@@ -50,11 +64,25 @@ function AuthButton({ TextColor }) {
 
 	return (
 		<div className='authbutton'>
-			<h1 className='authbutton-text'>
-				{user?.displayName && `hi ${user?.displayName}`}
-			</h1>
 			{user ? (
-				<button onClick={handleSignOut}>Logout</button>
+				<NavLink
+					to='/account'
+					style={{
+						display: FullWitdh && 'none',
+						width: FullWitdh && '100%',
+						padding: 15,
+						transition: 'color 0.5s ease-in-out',
+						color: TextColor,
+						fontFamily: 'Nunito Sans',
+						cursor: 'pointer',
+						textTransform: 'uppercase',
+						fontWeight: 700,
+						fontSize: FullWitdh ? 16 : 14,
+						margin: 0,
+					}}>
+					{user?.displayName &&
+						` ${user?.displayName?.split(' ').slice(-1)[0]}`}
+				</NavLink>
 			) : (
 				<>
 					<NavLink to='/sign-in'>

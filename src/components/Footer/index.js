@@ -91,16 +91,15 @@ export default function FooterWave() {
 								className='footer-menu-list'>
 								<li className='menu-item menu-item-type-custom menu-item-object-custom'>
 									<p>
-										{t(
-											' 418 Truong Sa, Phu Nhuan, Ho Chi Minh City',
-										)}
+										{' '}
+										418 Truong Sa, Phu Nhuan,{' '}
+										{t('Ho Chi Minh City')}
 									</p>
 								</li>
 								<li className='menu-item menu-item-type-custom menu-item-object-custom'>
 									<p>
-										{t(
-											' 111 Xuan Thuy, Thao Dien, Ho Chi Minh City',
-										)}
+										969 Xuan Thuy, Thao Dien,{' '}
+										{t('Ho Chi Minh City')}
 									</p>
 								</li>
 							</ul>

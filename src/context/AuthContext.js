@@ -57,8 +57,7 @@ export const AuthContextProvider = ({ children }) => {
 			setUser(currentUser);
 			if (currentUser) {
 				currentUser.getIdToken().then(function (idToken) {
-					// <------ Check this line
-					console.log(idToken); // It shows the Firebase token now
+					console.log(idToken);
 					setToken(idToken);
 				});
 			}
