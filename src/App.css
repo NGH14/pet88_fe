@@ -1,15 +1,11 @@
 
 html {
-	font-family: 'Nunito Sans', 'Poppins','Quicksand','Roboto' ,sans-serif;
+	font-family: 'Nunito Sans', 'Quicksand','Poppins','Roboto' ,sans-serif;
 	scroll-behavior: smooth;
 	transition: all ease-in-out 1s;
 	font-size: 62.5%;
 	height: 100%;
 
-}
-
-a {
-	font-family: 'Poppins',sans-serif;
 }
 
 
@@ -44,11 +40,7 @@ textarea {
 	outline: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-	.App-logo {
-		animation: App-logo-spin infinite 20s linear;
-	}
-}
+
 
 .App-header {
 	background-color: #282c34;

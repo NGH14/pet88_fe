@@ -10,6 +10,7 @@ import { UserAuth } from '../../context/AuthContext';
 import './style.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import AddUser from './../AddUser/index';
 
 const SignUpForm = () => {
 	const [displayName, setDisplayName] = React.useState('');
@@ -19,11 +20,9 @@ const SignUpForm = () => {
 	const [emailStatus, setEmailStatus] = React.useState();
 	const [password, setPassword] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
-	const { createUser, updateProfile } = UserAuth();
+	const { createUser, updateProfile, AddUserToDB } = UserAuth();
 	const navigate = useNavigate();
 	const [t, i18n] = useTranslation();
-
-	console.log(emailStatus);
 
 	const handleEmail = (e) => {
 		setEmail(e);
@@ -33,11 +32,9 @@ const SignUpForm = () => {
 		setLoading(true);
 		try {
 			const { user } = await createUser(email, password);
-			await updateProfile(user, {
-				displayName,
-			});
-
-			navigate('/account');
+			await AddUserToDB(user, { name: displayName });
+			localStorage.setItem('name', displayName);
+			navigate('/');
 			setLoading(false);
 		} catch (e) {
 			toast.error('The email already in use');

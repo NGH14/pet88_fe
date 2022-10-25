@@ -1,7 +1,7 @@
 import { Select, Space } from 'antd';
 import { GlobalOutlined, CaretDownOutlined } from '@ant-design/icons';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
 const { Option } = Select;
@@ -11,9 +11,10 @@ const ChangeLanguage = ({ TextColor = 'black', fullWidth }) => {
 	const { lang, SetLanguage } = UserLanguage();
 	const handleChange = (lng) => {
 		i18n.changeLanguage(lng);
+		localStorage.setItem('lng', lng);
 		SetLanguage(lng);
 	};
-	console.log(fullWidth);
+
 	return (
 		<Select
 			suffixIcon={

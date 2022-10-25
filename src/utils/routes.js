@@ -10,7 +10,6 @@ export const listRoute = (list) => {
 				path={route.path}
 				element={
 					<React.Suspense fallback={<LoadingSpinner />}>
-						{route?.header && <route.header />}
 						{route.private ? (
 							<PrivateRoute>
 								<route.element />

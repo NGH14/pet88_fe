@@ -13,7 +13,6 @@ import './style.css';
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { UserAuth } from '../../context/AuthContext';
-const { Link } = Anchor;
 
 function AppHeader() {
 	const locate = useLocation();
@@ -23,7 +22,8 @@ function AppHeader() {
 	const [visible, setVisible] = useState(false);
 	const { t } = useTranslation();
 
-	const handleSignOut = async () => {
+	const handleSignOut = async (e) => {
+		e.preventDefault();
 		try {
 			await SignOut();
 			navigate('/sign-in');
@@ -448,7 +448,9 @@ function AppHeader() {
 											<Button
 												style={{ fontWeight: '700' }}
 												type='text'
-												onClick={handleSignOut}
+												onClick={(e) =>
+													handleSignOut(e)
+												}
 												icon={
 													<LogoutOutlined
 														style={{

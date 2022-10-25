@@ -22,7 +22,6 @@ export default function ResetPassword() {
 	const query = useQuery();
 
 	const oobCode = query.get('oobCode');
-	console.log(verified);
 	const onFinish = async () => {
 		try {
 			await VerifyPasswordResetCode(oobCode);

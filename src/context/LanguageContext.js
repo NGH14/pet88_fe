@@ -1,15 +1,15 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { auth } from '../utils/firebase';
 
 const LanguageContext = createContext();
 
 export const LanguageContextProvider = ({ children }) => {
-	const [lang, setLang] = React.useState('en');
+	const [lang, setLang] = React.useState(localStorage.getItem('lng') || 'en');
+
 	console.log(lang);
 
 	const SetLanguage = (lg) => {
-		auth.languageCode = { lang };
-		return setLang(lg);
+		setLang(lg);
 	};
 
 	return (

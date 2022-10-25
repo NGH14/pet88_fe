@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { db } from '../../utils/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { storage } from '../../utils/firebase';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 
 export default function AddUser() {
 	const [file, setFile] = useState('');
 
 	const handleAdd = async (e) => {
 		e.preventDefault();
-		await addDoc(collection(db, 'cities'), {
-			name: 'Los Angeles',
-			state: ' CA',
-			country: 'USA',
-		});
+		// await addDoc(collection(storage, 'cities'));
+		await setDoc(doc(storage, 'cities', 'dsadsadsadsad'), { test: 'test' });
 	};
 	return (
 		<div>

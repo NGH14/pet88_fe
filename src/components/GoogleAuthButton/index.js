@@ -46,31 +46,19 @@ const handleMenuClick = (e) => {
 };
 
 function AuthButton({ TextColor, FullWitdh }) {
-	console.log(TextColor);
 	const [collapsed, setCollapsed] = useState(false);
-	const toggleCollapsed = () => {
-		setCollapsed(!collapsed);
-	};
+
 	const { user, SignOut } = UserAuth();
 	const [t] = useTranslation();
 
-	const handleSignOut = async () => {
-		try {
-			await SignOut();
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	return (
 		<div className='authbutton'>
-			{user ? (
+			{user || localStorage.getItem('name') ? (
 				<NavLink
 					to='/account'
 					style={{
 						display: FullWitdh && 'none',
 						width: FullWitdh && '100%',
-						padding: 15,
 						transition: 'color 0.5s ease-in-out',
 						color: TextColor,
 						fontFamily: 'Nunito Sans',
@@ -80,8 +68,7 @@ function AuthButton({ TextColor, FullWitdh }) {
 						fontSize: FullWitdh ? 16 : 14,
 						margin: 0,
 					}}>
-					{user?.displayName &&
-						` ${user?.displayName?.split(' ').slice(-1)[0]}`}
+					{localStorage.getItem('name') || ` ${user?.name}`}
 				</NavLink>
 			) : (
 				<>

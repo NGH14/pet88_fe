@@ -11,7 +11,6 @@ export const routes = [
 		path: '/',
 		element: React.lazy(() => import('../container/Homepage')),
 		private: false,
-		// header: React.lazy(() => import('../components/Navbar/')),
 	},
 
 	{

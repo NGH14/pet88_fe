@@ -1,6 +1,5 @@
 import React from 'react';
 import { UserAuth } from '../../context/AuthContext';
-import UpdatePasswordForm from './../../components/UpdatePasswordForm/index';
 import { Col, Divider, Row } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
 
@@ -19,8 +18,7 @@ const Account = () => {
 	const [displayName, setDisplayName] = useState('');
 	const [file, setFile] = useState('');
 
-	const { SignOut, user, updateProfile } = UserAuth();
-	console.log(user);
+	const { user, updateProfile } = UserAuth();
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 
@@ -32,7 +30,6 @@ const Account = () => {
 				displayName,
 			});
 
-			navigate('/account');
 			setLoading(false);
 		} catch (e) {
 			console.log(e.message);
