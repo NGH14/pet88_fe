@@ -1,7 +1,9 @@
-.subheader {
-    margin-right: 50px;
+.subheader-right  {
+    width: 100%;
     font-size: 12px !important;
-    max-height: 30px;
-    text-align: right;
-    padding: 5px;
+    max-height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px;
 }

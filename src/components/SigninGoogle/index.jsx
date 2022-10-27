@@ -18,15 +18,14 @@ const antIcon = (
 	/>
   );
 export default function SignInGoogle({ ...props }) {
-	const { googleSignIn, AddUserToDB } = UserAuth();
+	const { googleSignIn, AddUserToDB, user } = UserAuth();
 	const [loading, setLoading] = useState(false);
 
 	const handleGoogleSignIn = async () => {
 		setLoading(true)
 		try {
-			const { user } = await 			 googleSignIn();
-			await AddUserToDB(user,{})
-			setLoading(false)
+			const { user } =  await googleSignIn();
+			 AddUserToDB(user,{})
 		} catch (error) {
 			toast.error('Fail to login in Google')
 			setLoading(false)

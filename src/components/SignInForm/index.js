@@ -26,6 +26,7 @@ const SignInForm = () => {
 
 		try {
 			await emailSignIn(email, password);
+
 			setEmailSignInloadings(false);
 			navigate('/', { replace: true });
 		} catch (e) {

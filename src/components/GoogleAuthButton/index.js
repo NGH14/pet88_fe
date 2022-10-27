@@ -53,24 +53,7 @@ function AuthButton({ TextColor, FullWitdh }) {
 
 	return (
 		<div className='authbutton'>
-			{user || localStorage.getItem('name') ? (
-				<NavLink
-					to='/account'
-					style={{
-						display: FullWitdh && 'none',
-						width: FullWitdh && '100%',
-						transition: 'color 0.5s ease-in-out',
-						color: TextColor,
-						fontFamily: 'Nunito Sans',
-						cursor: 'pointer',
-						textTransform: 'uppercase',
-						fontWeight: 700,
-						fontSize: FullWitdh ? 16 : 14,
-						margin: 0,
-					}}>
-					{localStorage.getItem('name') || ` ${user?.name}`}
-				</NavLink>
-			) : (
+			{!user && !localStorage.getItem('name') && (
 				<>
 					<NavLink to='/sign-in'>
 						<SignInButton

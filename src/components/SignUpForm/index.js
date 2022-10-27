@@ -33,6 +33,7 @@ const SignUpForm = () => {
 		try {
 			const { user } = await createUser(email, password);
 			await AddUserToDB(user, { name: displayName });
+
 			localStorage.setItem('name', displayName);
 			navigate('/');
 			setLoading(false);

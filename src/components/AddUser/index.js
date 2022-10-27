@@ -7,8 +7,6 @@ export default function AddUser() {
 
 	const handleAdd = async (e) => {
 		e.preventDefault();
-		// await addDoc(collection(storage, 'cities'));
-		await setDoc(doc(storage, 'cities', 'dsadsadsadsad'), { test: 'test' });
 	};
 	return (
 		<div>

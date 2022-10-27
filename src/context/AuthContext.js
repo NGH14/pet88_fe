@@ -1,5 +1,6 @@
 import React, { useContext, createContext } from 'react';
 import {
+	reauthenticateWithCredential,
 	verifyPasswordResetCode,
 	sendPasswordResetEmail,
 	GoogleAuthProvider,
@@ -12,14 +13,20 @@ import {
 	confirmPasswordReset,
 	updateProfile,
 	getIdToken,
+	EmailAuthProvider,
 } from 'firebase/auth';
 import { auth, storage } from '../utils/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { async } from '@firebase/util';
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = React.useState();
+	const [credential, setCredential] = React.useState();
+	console.log(credential);
+	const [firebaseAuthUser, setFireBaseAuthUser] = React.useState({});
+
 	const [token, setToken] = React.useState('');
 	const googleSignIn = () => {
 		const provider = new GoogleAuthProvider();
@@ -29,11 +36,26 @@ export const AuthContextProvider = ({ children }) => {
 		return createUserWithEmailAndPassword(auth, email, password);
 	};
 
+	const updateUser = async (uid, name) => {
+		const userRef = doc(storage, 'users', uid);
+		return await updateDoc(userRef, {
+			name,
+		});
+	};
+
 	const emailSignIn = (email, password) => {
 		return signInWithEmailAndPassword(auth, email, password);
 	};
-	const UpdatePassword = (password) => {
-		return updatePassword(user, password);
+	const UpdatePassword = async (oldPassword, password) => {
+		const credential = EmailAuthProvider.credential(
+			user.email,
+			oldPassword,
+		);
+
+		console.log({ credential });
+		await reauthenticateWithCredential(auth.currentUser, credential);
+
+		return updatePassword(firebaseAuthUser, password);
 	};
 	const VerifyPasswordResetCode = (code) => {
 		return verifyPasswordResetCode(auth, code);
@@ -56,13 +78,16 @@ export const AuthContextProvider = ({ children }) => {
 	}
 
 	const AddUserToDB = async (user, additionalData) => {
-		const docRef = doc(storage, 'users', user?.uid);
+		const docRef = await doc(storage, 'users', user?.uid);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
-			await setDoc(doc(storage, 'users', user?.uid), {
+			return await setDoc(doc(storage, 'users', user?.uid), {
 				createAt: new Date(),
+				id: user.uid,
 				email: user.email,
+				photoURL: user.photoURL,
+				number: user?.number || null,
 				name: user.displayName,
 				role: additionalData.role || 'user',
 				...additionalData,
@@ -83,18 +108,18 @@ export const AuthContextProvider = ({ children }) => {
 		const docRef = doc(storage, 'users', userID);
 		const docSnap = await getDoc(docRef);
 		if (docSnap.exists()) {
-			localStorage.setItem('name', docSnap.data().name);
 			setUser(docSnap.data());
+			localStorage.setItem('name', docSnap.data().name);
 		}
 	};
 
 	React.useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-			UserInfo(currentUser.uid);
+			setFireBaseAuthUser(currentUser);
 			if (currentUser) {
-				CheckRole(currentUser.uid);
+				UserInfo(currentUser?.uid);
+				CheckRole(currentUser?.uid);
 				currentUser.getIdToken().then(function (idToken) {
-					console.log(idToken);
 					setToken(idToken);
 				});
 			}
@@ -109,6 +134,8 @@ export const AuthContextProvider = ({ children }) => {
 	return (
 		<AuthContext.Provider
 			value={{
+				UpdatePassword,
+				updateUser,
 				CheckRole,
 				user,
 				AddUserToDB,

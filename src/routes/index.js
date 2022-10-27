@@ -1,5 +1,3 @@
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
-
 import React from 'react';
 export const routes = [
 	{

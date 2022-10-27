@@ -7,22 +7,23 @@ general
   border-radius: 45px;
   padding: 50px;
   display: flex;
-  justify-content: space-around;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   gap: 15px;
+
 }
 
 .account-page_title {
   text-transform: capitalize;
   font-size: 3rem;
   font-weight: bold;
+  color: rgb(63, 63, 122);
 }
 
 .form-account {
   width: 100%;
-
-  
+  border-radius: 15px;
+  box-shadow: rgb(153 196 227 / 25%) 0px 2px 8px;
   background-color: white;
   padding: 30px 20px 10px;
 }

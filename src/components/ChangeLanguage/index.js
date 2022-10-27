@@ -27,7 +27,7 @@ const ChangeLanguage = ({ TextColor = 'black', fullWidth }) => {
 			bordered={false}
 			defaultValue={lang}
 			style={{
-				width: fullWidth ? '100%' : 115,
+				width: fullWidth ? '100%' : 100,
 				fontFamily: 'Nunito Sans',
 				color: TextColor,
 				fontSize: 12,
@@ -36,16 +36,18 @@ const ChangeLanguage = ({ TextColor = 'black', fullWidth }) => {
 			<Option
 				value='en'
 				style={{
-					width: fullWidth ? '100%' : 115,
+					width: fullWidth ? '100%' : 100,
 					fontFamily: 'Nunito Sans',
+					fontSize: 12,
 				}}>
 				English
 			</Option>
 			<Option
 				value='vi'
 				style={{
-					width: fullWidth ? '100%' : 115,
+					width: fullWidth ? '100%' : 100,
 					fontFamily: 'Nunito Sans',
+					fontSize: 12,
 				}}>
 				Tiếng Việt
 			</Option>
