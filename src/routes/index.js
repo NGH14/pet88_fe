@@ -47,4 +47,9 @@ export const routes = [
 		element: React.lazy(() => import('../container/Admin')),
 		private: true,
 	},
+	{
+		path: '/admin/:id',
+		element: React.lazy(() => import('../container/Admin')),
+		private: true,
+	},
 ];

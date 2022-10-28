@@ -9,12 +9,12 @@ import { useNavigate } from 'react-router-dom';
 export default function Admin() {
 	const [loading, setLoading] = React.useState(true);
 
-	const { CheckRole, user } = UserAuth();
+	const { user } = UserAuth();
 	const navigate = useNavigate();
 	console.log(user);
 	useEffect(() => {
-		if (user.role !== 'admin') {
-			// navigate('/');
+		if (!user?.role || user?.role !== 'admin') {
+			navigate('/');
 		}
 		setLoading(false);
 	}, [user]);
