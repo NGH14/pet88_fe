@@ -21,6 +21,7 @@ import {
 	Transfer,
 	Card,
 } from 'antd';
+import { HeartTwoTone } from '@ant-design/icons';
 
 import viVN from 'antd/es/locale/vi_VN';
 import 'swiper/css';
@@ -34,7 +35,7 @@ import { momentLocalizer } from 'react-big-calendar';
 import { Link } from 'react-router-dom';
 import HeroImage from '../../components/HeroImageHomepage/index';
 // translation catalog
-import 'react-before-after-slider-component/dist/build.css';
+import { Col, Divider, Row } from 'antd';
 
 import { Layout } from 'antd';
 import AppHeader from './../../components/Navbar/';
@@ -53,9 +54,15 @@ import img3 from '../../assets/images/customer-logo-4.webp';
 import img4 from '../../assets/images/customer-logo-2.webp';
 import FIRST from '../../assets/images/dog-grooming-photography-2.jpg';
 import SECOND from '../../assets/images/dog-grooming-photography-1.jpg';
+import serviceImg1 from '../../assets/images/Illustration-Bond.png';
+import serviceImg2 from '../../assets/images/Illustration-Schedule.png';
 
+import 'react-before-after-slider-component/dist/build.css';
 const { Header, Content, Footer } = Layout;
-
+const style = {
+	background: '#0092ff',
+	padding: '8px 0',
+};
 // initialize i18next with catalog and language to use
 SwiperCore.use([Autoplay]);
 
@@ -212,9 +219,28 @@ function Homepage() {
 								</SwiperSlide>
 							</Swiper>
 						</div>
+						<div className='homepage-content_flex'>
+							<div className='homepage-content_flexText'>
+								<HeartTwoTone
+									style={{ fontSize: 20, color: '#08c' }}
+								/>
+								<h3>
+									{t(
+										'Stay motivated and build better relationships',
+									)}
+								</h3>
+								<p>dsadsasda</p>
+							</div>
+							<div>
+								<img
+									src={serviceImg1}
+									alt=''
+									className='homepage-content_flexImg'
+								/>
+							</div>
+						</div>
 					</div>
 					<div className='grey'>
-						<ListOfUser></ListOfUser>
 						<ScrollTrigger onEnter={() => setCountUp(true)}>
 							{countUp && (
 								<div className='countup-container'>

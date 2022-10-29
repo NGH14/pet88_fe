@@ -10,25 +10,25 @@ import { toast } from 'react-toastify';
 
 const antIcon = (
 	<LoadingOutlined
-	  style={{
-		fontSize: 20,
-		color: '#F76A1A',
-	}}
-	  spin
+		style={{
+			fontSize: 20,
+			color: '#F76A1A',
+		}}
+		spin
 	/>
-  );
+);
 export default function SignInGoogle({ ...props }) {
 	const { googleSignIn, AddUserToDB, user } = UserAuth();
 	const [loading, setLoading] = useState(false);
 
 	const handleGoogleSignIn = async () => {
-		setLoading(true)
+		setLoading(true);
 		try {
-			const { user } =  await googleSignIn();
-			 AddUserToDB(user,{})
+			const { user } = await googleSignIn();
+			await AddUserToDB(user, {});
 		} catch (error) {
-			toast.error('Fail to login in Google')
-			setLoading(false)
+			toast.error('Fail to login in Google');
+			setLoading(false);
 			console.log(error);
 		}
 	};

@@ -36,10 +36,13 @@ export const AuthContextProvider = ({ children }) => {
 		return createUserWithEmailAndPassword(auth, email, password);
 	};
 
-	const updateUser = async (uid, name) => {
+	const updateUser = async (uid, name, dob, gender, phone) => {
 		const userRef = doc(storage, 'users', uid);
 		return await updateDoc(userRef, {
 			name,
+			dob,
+			gender,
+			phone,
 		});
 	};
 
@@ -82,12 +85,14 @@ export const AuthContextProvider = ({ children }) => {
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
-			return await setDoc(doc(storage, 'users', user?.uid), {
+			return setDoc(doc(storage, 'users', user?.uid), {
 				createAt: new Date(),
 				id: user.uid,
 				email: user.email,
+				dob: user.dob || new Date(0),
+				gender: user.gender || null,
 				photoURL: user.photoURL,
-				number: user?.number || null,
+				phone: user?.phone || null,
 				name: user.displayName,
 				role: additionalData.role || 'user',
 				...additionalData,

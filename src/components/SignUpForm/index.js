@@ -38,7 +38,7 @@ const SignUpForm = () => {
 			navigate('/');
 			setLoading(false);
 		} catch (e) {
-			toast.error('The email already in use');
+			toast.error(t('The email already in use'));
 			setEmailStatus('error');
 			console.log(e.message);
 			setLoading(false);

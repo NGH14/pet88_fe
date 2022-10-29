@@ -134,9 +134,11 @@ function SubNavBar() {
 										'background-color 0.5s ease-in-out',
 								}}>
 								<div className='subheader mobileHidden'>
-									<div className='mobileHidden'>
+									<div className='mobileHidden subheader-right'>
 										{user?.role === 'admin' && (
-											<NavLink to='/admin'>Admin</NavLink>
+											<NavLink to='/admin/dashboard'>
+												Admin
+											</NavLink>
 										)}
 
 										<ChangeLanguage

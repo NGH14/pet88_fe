@@ -11,7 +11,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 import './style.css';
-import SignInGoogle from '../SignInGoogle/index';
+import SignInGoogle from '../SigninGoogle';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';

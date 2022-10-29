@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import './style.css';
-import SignInGoogle from '../SignInGoogle/index';
+import SignInGoogle from '../SigninGoogle';
 import { useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -30,7 +30,7 @@ const SignInForm = () => {
 			setEmailSignInloadings(false);
 			navigate('/', { replace: true });
 		} catch (e) {
-			toast.error('Invalid user ID or password.');
+			toast.error(t('Invalid email or password'));
 			console.log(e.message);
 			setEmailSignInloadings(false);
 		}
