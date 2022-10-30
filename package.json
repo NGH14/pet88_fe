@@ -23,6 +23,7 @@
     "react-before-after-slider-component": "^1.1.5",
     "react-big-calendar": "^1.5.0",
     "react-countup": "^6.3.2",
+    "react-csv": "^2.2.2",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.1.0",
     "react-google-button": "^0.7.2",

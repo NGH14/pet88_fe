@@ -7,6 +7,7 @@ import { UserAuth } from '../../context/AuthContext';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const antIcon = (
 	<LoadingOutlined
@@ -20,14 +21,14 @@ const antIcon = (
 export default function SignInGoogle({ ...props }) {
 	const { googleSignIn, AddUserToDB, user } = UserAuth();
 	const [loading, setLoading] = useState(false);
-
+	const { t } = useTranslation();
 	const handleGoogleSignIn = async () => {
 		setLoading(true);
 		try {
 			const { user } = await googleSignIn();
 			await AddUserToDB(user, {});
 		} catch (error) {
-			toast.error('Fail to login in Google');
+			toast.error(t('Fail to login in Google'));
 			setLoading(false);
 			console.log(error);
 		}

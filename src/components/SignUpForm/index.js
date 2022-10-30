@@ -1,5 +1,4 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -33,7 +32,6 @@ const SignUpForm = () => {
 		try {
 			const { user } = await createUser(email, password);
 			await AddUserToDB(user, { name: displayName });
-
 			localStorage.setItem('name', displayName);
 			navigate('/');
 			setLoading(false);
@@ -63,7 +61,7 @@ const SignUpForm = () => {
 			</span>
 
 			<Form
-				name='basic'
+				name='sign-up'
 				initialValues={{
 					remember: true,
 				}}
@@ -76,7 +74,7 @@ const SignUpForm = () => {
 					rules={[
 						{
 							required: true,
-							message: 'Please enter your email!',
+							message: 'Please enter your name!',
 						},
 					]}>
 					<Input

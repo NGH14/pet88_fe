@@ -9,6 +9,7 @@ import {
 	Empty,
 	Select,
 	DatePicker,
+	Popconfirm,
 } from 'antd';
 import viVN from 'antd/es/locale/vi_VN';
 
@@ -35,8 +36,7 @@ const { Option } = Select;
 const Account = () => {
 	const [loading, setLoading] = useState(false);
 	const [passwordLoading, setPasswordLoading] = useState(false);
-	const { lang, SetLanguage } = UserLanguage();
-	const [file, setFile] = useState('');
+	const { lang } = UserLanguage();
 	const { user, updateProfile, updateUser, UpdatePassword } = UserAuth();
 	const [name, setName] = React.useState(user?.name);
 	const [password, setPassword] = React.useState();
@@ -245,7 +245,7 @@ const Account = () => {
 													{t('Confirm')}
 												</Button>
 											</Form.Item>
-										</Form>{' '}
+										</Form>
 									</div>
 								</TabPane>
 								<TabPane tab={t('Change password')} key='2'>

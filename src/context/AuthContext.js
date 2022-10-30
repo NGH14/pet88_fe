@@ -16,15 +16,21 @@ import {
 	EmailAuthProvider,
 } from 'firebase/auth';
 import { auth, storage } from '../utils/firebase';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { async } from '@firebase/util';
+import {
+	doc,
+	getDoc,
+	setDoc,
+	updateDoc,
+	getDocs,
+	collection,
+	deleteDoc,
+	Timestamp,
+} from 'firebase/firestore';
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = React.useState();
-	const [credential, setCredential] = React.useState();
-	console.log(credential);
 	const [firebaseAuthUser, setFireBaseAuthUser] = React.useState({});
 
 	const [token, setToken] = React.useState('');
@@ -46,6 +52,18 @@ export const AuthContextProvider = ({ children }) => {
 		});
 	};
 
+	const updateUserByAdmin = async (uid, value) => {
+		const userRef = doc(storage, 'users', uid);
+		const cusdob = Timestamp.fromDate(new Date(value.dob));
+
+		const { dob, ...rest } = value;
+		console.log(cusdob);
+		return await updateDoc(userRef, {
+			dob: cusdob,
+			...rest,
+		});
+	};
+
 	const emailSignIn = (email, password) => {
 		return signInWithEmailAndPassword(auth, email, password);
 	};
@@ -55,7 +73,6 @@ export const AuthContextProvider = ({ children }) => {
 			oldPassword,
 		);
 
-		console.log({ credential });
 		await reauthenticateWithCredential(auth.currentUser, credential);
 
 		return updatePassword(firebaseAuthUser, password);
@@ -94,10 +111,19 @@ export const AuthContextProvider = ({ children }) => {
 				photoURL: user.photoURL,
 				phone: user?.phone || null,
 				name: user.displayName,
+				tag: user.tag || [],
 				role: additionalData.role || 'user',
 				...additionalData,
 			});
 		}
+	};
+
+	const GetAllUser = async () => {
+		return await getDocs(collection(storage, 'users'));
+	};
+
+	const DeleteUser = async (id) => {
+		return await deleteDoc(doc(storage, 'users', id));
 	};
 
 	const CheckRole = async (userID) => {
@@ -151,9 +177,11 @@ export const AuthContextProvider = ({ children }) => {
 				createUser,
 				emailSignIn,
 				forgotPassword,
-				UpdatePassword,
+				GetAllUser,
 				ConfirmResetPassword,
 				updateProfile,
+				updateUserByAdmin,
+				DeleteUser,
 			}}>
 			{children}
 		</AuthContext.Provider>

@@ -149,7 +149,7 @@ font-weight: 600;
     background: #fff !important;
   }
   
-  .mainLayout .ant-layout-header {
+  .mainLayout  .ant-layout-header {
     background-color: transparent;
     padding: 0;
     height: auto;
@@ -190,7 +190,7 @@ font-weight: 600;
   header
   ------ 
   */
-  .ant-layout-header {
+  .mainLayout .ant-layout-header {
     transition: all 0.5s ease-in-out;
     position: fixed;
     left: 0;
