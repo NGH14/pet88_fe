@@ -6,10 +6,9 @@ import { collection, getDocs } from 'firebase/firestore';
 import { storage } from '../../utils/firebase';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Space, Table, Tag, ConfigProvider } from 'antd';
+import { Space, Table, Tag, ConfigProvider, Button } from 'antd';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
-import TableUser from './../../components/TableUser/index';
 import logoWhite from '../../assets/images/pet88_logoraw_secondary 1.png';
 import logoWhiteText from '../../assets/images/Group 3.png';
 import viVN from 'antd/es/locale/vi_VN';
@@ -20,6 +19,8 @@ import {
 	PieChartOutlined,
 	TeamOutlined,
 	UserOutlined,
+	MenuFoldOutlined,
+	MenuUnfoldOutlined,
 } from '@ant-design/icons';
 
 import { Breadcrumb, Layout, Menu } from 'antd';
@@ -27,7 +28,8 @@ import { Breadcrumb, Layout, Menu } from 'antd';
 import './style.css';
 import SubNavBar from './../../components/SubNavBar/index';
 import { UserLanguage } from '../../context/LanguageContext';
-const { Header, Content, Footer, Sider } = Layout;
+import TableUser from './../../components/TableUser/index';
+const { Header, Content, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
 	return {
@@ -79,10 +81,7 @@ export default function Admin() {
 					style={{
 						minHeight: '100vh',
 					}}>
-					<Sider
-						collapsible
-						collapsed={collapsed}
-						onCollapse={(value) => setCollapsed(value)}>
+					<Sider collapsed={collapsed}>
 						<div className='logo_admin-container'>
 							{collapsed ? (
 								<img
@@ -115,8 +114,26 @@ export default function Admin() {
 						<Header
 							className='adminsite-layout-background'
 							style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+								// maxWidth: 1350,
 								padding: 0,
-							}}></Header>
+								margin: 'auto 10px auto 15px',
+							}}>
+							<Button
+								style={{ backgroundColor: 'white' }}
+								ghost
+								type='text'
+								className='trigger'
+								onClick={() => setCollapsed(!collapsed)}>
+								{collapsed ? (
+									<MenuUnfoldOutlined></MenuUnfoldOutlined>
+								) : (
+									<MenuFoldOutlined></MenuFoldOutlined>
+								)}
+							</Button>
+							<SubNavBar></SubNavBar>
+						</Header>
 						<Content
 							style={{
 								padding: '0 16px',

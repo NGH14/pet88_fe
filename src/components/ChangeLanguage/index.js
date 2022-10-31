@@ -17,6 +17,7 @@ const ChangeLanguage = ({ TextColor = 'black', fullWidth }) => {
 
 	return (
 		<Select
+			showArrow={false}
 			suffixIcon={
 				<CaretDownOutlined
 					style={{

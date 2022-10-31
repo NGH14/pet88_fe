@@ -3,14 +3,15 @@ import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { collection, getDocs, Timestamp } from 'firebase/firestore';
+import { Table } from 'ant-table-extensions';
 import { storage } from '../../utils/firebase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import {
 	Button,
 	Drawer,
 	Space,
-	Table,
 	Tag,
 	Form,
 	Input,
@@ -23,24 +24,27 @@ import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
+import { styled } from 'styled-components';
 
 const { Option } = Select;
 
 export default function TableUser() {
 	const [tableLoading, setTableLoading] = React.useState(true);
-	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [userRecord, setUserRecord] = React.useState({});
-	const [email, setEmail] = React.useState('');
-	const [emailStatus, setEmailStatus] = React.useState();
-	const [password, setPassword] = React.useState('');
+	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listUsers, setListUsers] = React.useState([]);
+	const [size, setSize] = useState('large');
+
 	const { t } = useTranslation();
-	const { GetAllUser, DeleteUser, createUser, AddUserToDB } = UserAuth();
+	const {
+		user,
+		GetAllUser,
+		DeleteUser,
+		updateUserByAdmin,
+		AddUserToDBByAdmin,
+	} = UserAuth();
 	const { lang } = UserLanguage();
-	const { user, updateUserByAdmin } = UserAuth();
-	const [name, setName] = React.useState('');
-	const [dob, setdob] = React.useState(new Date());
 
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openCreate, setOpenCreate] = useState(false);
@@ -66,14 +70,14 @@ export default function TableUser() {
 			setLoading(false);
 			toast.success(t('Update Profile Success'));
 			getAllUserData();
+			setOpenUpdate(false);
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
-
 			console.log(e.message);
 			setLoading(false);
 		}
 	};
-	useEffect(() => form.resetFields(), [userRecord]);
+	useEffect(() => form.resetFields(), [userRecord, openCreate]);
 
 	const fullWidth = global.window.innerWidth;
 
@@ -102,11 +106,28 @@ export default function TableUser() {
 		}
 	};
 
+	const fetchCreateData = async (token, value) => {
+		try {
+			const res = await axios.post(
+				`http://localhost:3001/api/user/`,
+				value,
+				{
+					headers: {
+						Authorization: 'Bearer ' + token,
+					},
+				},
+			);
+			return res.data;
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	const handleDeleteUser = async (id) => {
 		try {
-			// await DeleteUser(id);
+			await DeleteUser(id);
 			fetchDeleteData(token, id);
-			// setListUsers(listUsers.filter((item) => item.id !== id));
+			setListUsers(listUsers.filter((item) => item.id !== id));
 		} catch (err) {
 			console.log(err);
 		}
@@ -114,14 +135,17 @@ export default function TableUser() {
 
 	const onFinishCreateUser = async (value) => {
 		setLoadingCreate(true);
+
 		try {
-			const { user } = await createUser(email, password);
-			await AddUserToDB(user, value);
+			const uid = await fetchCreateData(token, value);
+			await AddUserToDBByAdmin(uid, value);
 			setOpenUpdate(false);
 			setLoadingCreate(false);
+			setOpenCreate(false);
+			toast.success(t('Create user success'));
+			getAllUserData();
 		} catch (e) {
 			toast.error(t('The email already in use'));
-			setEmailStatus('error');
 			console.log(e.message);
 			setLoadingCreate(false);
 		}
@@ -136,7 +160,8 @@ export default function TableUser() {
 			title: 'Name',
 			dataIndex: 'name',
 			key: 'name',
-			render: (text) => <a>{text}</a>,
+			render: (text) => <p>{text}</p>,
+			sorter: (a, b) => a.name.length - b.name.length,
 		},
 
 		{
@@ -171,7 +196,6 @@ export default function TableUser() {
 			const users = await GetAllUser();
 			users.forEach((doc) => {
 				// doc.data() is never undefined for query doc
-
 				list.push({ id: doc.id, ...doc.data() });
 			});
 
@@ -359,7 +383,7 @@ export default function TableUser() {
 							</Select>
 						</Form.Item>
 						<Form.Item name='role' label={t('Role')}>
-							<>
+							<Select>
 								<Option value='user'>{t('User')}</Option>
 								<Option
 									value='admin'
@@ -367,7 +391,7 @@ export default function TableUser() {
 									{t('Admin')}
 								</Option>
 								<Option value='Manager'>{t('Manager')}</Option>
-							</>
+							</Select>
 						</Form.Item>
 						<Form.Item name='tag' label={t('Tags')}>
 							<Select mode='tags'>
@@ -464,7 +488,7 @@ export default function TableUser() {
 								{t('Close')}
 							</Button>
 							<Button
-								loading={loading}
+								loading={loadingCreate}
 								style={{
 									height: 'fit-content',
 									fontSize: 16,
@@ -482,9 +506,26 @@ export default function TableUser() {
 				) : null}
 			</Drawer>
 			<Table
+				style={{
+					backgroundColor: 'white',
+					padding: 20,
+					marginBlock: 10,
+					borderRadius: 15,
+					boxShadow: 'rgb(153 196 227 / 25%) 0px 2px 8px',
+				}}
+				scroll={{
+					x: 800,
+				}}
+				pagination={{
+					defaultPageSize: 5,
+					showSizeChanger: true,
+					pageSizeOptions: ['5', '10', '20', '30'],
+				}}
 				columns={columns}
 				dataSource={listUsers}
 				loading={tableLoading}
+				searchable
+				exportable
 			/>
 		</>
 	);
