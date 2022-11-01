@@ -94,12 +94,40 @@ font-weight: 600;
   width: 400px;
 }
 
+.homepage-content_flexText {
+  line-height: 1.8;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-size: 14px;
+  align-items: start;
+}
+
+.homepage-content_title{
+  font-weight: 800;
+  font-size: 25px;
+}
 
 .homepage-content_flex{
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.homepage-servicecontent{
+  padding: 80px 80px 40px;
+
+}
+
+.homepage-servicecontent_title{
+  line-height: 70px;
+  font-size: 50px;
+  width: 600px;
+  font-weight: 900;
+  letter-spacing: .02em;
+
 }
 
 .grey {
@@ -175,6 +203,7 @@ font-weight: 600;
     content: '';
     background: #1890ff;
     position: absolute;
+
     bottom: 0;
     left: 50%;
     height: 3px;
@@ -327,6 +356,20 @@ font-weight: 600;
   }
   
   @media only screen and (max-width: 767px) {
+
+    .homepage-servicecontent{
+      padding: 10px;
+    
+    }
+
+    .homepage-servicecontent_title{
+      line-height: 30px;
+      font-size: 30px;
+      font-weight: 900;
+      word-wrap: normal;
+  width: 100%;
+
+    }
     .mainLayout {
       font-size: 12px;
     }

@@ -21,7 +21,7 @@ import {
 	Transfer,
 	Card,
 } from 'antd';
-import { HeartTwoTone } from '@ant-design/icons';
+import { HeartTwoTone, LikeTwoTone } from '@ant-design/icons';
 
 import viVN from 'antd/es/locale/vi_VN';
 import 'swiper/css';
@@ -219,17 +219,22 @@ function Homepage() {
 								</SwiperSlide>
 							</Swiper>
 						</div>
+
 						<div className='homepage-content_flex'>
 							<div className='homepage-content_flexText'>
 								<HeartTwoTone
 									style={{ fontSize: 20, color: '#08c' }}
 								/>
-								<h3>
+								<h3 className='homepage-content_title'>
 									{t(
 										'Stay motivated and build better relationships',
 									)}
 								</h3>
-								<p>dsadsasda</p>
+								<p>
+									{t(
+										'Healthy work relationships necessitate clear, consistent, honest, and open communication, which is the foundation of trust, without which no relationship can thrive',
+									)}
+								</p>
 							</div>
 							<div>
 								<img
@@ -241,6 +246,16 @@ function Homepage() {
 						</div>
 					</div>
 					<div className='grey'>
+						<div className='homepage-servicecontent'>
+							<h3 className='homepage-servicecontent_title'>
+								{t('One platform, everything pet service')}
+							</h3>
+							<p>
+								{t(
+									'Pet88 is dedicated to providing the best quality care for your pet. We offer the service, depending on your needs. We strive to be the most dependable	and accessible service in Vietnam and will go the extra distance to give you precisely what you are looking for in pet care',
+								)}
+							</p>
+						</div>
 						<ScrollTrigger onEnter={() => setCountUp(true)}>
 							{countUp && (
 								<div className='countup-container'>
@@ -284,10 +299,6 @@ function Homepage() {
 								</div>
 							)}
 						</ScrollTrigger>
-						<div>
-							<TimePicker />
-							<Calendar></Calendar>
-						</div>
 					</div>
 					<div>
 						<p className='title-homepage'>

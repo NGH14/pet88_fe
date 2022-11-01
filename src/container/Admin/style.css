@@ -9,12 +9,17 @@
   justify-content: flex-end;
   padding: 18px 24px;
   white-space: pre;
-  min-height: 100px;
+  min-height: 80px;
   width: 100%;
   background-color: rgb(255, 255, 255);
+  
 }
 
-
+.ant-layout-sider-children{
+  background-color: white;
+  border-right: 0.5px solid rgb(224, 225, 226);
+  box-shadow: rgb(0 0 0 / 10%) 0px 4px 10px 0px;
+}
   
 .logo_admin-container {
     width: 100%;

@@ -9,8 +9,7 @@ import { toast } from 'react-toastify';
 import { Space, Table, Tag, ConfigProvider, Button } from 'antd';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
-import logoWhite from '../../assets/images/pet88_logoraw_secondary 1.png';
-import logoWhiteText from '../../assets/images/Group 3.png';
+import logoWhite from '../../assets/images/logo-text.png';
 import viVN from 'antd/es/locale/vi_VN';
 
 import {
@@ -43,11 +42,7 @@ function getItem(label, key, icon, children) {
 const items = [
 	getItem('Option 1', '/admin/', <PieChartOutlined />),
 	getItem('Option 2', '2', <DesktopOutlined />),
-	getItem('User', 'sub1', <UserOutlined />, [
-		getItem('Tom', '3'),
-		getItem('Bill', '4'),
-		getItem('Alex', '5'),
-	]),
+	getItem('User', '/admin/management-user', <UserOutlined />),
 	getItem('Team', 'sub2', <TeamOutlined />, [
 		getItem('Team 1', '6'),
 		getItem('Team 2', '8'),
@@ -61,7 +56,7 @@ export default function Admin() {
 	const { t } = useTranslation();
 	const { user } = UserAuth();
 	const navigate = useNavigate();
-	const [collapsed, setCollapsed] = useState(false);
+	const [collapsed, setCollapsed] = useState(true);
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const { lang, SetLanguage } = UserLanguage();
 
@@ -91,20 +86,15 @@ export default function Admin() {
 								/>
 							) : (
 								<img
-									src={logoWhiteText}
+									src={logoWhite}
 									alt=''
-									style={{
-										height: 35,
-										marginInline: '15px',
-										objectFit: 'cover',
-									}}
-									className='logo_admin-imgtext'
+									style={{ height: 30, objectFit: 'cover' }}
 								/>
 							)}
 						</div>
 						<Menu
 							onClick={({ key }) => navigate(key)}
-							theme='dark'
+							theme='light'
 							defaultSelectedKeys={['1']}
 							mode='inline'
 							items={items}
@@ -139,20 +129,26 @@ export default function Admin() {
 								padding: '0 16px',
 								backgroundColor: '#F7F8FA',
 							}}>
-							<Breadcrumb
-								style={{
-									margin: '16px 0',
-								}}>
-								<Breadcrumb.Item>User</Breadcrumb.Item>
-								<Breadcrumb.Item>Bill</Breadcrumb.Item>
-							</Breadcrumb>
 							<div
 								className='site-layout-background'
 								style={{
 									padding: 24,
 									minHeight: 360,
 								}}>
-								<TableUser />
+								{' '}
+								{(() => {
+									switch (location.pathname) {
+										case '/admin/management-user':
+											return <TableUser />;
+
+										case '/sign-up':
+										// return <SignUpForm />;
+										case '/forgot-password':
+										// return <ForgotPasswordForm />;
+										default:
+											return null;
+									}
+								})()}
 							</div>
 						</Content>
 					</Layout>

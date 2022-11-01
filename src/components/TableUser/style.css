@@ -1,0 +1,45 @@
+.tableuser-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+
+
+.tableuser_rightheader{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+
+}
+
+.tableuser_rightheader .ant-input-affix-wrapper{
+    max-width: unset;
+    width: 200px;
+    border-radius: 5px;
+}
+
+.tableuser_rightheader .tableuser_createbutton{
+    border-radius: 5px;
+
+}
+
+.tableuser-header-title {
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 24px;
+    display: inline;
+}
+
+.table_tooltip {
+display: flex;
+justify-content: flex-end;
+margin-bottom: 10px;
+
+}
+
+.table_tooltip .ant-btn {
+    border-radius: 5px;
+}

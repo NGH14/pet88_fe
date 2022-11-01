@@ -93,7 +93,7 @@ function SubNavBar() {
 										}>
 										{user?.role === 'admin' && (
 											<NavLink
-												to='/admin/dashboard'
+												to='/admin'
 												style={{
 													transition:
 														'color 0.5s ease-in-out',

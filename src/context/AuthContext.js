@@ -119,23 +119,25 @@ export const AuthContextProvider = ({ children }) => {
 	};
 
 	const AddUserToDBByAdmin = async (uid, additionalData) => {
-		console.log(uid, additionalData);
 		const docRef = await doc(storage, 'users', uid);
 		const docSnap = await getDoc(docRef);
-		const cusdob = Timestamp.fromDate(new Date(additionalData.dob));
+		const cusdob = Timestamp.fromDate(new Date(additionalData?.dob || 0));
+		const userRole = additionalData?.role || 'user';
+		const userPhone = additionalData?.phone || null;
+		const userGender = additionalData?.gender || null;
+		const userTag = additionalData?.tag || [];
 
-		const { dob, ...rest } = additionalData;
+		const { dob, password, confirm, gender, phone, role, tag, ...rest } =
+			additionalData;
 		if (!docSnap.exists()) {
 			return setDoc(doc(storage, 'users', uid), {
 				createAt: new Date(),
 				id: uid,
-				email: additionalData.email,
-				dob: cusdob || new Date(0),
-				gender: additionalData.gender || null,
-				phone: additionalData?.phone || null,
-				name: additionalData.displayName,
-				tag: additionalData.tag || [],
-				role: additionalData.role || 'user',
+				dob: cusdob,
+				role: userRole,
+				gender: userGender,
+				phone: userPhone,
+				tag: userTag,
 				...rest,
 			});
 		}

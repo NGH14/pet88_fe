@@ -3,10 +3,23 @@ import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { collection, getDocs, Timestamp } from 'firebase/firestore';
-import { Table } from 'ant-table-extensions';
+import {
+	Table,
+	ExportTableButton,
+	SearchTableInput,
+} from 'ant-table-extensions';
 import { storage } from '../../utils/firebase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {
+	FileExcelOutlined,
+	SearchOutlined,
+	DeleteOutlined,
+	EditOutlined,
+	MoreOutlined,
+	UpOutlined,
+	DownOutlined,
+} from '@ant-design/icons';
 
 import {
 	Button,
@@ -19,13 +32,11 @@ import {
 	DatePicker,
 	Popconfirm,
 } from 'antd';
-import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
-import { styled } from 'styled-components';
-
+import './style.css';
 const { Option } = Select;
 
 export default function TableUser() {
@@ -33,10 +44,21 @@ export default function TableUser() {
 	const [userRecord, setUserRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const [listUsers, setListUsers] = React.useState([]);
+	const [listUsers, setListUsers] = React.useState();
+	const [additionInfo, setAdditionInfo] = React.useState(false);
+
 	const [size, setSize] = useState('large');
 
+	const [openUpdate, setOpenUpdate] = useState(false);
+	const [openCreate, setOpenCreate] = useState(false);
+	const [tableToolTip, setTableToolTip] = useState(false);
+
+	const [form] = Form.useForm();
+	const { token } = UserAuth();
+	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
 	const { t } = useTranslation();
+	const [page, setPage] = React.useState(1);
+
 	const {
 		user,
 		GetAllUser,
@@ -45,11 +67,6 @@ export default function TableUser() {
 		AddUserToDBByAdmin,
 	} = UserAuth();
 	const { lang } = UserLanguage();
-
-	const [openUpdate, setOpenUpdate] = useState(false);
-	const [openCreate, setOpenCreate] = useState(false);
-	const [form] = Form.useForm();
-	const { token } = UserAuth();
 	useEffect(() => {
 		getAllUserData();
 	}, []);
@@ -157,7 +174,7 @@ export default function TableUser() {
 
 	const columns = [
 		{
-			title: 'Name',
+			title: t('Name'),
 			dataIndex: 'name',
 			key: 'name',
 			render: (text) => <p>{text}</p>,
@@ -165,26 +182,58 @@ export default function TableUser() {
 		},
 
 		{
-			title: 'phone',
+			title: t('Phone Number'),
 			dataIndex: 'phone',
 			key: 'phone',
 		},
+		{
+			title: 'Email',
+			dataIndex: 'email',
+			key: 'email',
+			width: 210,
+		},
+		{
+			title: t('Tags'),
+			dataIndex: 'tag',
+			key: 'tag',
+		},
+		{
+			title: t('Gender'),
+			dataIndex: 'gender',
+			key: 'gender',
+			render: (text) => <p>{t(text)}</p>,
+		},
+		{
+			title: t('Role'),
+			dataIndex: 'role',
+			key: 'role',
+			render: (text) => <p>{t(text)}</p>,
+		},
 
 		{
-			title: 'Action',
+			title: t('ID'),
+			dataIndex: 'id',
+			key: 'id',
+		},
+		{
+			title: t('Action'),
+			fixed: 'right',
 			key: 'action',
 			render: (_, record) => (
 				<Space size='middle'>
 					<Button
+						type='text'
 						key='update'
-						onClick={() => handleOpenUpdateUser(record)}>
-						Update
-					</Button>
+						icon={<EditOutlined />}
+						onClick={() => handleOpenUpdateUser(record)}></Button>
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
 						onConfirm={() => handleDeleteUser(record.id)}>
-						<Button>{t('Delete')}</Button>
+						<Button
+							danger
+							type='text'
+							icon={<DeleteOutlined />}></Button>
 					</Popconfirm>
 				</Space>
 			),
@@ -198,7 +247,6 @@ export default function TableUser() {
 				// doc.data() is never undefined for query doc
 				list.push({ id: doc.id, ...doc.data() });
 			});
-
 			setListUsers(list);
 			setTableLoading(false);
 		} catch (error) {
@@ -211,15 +259,36 @@ export default function TableUser() {
 
 	return (
 		<>
-			<Button loading={loadingCreate} onClick={handleOpenCreateUser}>
-				{t('Create New User')}
-			</Button>
-			<CSVLink
-				filename={'Expense_Table.csv'}
-				data={listUsers}
-				className='btn btn-primary'>
-				Export to CSV
-			</CSVLink>
+			<div className='tableuser-header'>
+				<div className='tableuser_leftheader'>
+					<h2 className='tableuser-header-title'>
+						{t('management users')}
+					</h2>
+					<Button
+						icon={<MoreOutlined style={{ fontSize: 20 }} />}
+						onClick={() => setTableToolTip(!tableToolTip)}
+						type='text'></Button>
+				</div>
+				<div className='tableuser_rightheader'>
+					<SearchTableInput
+						columns={columns}
+						dataSource={listUsers} // 🔴 Original dataSource
+						setDataSource={setSearchDataSource} // 🔴 Newly created setSearchDataSource from useState hook
+						inputProps={{
+							placeholder: t('Search'),
+							prefix: <SearchOutlined />,
+						}}
+					/>
+					<Button
+						className='tableuser_createbutton'
+						loading={loadingCreate}
+						type='primary'
+						onClick={handleOpenCreateUser}>
+						{t('Create User')}
+					</Button>
+				</div>
+			</div>
+
 			<Drawer
 				title={t('Update')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
@@ -364,40 +433,10 @@ export default function TableUser() {
 							rules={[
 								{
 									required: true,
-									message: 'Please input your username!',
+									message: 'Please input your name!',
 								},
 							]}>
 							<Input />
-						</Form.Item>
-						<Form.Item name='dob' label={t('Date of Birth')}>
-							<DatePicker
-								disabledDate={(current) => current > moment()}
-								format={lang === 'vi' ? 'DD-MM-YYYY' : null}
-							/>
-						</Form.Item>
-						<Form.Item name='gender' label={t('Gender')}>
-							<Select>
-								<Option value='male'>{t('Male')}</Option>
-								<Option value='female'>{t('Female')}</Option>
-								<Option value='other'>{t('Other')}</Option>
-							</Select>
-						</Form.Item>
-						<Form.Item name='role' label={t('Role')}>
-							<Select>
-								<Option value='user'>{t('User')}</Option>
-								<Option
-									value='admin'
-									disabled={!user?.role === 'admin'}>
-									{t('Admin')}
-								</Option>
-								<Option value='Manager'>{t('Manager')}</Option>
-							</Select>
-						</Form.Item>
-						<Form.Item name='tag' label={t('Tags')}>
-							<Select mode='tags'>
-								<Option value='vip'>{t('V.I.P')}</Option>
-								<Option value='OCD'>{t('O.C.D')}</Option>
-							</Select>
 						</Form.Item>
 						<Form.Item
 							label={t('Email')}
@@ -458,16 +497,82 @@ export default function TableUser() {
 							]}>
 							<Input.Password />
 						</Form.Item>
-						<Form.Item
-							type='number'
-							name='phone'
-							label={t('Phone Number')}>
-							<Input
-								style={{
-									width: '100%',
-								}}
-							/>
-						</Form.Item>
+
+						<Button
+							style={{ margin: 15 }}
+							type='text'
+							onClick={() => setAdditionInfo(!additionInfo)}>
+							{t('Addition Information')}{' '}
+							{additionInfo ? (
+								<UpOutlined style={{ fontSize: 12 }} />
+							) : (
+								<DownOutlined style={{ fontSize: 12 }} />
+							)}
+						</Button>
+						{additionInfo && (
+							<>
+								<Form.Item
+									name='dob'
+									label={t('Date of Birth')}>
+									<DatePicker
+										disabledDate={(current) =>
+											current > moment()
+										}
+										format={
+											lang === 'vi' ? 'DD-MM-YYYY' : null
+										}
+									/>
+								</Form.Item>
+								<Form.Item name='gender' label={t('Gender')}>
+									<Select>
+										<Option value='male'>
+											{t('Male')}
+										</Option>
+										<Option value='female'>
+											{t('Female')}
+										</Option>
+										<Option value='other'>
+											{t('Other')}
+										</Option>
+									</Select>
+								</Form.Item>
+								<Form.Item name='role' label={t('Role')}>
+									<Select>
+										<Option value='user'>
+											{t('User')}
+										</Option>
+										<Option
+											value='admin'
+											disabled={!user?.role === 'admin'}>
+											{t('Admin')}
+										</Option>
+										<Option value='Manager'>
+											{t('Manager')}
+										</Option>
+									</Select>
+								</Form.Item>
+								<Form.Item name='tag' label={t('Tags')}>
+									<Select mode='tags'>
+										<Option value='vip'>
+											{t('V.I.P')}
+										</Option>
+										<Option value='OCD'>
+											{t('O.C.D')}
+										</Option>
+									</Select>
+								</Form.Item>
+								<Form.Item
+									type='number'
+									name='phone'
+									label={t('Phone Number')}>
+									<Input
+										style={{
+											width: '100%',
+										}}
+									/>
+								</Form.Item>
+							</>
+						)}
 
 						<Form.Item
 							wrapperCol={{
@@ -505,7 +610,36 @@ export default function TableUser() {
 					</Form>
 				) : null}
 			</Drawer>
+
+			{tableToolTip ? (
+				<div className='table_tooltip'>
+					<Select
+						bordered={false}
+						defaultValue='large'
+						style={{
+							width: 100,
+						}}
+						onChange={setSize}>
+						<Option value='small'> {t('Small')}</Option>
+						<Option value='middle'>{t('Medium')}</Option>
+						<Option value='large'>{t('Large')}</Option>
+					</Select>
+
+					<ExportTableButton
+						dataSource={listUsers}
+						columns={columns}
+						btnProps={{
+							type: 'primary',
+							icon: <FileExcelOutlined />,
+						}}
+						showColumnPicker>
+						{t('Export')}
+					</ExportTableButton>
+				</div>
+			) : null}
+
 			<Table
+				size={size}
 				style={{
 					backgroundColor: 'white',
 					padding: 20,
@@ -517,15 +651,16 @@ export default function TableUser() {
 					x: 800,
 				}}
 				pagination={{
+					onChange(current) {
+						setPage(current);
+					},
 					defaultPageSize: 5,
 					showSizeChanger: true,
 					pageSizeOptions: ['5', '10', '20', '30'],
 				}}
 				columns={columns}
-				dataSource={listUsers}
+				dataSource={searchDataSource || listUsers}
 				loading={tableLoading}
-				searchable
-				exportable
 			/>
 		</>
 	);
