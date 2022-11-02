@@ -7,6 +7,7 @@ import dogImg from '../../assets/images/Summer-Header.jpg';
 import bgHeader from '../../assets/images/navy-bg.png';
 
 import { useLocation } from 'react-router-dom';
+import FormBookingHomepage from './../FormBookingHomepage/index';
 
 const HeroBlockStyled = styled.div`
 	background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)),
@@ -38,27 +39,7 @@ function HeroImageHomePage({ HeaderText }) {
 										)}
 									</h3>
 									<div className='content-form'>
-										<Form
-											name='basic'
-											labelCol={{ span: 8 }}
-											wrapperCol={{ span: 16 }}
-											initialValues={{ remember: true }}
-											// onFinish={onFinish}
-											// onFinishFailed={onFinishFailed}
-											autoComplete='off'>
-											<Form.Item
-												label='Username'
-												name='username'
-												rules={[
-													{
-														required: true,
-														message:
-															'Please input your username!',
-													},
-												]}>
-												<Input />
-											</Form.Item>
-										</Form>
+										<FormBookingHomepage></FormBookingHomepage>
 									</div>
 								</div>
 							</HeroBlockStyled>

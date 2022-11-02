@@ -145,6 +145,9 @@ export default function TableUser() {
 			await DeleteUser(id);
 			fetchDeleteData(token, id);
 			setListUsers(listUsers.filter((item) => item.id !== id));
+			setSearchDataSource(
+				searchDataSource.filter((item) => item.id !== id),
+			);
 		} catch (err) {
 			console.log(err);
 		}
@@ -152,7 +155,6 @@ export default function TableUser() {
 
 	const onFinishCreateUser = async (value) => {
 		setLoadingCreate(true);
-
 		try {
 			const uid = await fetchCreateData(token, value);
 			await AddUserToDBByAdmin(uid, value);
@@ -216,6 +218,8 @@ export default function TableUser() {
 			key: 'id',
 		},
 		{
+			width: 110,
+
 			title: t('Action'),
 			fixed: 'right',
 			key: 'action',
@@ -248,6 +252,7 @@ export default function TableUser() {
 				list.push({ id: doc.id, ...doc.data() });
 			});
 			setListUsers(list);
+			setSearchDataSource(list);
 			setTableLoading(false);
 		} catch (error) {
 			toast.error(t('Fail to load user data'));
