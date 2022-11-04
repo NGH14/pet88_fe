@@ -1,4 +1,13 @@
 {
+	"Admin": "Quản trị viên",
+	"admin": "Quản trị viên",
+
+	"Manager": "Quản lí",
+	"manager": "Quản lí",
+
+	"User": "Người dùng",
+	"user": "Người dùng",
+	"history": "Lịch sử",
 	"Export": "Tải xuống",
 	"Large": "Rộng",
 	"Medium": "Trung bình",
@@ -9,6 +18,11 @@
 	"Tags": "Nhãn",
 	"Search": "Tìm",
 	"Create User": "Tạo Mới",
+	"Create Hotel": "Tạo Mới",
+	"management hotel": "quản lí khách sạn",
+	"Drop off": "Gửi thú cưng",
+	"Pick up": "Đón bé",
+	"City name": "Tên thành phố",
 	"management users": "quản lí người dùng",
 	"Welcome to React": "Xin chào",
 	"Welcome Back": "Đăng nhập vào Pet88",

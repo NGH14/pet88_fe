@@ -1,0 +1,23 @@
+.form_bookinghomepage{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 15px 15px 0;
+    flex-grow: 1;
+
+
+}
+
+.form_bookinghomepage .ant-form-item-label{
+    font-weight: bold;
+}
+
+.form-item_bookinghomepage{
+    border-radius: 5px;
+}
+
+.form-button_bookinghomepage{
+    border-radius: 45px;
+    font-weight: bold;
+}

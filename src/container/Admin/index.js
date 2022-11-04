@@ -4,7 +4,7 @@ import { UserAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { collection, getDocs } from 'firebase/firestore';
 import { storage } from '../../utils/firebase';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Space, Table, Tag, ConfigProvider, Button } from 'antd';
 import { CSVLink } from 'react-csv';
@@ -13,7 +13,7 @@ import logoWhite from '../../assets/images/logo-text.png';
 import viVN from 'antd/es/locale/vi_VN';
 
 import {
-	DesktopOutlined,
+	ReconciliationOutlined,
 	FileOutlined,
 	PieChartOutlined,
 	TeamOutlined,
@@ -28,6 +28,7 @@ import './style.css';
 import SubNavBar from './../../components/SubNavBar/index';
 import { UserLanguage } from '../../context/LanguageContext';
 import TableUser from './../../components/TableUser/index';
+import TableHotel from '../../components/TableHotel';
 const { Header, Content, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -40,8 +41,8 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-	getItem('Option 1', '/admin/', <PieChartOutlined />),
-	getItem('Option 2', '2', <DesktopOutlined />),
+	getItem('Option 1', '/admin', <PieChartOutlined />),
+	getItem('Option 2', '/admin/management-hotel', <ReconciliationOutlined />),
 	getItem('User', '/admin/management-user', <UserOutlined />),
 	getItem('Team', 'sub2', <TeamOutlined />, [
 		getItem('Team 1', '6'),
@@ -66,7 +67,6 @@ export default function Admin() {
 		}
 		setLoading(false);
 	}, [user]);
-	console.log(location.pathname);
 	return loading ? (
 		<LoadingSpinner />
 	) : (
@@ -77,25 +77,33 @@ export default function Admin() {
 						minHeight: '100vh',
 					}}>
 					<Sider collapsed={collapsed}>
-						<div className='logo_admin-container'>
-							{collapsed ? (
-								<img
-									src={logoWhite}
-									alt=''
-									style={{ height: 30, objectFit: 'cover' }}
-								/>
-							) : (
-								<img
-									src={logoWhite}
-									alt=''
-									style={{ height: 30, objectFit: 'cover' }}
-								/>
-							)}
-						</div>
+						<NavLink to='/admin'>
+							<div className='logo_admin-container'>
+								{collapsed ? (
+									<img
+										src={logoWhite}
+										alt=''
+										style={{
+											height: 30,
+											objectFit: 'cover',
+										}}
+									/>
+								) : (
+									<img
+										src={logoWhite}
+										alt=''
+										style={{
+											height: 40,
+											objectFit: 'cover',
+										}}
+									/>
+								)}
+							</div>
+						</NavLink>
 						<Menu
 							onClick={({ key }) => navigate(key)}
 							theme='light'
-							defaultSelectedKeys={['1']}
+							defaultSelectedKeys={['/admin']}
 							mode='inline'
 							items={items}
 						/>
@@ -108,7 +116,7 @@ export default function Admin() {
 								justifyContent: 'space-between',
 								// maxWidth: 1350,
 								padding: 0,
-								margin: 'auto 10px auto 15px',
+								margin: 'auto	',
 							}}>
 							<Button
 								style={{ backgroundColor: 'white' }}
@@ -140,10 +148,9 @@ export default function Admin() {
 									switch (location.pathname) {
 										case '/admin/management-user':
 											return <TableUser />;
-
-										case '/sign-up':
-										// return <SignUpForm />;
-										case '/forgot-password':
+										case '/admin/management-hotel':
+											return <TableHotel />;
+										// case '/forgot-password':
 										// return <ForgotPasswordForm />;
 										default:
 											return null;

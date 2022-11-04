@@ -26,6 +26,7 @@ import {
 	deleteDoc,
 	Timestamp,
 } from 'firebase/firestore';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -118,6 +119,52 @@ export const AuthContextProvider = ({ children }) => {
 		}
 	};
 
+	const GetAllHotel = async () => {
+		try {
+			const res = await axios.get(`http://localhost:3001/api/hotel/`, {
+				headers: {
+					Authorization: 'Bearer ' + token,
+				},
+			});
+			return res.data;
+		} catch (error) {
+			return console.error(error);
+		}
+	};
+
+	const DeleteHotel = async (id) => {
+		try {
+			const res = await axios.delete(
+				`http://localhost:3001/api/hotel/${id}`,
+				{
+					headers: {
+						Authorization: 'Bearer ' + token,
+					},
+				},
+			);
+			return res.data;
+		} catch (error) {
+			return console.error(error);
+		}
+	};
+
+	const CreateHotel = async (value) => {
+		try {
+			const res = await axios.post(
+				`http://localhost:3001/api/hotel`,
+				value,
+				{
+					headers: {
+						Authorization: 'Bearer ' + token,
+					},
+				},
+			);
+			return res.data;
+		} catch (error) {
+			return console.error(error);
+		}
+	};
+
 	const AddUserToDBByAdmin = async (uid, additionalData) => {
 		const docRef = await doc(storage, 'users', uid);
 		const docSnap = await getDoc(docRef);
@@ -190,6 +237,7 @@ export const AuthContextProvider = ({ children }) => {
 	return (
 		<AuthContext.Provider
 			value={{
+				CreateHotel,
 				AddUserToDBByAdmin,
 				UpdatePassword,
 				updateUser,
@@ -208,6 +256,8 @@ export const AuthContextProvider = ({ children }) => {
 				updateProfile,
 				updateUserByAdmin,
 				DeleteUser,
+				GetAllHotel,
+				DeleteHotel,
 			}}>
 			{children}
 		</AuthContext.Provider>

@@ -6,8 +6,6 @@ const LanguageContext = createContext();
 export const LanguageContextProvider = ({ children }) => {
 	const [lang, setLang] = React.useState(localStorage.getItem('lng') || 'en');
 
-	console.log(lang);
-
 	const SetLanguage = (lg) => {
 		setLang(lg);
 	};

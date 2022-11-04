@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { collection, getDocs, Timestamp } from 'firebase/firestore';
 import {
 	Table,
 	ExportTableButton,
@@ -39,14 +38,13 @@ import axios from 'axios';
 import './style.css';
 const { Option } = Select;
 
-export default function TableUser() {
+export default function TableHotel() {
 	const [tableLoading, setTableLoading] = React.useState(true);
 	const [userRecord, setUserRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const [listUsers, setListUsers] = React.useState();
+	const [listHotels, setListHotels] = React.useState();
 	const [additionInfo, setAdditionInfo] = React.useState(false);
-
 	const [size, setSize] = useState('large');
 
 	const [openUpdate, setOpenUpdate] = useState(false);
@@ -55,20 +53,20 @@ export default function TableUser() {
 
 	const [form] = Form.useForm();
 	const { token } = UserAuth();
-	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
+	const [searchDataSource, setSearchDataSource] = React.useState(listHotels);
 	const { t } = useTranslation();
 	const [page, setPage] = React.useState(1);
-
 	const {
-		user,
-		GetAllUser,
-		DeleteUser,
+		CreateHotel,
+		DeleteHotel,
 		updateUserByAdmin,
 		AddUserToDBByAdmin,
+		GetAllHotel,
 	} = UserAuth();
 	const { lang } = UserLanguage();
+
 	useEffect(() => {
-		getAllUserData();
+		getAllHotelData();
 	}, []);
 
 	const handleOpenUpdateUser = (record) => {
@@ -86,7 +84,7 @@ export default function TableUser() {
 			await updateUserByAdmin(userRecord?.id, value);
 			setLoading(false);
 			toast.success(t('Update Profile Success'));
-			getAllUserData();
+			getAllHotelData();
 			setOpenUpdate(false);
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
@@ -140,13 +138,12 @@ export default function TableUser() {
 		}
 	};
 
-	const handleDeleteUser = async (id) => {
+	const handleDeleteHotel = async (id) => {
 		try {
-			await DeleteUser(id);
-			fetchDeleteData(token, id);
-			setListUsers(listUsers.filter((item) => item.id !== id));
+			await DeleteHotel(id);
+			setListHotels(listHotels.filter((item) => item._id !== id));
 			setSearchDataSource(
-				searchDataSource.filter((item) => item.id !== id),
+				searchDataSource.filter((item) => item._id !== id),
 			);
 		} catch (err) {
 			console.log(err);
@@ -156,13 +153,21 @@ export default function TableUser() {
 	const onFinishCreateUser = async (value) => {
 		setLoadingCreate(true);
 		try {
-			const uid = await fetchCreateData(token, value);
-			await AddUserToDBByAdmin(uid, value);
+			await CreateHotel({
+				name: 'Pet16',
+				type: 'hotel',
+				city: 'Hanoi',
+				address: 'somewhere',
+				distance: '500',
+				title: 'Best Hotel in the City',
+				desc: 'hotel description',
+				cheapestPrice: 100,
+			});
 			setOpenUpdate(false);
 			setLoadingCreate(false);
 			setOpenCreate(false);
 			toast.success(t('Create user success'));
-			getAllUserData();
+			getAllHotelData();
 		} catch (e) {
 			toast.error(t('The email already in use'));
 			console.log(e.message);
@@ -182,41 +187,6 @@ export default function TableUser() {
 			render: (text) => <p>{text}</p>,
 			sorter: (a, b) => a.name.length - b.name.length,
 		},
-
-		{
-			title: t('Phone Number'),
-			dataIndex: 'phone',
-			key: 'phone',
-		},
-		{
-			title: 'Email',
-			dataIndex: 'email',
-			key: 'email',
-			width: 210,
-		},
-		{
-			title: t('Tags'),
-			dataIndex: 'tag',
-			key: 'tag',
-		},
-		{
-			title: t('Gender'),
-			dataIndex: 'gender',
-			key: 'gender',
-			render: (text) => <p>{t(text)}</p>,
-		},
-		{
-			title: t('Role'),
-			dataIndex: 'role',
-			key: 'role',
-			render: (text) => <p>{t(text)}</p>,
-		},
-
-		{
-			title: t('ID'),
-			dataIndex: 'id',
-			key: 'id',
-		},
 		{
 			width: 110,
 
@@ -233,7 +203,7 @@ export default function TableUser() {
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteUser(record.id)}>
+						onConfirm={() => handleDeleteHotel(record._id)}>
 						<Button
 							danger
 							type='text'
@@ -243,41 +213,33 @@ export default function TableUser() {
 			),
 		},
 	];
-	const getAllUserData = async () => {
-		const list = [];
+	const getAllHotelData = async () => {
 		try {
-			const users = await GetAllUser();
-			users.forEach((doc) => {
-				// doc.data() is never undefined for query doc
-				list.push({ id: doc.id, ...doc.data() });
-			});
-			setListUsers(list);
-			setSearchDataSource(list);
+			const res = await GetAllHotel();
+			setListHotels(res);
 			setTableLoading(false);
 		} catch (error) {
-			toast.error(t('Fail to load user data'));
+			console.error(error);
 			setTableLoading(false);
-
-			console.log(error);
 		}
 	};
 
 	return (
 		<>
-			<div className='tableuser-header'>
-				<div className='tableuser_leftheader'>
-					<h2 className='tableuser-header-title'>
-						{t('management users')}
+			<div className='tablehotel-header'>
+				<div className='tablehotel_leftheader'>
+					<h2 className='tablehotel-header-title'>
+						{t('management hotel')}
 					</h2>
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
 						onClick={() => setTableToolTip(!tableToolTip)}
 						type='text'></Button>
 				</div>
-				<div className='tableuser_rightheader'>
+				<div className='tablehotel_rightheader'>
 					<SearchTableInput
 						columns={columns}
-						dataSource={listUsers} // 🔴 Original dataSource
+						dataSource={listHotels} // 🔴 Original dataSource
 						setDataSource={setSearchDataSource} // 🔴 Newly created setSearchDataSource from useState hook
 						inputProps={{
 							placeholder: t('Search'),
@@ -285,11 +247,11 @@ export default function TableUser() {
 						}}
 					/>
 					<Button
-						className='tableuser_createbutton'
+						className='tablehotel_createbutton'
 						loading={loadingCreate}
 						type='primary'
 						onClick={handleOpenCreateUser}>
-						{t('Create User')}
+						{t('Create Hotel')}
 					</Button>
 				</div>
 			</div>
@@ -346,17 +308,7 @@ export default function TableUser() {
 								<Option value='other'>{t('Other')}</Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name='role' label={t('Role')}>
-							<Select>
-								<Option value='user'>{t('User')}</Option>
-								<Option
-									value='admin'
-									disabled={!user?.role === 'admin'}>
-									{t('Admin')}
-								</Option>
-								<Option value='manager'>{t('Manager')}</Option>
-							</Select>
-						</Form.Item>
+
 						<Form.Item name='tag' label={t('Tags')}>
 							<Select mode='tags'>
 								<Option value='vip'>{t('V.I.P')}</Option>
@@ -541,21 +493,7 @@ export default function TableUser() {
 										</Option>
 									</Select>
 								</Form.Item>
-								<Form.Item name='role' label={t('Role')}>
-									<Select>
-										<Option value='user'>
-											{t('User')}
-										</Option>
-										<Option
-											value='admin'
-											disabled={!user?.role === 'admin'}>
-											{t('Admin')}
-										</Option>
-										<Option value='Manager'>
-											{t('Manager')}
-										</Option>
-									</Select>
-								</Form.Item>
+
 								<Form.Item name='tag' label={t('Tags')}>
 									<Select mode='tags'>
 										<Option value='vip'>
@@ -631,7 +569,7 @@ export default function TableUser() {
 					</Select>
 
 					<ExportTableButton
-						dataSource={listUsers}
+						dataSource={listHotels}
 						columns={columns}
 						btnProps={{
 							type: 'primary',
@@ -664,7 +602,7 @@ export default function TableUser() {
 					pageSizeOptions: ['5', '10', '20', '30'],
 				}}
 				columns={columns}
-				dataSource={searchDataSource || listUsers}
+				dataSource={searchDataSource || listHotels}
 				loading={tableLoading}
 			/>
 		</>

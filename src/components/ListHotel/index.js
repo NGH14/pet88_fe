@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function ListHotel() {
 	const [loadingHotel, setLoadingHotel] = React.useState(true);
+
+	const { state } = useLocation();
 	const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
 	const [listHotels, setListHotels] = React.useState([]);
-	console.log(listHotels);
 	React.useEffect(() => {
 		fetchHotelData();
 	}, []);

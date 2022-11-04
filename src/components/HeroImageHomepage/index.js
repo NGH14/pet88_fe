@@ -38,7 +38,12 @@ function HeroImageHomePage({ HeaderText }) {
 											'established & trusted pet care service',
 										)}
 									</h3>
-									<div className='content-form'>
+									<div className='herocontent-form'>
+										<h3 className='formcontent-title'>
+											{t(
+												'established & trusted pet care service',
+											)}
+										</h3>
 										<FormBookingHomepage></FormBookingHomepage>
 									</div>
 								</div>
