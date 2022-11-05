@@ -21,6 +21,14 @@ const HeroBlockStyled = styled.div`
 
 const HeroInlineStyled = styled.div``;
 
+const HeroBlockStyledNormal = styled.div`
+	background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)),
+		url(${bgHeader});
+	width: 100%;
+
+	height: 150px;
+`;
+
 function HeroImageHomePage({ HeaderText }) {
 	const locate = useLocation();
 
@@ -59,11 +67,9 @@ function HeroImageHomePage({ HeaderText }) {
 
 					default:
 						return (
-							<HeroInlineStyled id='hero' className='heroInline'>
-								<div className='heroInline-header'>
-									{HeaderText ?? 'Welcome'}
-								</div>
-							</HeroInlineStyled>
+							<HeroBlockStyledNormal
+								id='hero'
+								className='heroInline'></HeroBlockStyledNormal>
 						);
 				}
 			})()}

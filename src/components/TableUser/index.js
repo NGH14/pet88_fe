@@ -19,6 +19,7 @@ import {
 	MoreOutlined,
 	UpOutlined,
 	DownOutlined,
+	ReloadOutlined,
 } from '@ant-design/icons';
 
 import {
@@ -198,6 +199,10 @@ export default function TableUser() {
 			title: t('Tags'),
 			dataIndex: 'tag',
 			key: 'tag',
+			render: (tag) =>
+				tag.map((_) => (
+					<Tag color={_?.length > 5 ? 'cyan' : 'gold'}>{_}</Tag>
+				)),
 		},
 		{
 			title: t('Gender'),
@@ -244,6 +249,8 @@ export default function TableUser() {
 		},
 	];
 	const getAllUserData = async () => {
+		setTableLoading(true);
+
 		const list = [];
 		try {
 			const users = await GetAllUser();
@@ -291,6 +298,15 @@ export default function TableUser() {
 						onClick={handleOpenCreateUser}>
 						{t('Create User')}
 					</Button>
+					<Button
+						icon={
+							<ReloadOutlined
+								rotate={50}
+								style={{ fontSize: 14 }}
+							/>
+						}
+						onClick={() => getAllUserData()}
+						type='text'></Button>
 				</div>
 			</div>
 

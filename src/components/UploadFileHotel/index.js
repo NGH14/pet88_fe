@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Modal, Upload } from 'antd';
+import { Button, Form, message, Modal, Upload } from 'antd';
 import './style.css';
 import { InboxOutlined } from '@ant-design/icons';
 import { async } from '@firebase/util';
@@ -22,11 +22,16 @@ const UploadFileHotel = () => {
 	const [previewImage, setPreviewImage] = React.useState('');
 	const [previewTitle, setPreviewTitle] = React.useState('');
 	const [fileList, setFileList] = React.useState([]);
+	const [resetUpload, setResetUpload] = React.useState(true);
 	const [showFile, setShowFile] = React.useState(true);
+	const [form] = Form.useForm();
 
 	const [uploading, setUploading] = React.useState(false);
 	const { CreateHotel } = UserAuth();
 	console.log(fileList);
+
+	React.useEffect(() => form.resetFields(), [resetUpload]);
+
 	const handleUpload = async (e) => {
 		try {
 			const list = await Promise.all(
@@ -42,7 +47,7 @@ const UploadFileHotel = () => {
 
 					const { url } = uploadRes.data;
 					setFileList([]);
-					setShowFile(false);
+					setResetUpload(!resetUpload);
 					return url;
 				}),
 			);
@@ -73,6 +78,12 @@ const UploadFileHotel = () => {
 		},
 		beforeUpload: (file) => {
 			setFileList([...fileList, file]);
+			const isPNG = file.type === 'image/png';
+			const isJPG = file.type === 'image/jpg';
+
+			if (!isPNG || isJPG) {
+				message.error(`${file.name} is not a png/jpg file`);
+			}
 			return false;
 		},
 	};
@@ -91,7 +102,7 @@ const UploadFileHotel = () => {
 
 	return (
 		<>
-			<Form>
+			<Form form={form}>
 				<Form.Item
 					label='File'
 					name='file'
@@ -102,9 +113,10 @@ const UploadFileHotel = () => {
 						},
 					]}>
 					<Dragger
+						accept='.png,.jpeg'
+						maxCount={3}
 						multiple={true}
 						onClick={() => setShowFile(true)}
-						showUploadList={showFile}
 						onPreview={handlePreview}
 						listType='picture'
 						defaultFileList={[...fileList]}

@@ -16,8 +16,10 @@ import {
 	DeleteOutlined,
 	EditOutlined,
 	MoreOutlined,
-	UpOutlined,
+	ReloadOutlined,
 	DownOutlined,
+	UploadOutlined,
+	InboxOutlined,
 } from '@ant-design/icons';
 
 import {
@@ -30,6 +32,9 @@ import {
 	Select,
 	DatePicker,
 	Popconfirm,
+	Upload,
+	message,
+	Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
@@ -38,9 +43,19 @@ import axios from 'axios';
 import './style.css';
 const { Option } = Select;
 
+const getBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result);
+		reader.onerror = (error) => reject(error);
+	});
+
+const { Dragger } = Upload;
+
 export default function TableHotel() {
 	const [tableLoading, setTableLoading] = React.useState(true);
-	const [userRecord, setUserRecord] = React.useState({});
+	const [deparmentRecord, SetDeparmentRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listHotels, setListHotels] = React.useState();
@@ -62,15 +77,81 @@ export default function TableHotel() {
 		updateUserByAdmin,
 		AddUserToDBByAdmin,
 		GetAllHotel,
+		UpdateHotel,
 	} = UserAuth();
 	const { lang } = UserLanguage();
+
+	const [previewOpen, setPreviewOpen] = React.useState(false);
+	const [previewImage, setPreviewImage] = React.useState('');
+	const [previewTitle, setPreviewTitle] = React.useState('');
+	const [fileList, setFileList] = React.useState([]);
+	const [resetUpload, setResetUpload] = React.useState(true);
+	const [showFile, setShowFile] = React.useState(true);
+
+	const [uploading, setUploading] = React.useState(false);
+
+	const handleUpload = async (e) => {
+		try {
+			const list = await Promise.all(
+				Object.values(fileList).map(async (file) => {
+					const data = new FormData();
+					data.append('file', file);
+					data.append('upload_preset', 'pet88_upload');
+
+					const uploadRes = await axios.post(
+						'https://api.cloudinary.com/v1_1/dggxjymsy/image/upload',
+						data,
+					);
+
+					const { url } = uploadRes.data;
+					setFileList([]);
+					setResetUpload(!resetUpload);
+					return url;
+				}),
+			);
+			return list;
+		} catch (err) {
+			return err;
+		}
+	};
+
+	const props = {
+		onRemove: (file) => {
+			const index = fileList.indexOf(file);
+			const newFileList = fileList.slice();
+			newFileList.splice(index, 1);
+			setFileList(newFileList);
+		},
+		beforeUpload: (file) => {
+			setFileList([...fileList, file]);
+			const isPNG = file.type === 'image/png';
+			const isJPG = file.type === 'image/jpg';
+
+			if (!isPNG || isJPG) {
+				message.error(`${file.name} is not a png/jpg file`);
+			}
+			return false;
+		},
+	};
+
+	const handleCancel = () => setPreviewOpen(false);
+	const handlePreview = async (file) => {
+		if (!file.url && !file.preview) {
+			file.preview = await getBase64(file.originFileObj);
+		}
+		setPreviewImage(file.url || file.preview);
+		setPreviewOpen(true);
+		setPreviewTitle(
+			file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+		);
+	};
 
 	useEffect(() => {
 		getAllHotelData();
 	}, []);
 
 	const handleOpenUpdateUser = (record) => {
-		setUserRecord(record);
+		SetDeparmentRecord(record);
 		setOpenUpdate(true);
 	};
 
@@ -81,61 +162,28 @@ export default function TableHotel() {
 	const onFinishUpdate = async (value) => {
 		setLoading(true);
 		try {
-			await updateUserByAdmin(userRecord?.id, value);
+			await UpdateHotel(deparmentRecord._id, value);
 			setLoading(false);
-			toast.success(t('Update Profile Success'));
-			getAllHotelData();
+			toast.success(t('Update Department Success'));
 			setOpenUpdate(false);
+			getAllHotelData();
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
 			console.log(e.message);
 			setLoading(false);
 		}
 	};
-	useEffect(() => form.resetFields(), [userRecord, openCreate]);
+	useEffect(() => form.resetFields(), [deparmentRecord, openCreate]);
 
 	const fullWidth = global.window.innerWidth;
 
-	const onCloseUpdateUser = () => {
-		setUserRecord({});
+	const onCloseUpdateDepartment = () => {
+		SetDeparmentRecord({});
 		setOpenUpdate(false);
 	};
 
 	const onCloseCreateUser = () => {
 		setOpenCreate(false);
-	};
-
-	const fetchDeleteData = async (token, id) => {
-		try {
-			const res = await axios.delete(
-				`http://localhost:3001/api/user/${id}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
-			);
-			console.log(res.data);
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
-	const fetchCreateData = async (token, value) => {
-		try {
-			const res = await axios.post(
-				`http://localhost:3001/api/user/`,
-				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
-			);
-			return res.data;
-		} catch (error) {
-			console.error(error);
-		}
 	};
 
 	const handleDeleteHotel = async (id) => {
@@ -150,26 +198,22 @@ export default function TableHotel() {
 		}
 	};
 
-	const onFinishCreateUser = async (value) => {
+	const onFinishCreateHotel = async (value) => {
 		setLoadingCreate(true);
 		try {
-			await CreateHotel({
-				name: 'Pet16',
-				type: 'hotel',
-				city: 'Hanoi',
-				address: 'somewhere',
-				distance: '500',
-				title: 'Best Hotel in the City',
-				desc: 'hotel description',
-				cheapestPrice: 100,
-			});
-			setOpenUpdate(false);
+			const listImg = await handleUpload();
+
+			const data = {
+				...value,
+				photos: listImg,
+			};
+			await CreateHotel(data);
+
 			setLoadingCreate(false);
 			setOpenCreate(false);
-			toast.success(t('Create user success'));
 			getAllHotelData();
+			toast.success(t('Created department'));
 		} catch (e) {
-			toast.error(t('The email already in use'));
 			console.log(e.message);
 			setLoadingCreate(false);
 		}
@@ -188,8 +232,37 @@ export default function TableHotel() {
 			sorter: (a, b) => a.name.length - b.name.length,
 		},
 		{
+			title: t('Type'),
+			dataIndex: 'type',
+			key: 'type',
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: t('City'),
+			dataIndex: 'city',
+			key: 'City',
+			render: (text) => <p>{text}</p>,
+			sorter: (a, b) => a.City.length - b.City.length,
+		},
+		{
+			title: t('Address'),
+			dataIndex: 'address',
+			key: 'address',
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: t('Services'),
+			dataIndex: 'services',
+			key: 'services',
+			render: (services) =>
+				services.map((service) => (
+					<Tag color={service?.length > 5 ? 'cyan' : 'gold'}>
+						{service}
+					</Tag>
+				)),
+		},
+		{
 			width: 110,
-
 			title: t('Action'),
 			fixed: 'right',
 			key: 'action',
@@ -214,9 +287,11 @@ export default function TableHotel() {
 		},
 	];
 	const getAllHotelData = async () => {
+		setTableLoading(true);
 		try {
 			const res = await GetAllHotel();
 			setListHotels(res);
+			setSearchDataSource(res);
 			setTableLoading(false);
 		} catch (error) {
 			console.error(error);
@@ -229,7 +304,7 @@ export default function TableHotel() {
 			<div className='tablehotel-header'>
 				<div className='tablehotel_leftheader'>
 					<h2 className='tablehotel-header-title'>
-						{t('management hotel')}
+						{t('management deparment')}
 					</h2>
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
@@ -239,8 +314,8 @@ export default function TableHotel() {
 				<div className='tablehotel_rightheader'>
 					<SearchTableInput
 						columns={columns}
-						dataSource={listHotels} // 🔴 Original dataSource
-						setDataSource={setSearchDataSource} // 🔴 Newly created setSearchDataSource from useState hook
+						dataSource={listHotels}
+						setDataSource={setSearchDataSource}
 						inputProps={{
 							placeholder: t('Search'),
 							prefix: <SearchOutlined />,
@@ -251,15 +326,24 @@ export default function TableHotel() {
 						loading={loadingCreate}
 						type='primary'
 						onClick={handleOpenCreateUser}>
-						{t('Create Hotel')}
+						{t('Create Deparment')}
 					</Button>
+					<Button
+						icon={
+							<ReloadOutlined
+								rotate={50}
+								style={{ fontSize: 14 }}
+							/>
+						}
+						onClick={() => getAllHotelData()}
+						type='text'></Button>
 				</div>
 			</div>
 
 			<Drawer
 				title={t('Update')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
-				onClose={onCloseUpdateUser}
+				onClose={onCloseUpdateDepartment}
 				open={openUpdate}
 				bodyStyle={{
 					paddingBottom: 80,
@@ -272,61 +356,58 @@ export default function TableHotel() {
 						name='update user'
 						size={'large'}
 						initialValues={{
-							name: userRecord?.name,
-							phone: userRecord?.phone,
-							gender: userRecord?.gender,
-							dob: moment(userRecord?.dob?.toDate()),
-							email: userRecord?.email,
-							role: userRecord?.role,
-							tag: userRecord?.tag,
+							name: deparmentRecord?.name,
+							tag: deparmentRecord?.tag,
+							type: deparmentRecord?.type,
+							city: deparmentRecord?.city,
+							address: deparmentRecord?.address,
+							title: deparmentRecord?.title,
+							desc: deparmentRecord?.desc,
+							services: deparmentRecord?.services,
 						}}
 						onFinish={onFinishUpdate}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item
-							label={t('Name')}
-							name='name'
-							rules={[
-								{
-									required: true,
-									message: 'Please input your username!',
-								},
-							]}>
+						<Form.Item label={t('Name')} name='name'>
 							<Input />
 						</Form.Item>
-						<Form.Item name='dob' label={t('Date of Birth')}>
-							<DatePicker
-								disabledDate={(current) => current > moment()}
-								format={lang === 'vi' ? 'DD-MM-YYYY' : null}
-							/>
-						</Form.Item>
-						<Form.Item name='gender' label={t('Gender')}>
+						<Form.Item name='type' label={t('Type')}>
 							<Select>
-								<Option value='male'>{t('Male')}</Option>
-								<Option value='female'>{t('Female')}</Option>
-								<Option value='other'>{t('Other')}</Option>
+								<Option value='franchise'>
+									{t('Franchise')}
+								</Option>
+								<Option value='owner'>{t('Owner')}</Option>
 							</Select>
 						</Form.Item>
-
-						<Form.Item name='tag' label={t('Tags')}>
-							<Select mode='tags'>
-								<Option value='vip'>{t('V.I.P')}</Option>
-								<Option value='OCD'>{t('O.C.D')}</Option>
+						<Form.Item label={t('Address')} name='address'>
+							<Input />
+						</Form.Item>
+						<Form.Item label={t('Title')} name='title'>
+							<Input />
+						</Form.Item>
+						<Form.Item label={t('Describe')} name='desc'>
+							<Input />
+						</Form.Item>
+						<Form.Item name='city' label={t('City')}>
+							<Select>
+								<Option value='Ho Chi Minh'>
+									{t('Ho Chi Minh')}
+								</Option>
+								<Option value='Ha Noi'>{t('Ha Noi')}</Option>
+								<Option value='Da Nang'>{t('Da Nang')}</Option>
 							</Select>
-						</Form.Item>
-						<Form.Item
-							type='number'
-							name='phone'
-							label={t('Phone Number')}>
-							<Input
-								style={{
-									width: '100%',
-								}}
-							/>
-						</Form.Item>
-						<Form.Item label='Email' name='email'>
-							<Input disabled />
+						</Form.Item>{' '}
+						<Form.Item name='services' label={t('Services')}>
+							<Select mode='multiple'>
+								<Option value='hotel'>{t('Hotel')}</Option>
+								<Option value='grooming'>
+									{t('Grooming')}
+								</Option>
+								<Option value='training'>
+									{t('Training')}
+								</Option>
+							</Select>
 						</Form.Item>
 						<Form.Item
 							wrapperCol={{
@@ -343,7 +424,7 @@ export default function TableHotel() {
 									boxShadow:
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
-								onClick={onCloseUpdateUser}>
+								onClick={onCloseUpdateDepartment}>
 								{t('Close')}
 							</Button>
 							<Button
@@ -364,8 +445,9 @@ export default function TableHotel() {
 					</Form>
 				) : null}
 			</Drawer>
+
 			<Drawer
-				title={t('Create new user')}
+				title={t('Create Hotel')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}
@@ -377,146 +459,85 @@ export default function TableHotel() {
 						form={form}
 						validateTrigger='onBlur'
 						labelCol={{ span: 4 }}
-						name='Create User'
+						name='Create Hotel'
 						size={'medium'}
 						initialValues={{}}
-						onFinish={onFinishCreateUser}
+						onFinish={onFinishCreateHotel}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item
-							label={t('Name')}
-							name='name'
-							rules={[
-								{
-									required: true,
-									message: 'Please input your name!',
-								},
-							]}>
+						<Form.Item label={t('Name')} name='name'>
 							<Input />
 						</Form.Item>
-						<Form.Item
-							label={t('Email')}
-							name='email'
-							rules={[
-								{
-									required: true,
-									message: 'Please enter your email!',
-								},
-								{
-									type: 'email',
-									message: 'Invalid enter your email!',
-								},
-							]}>
+						<Form.Item name='type' label={t('Type')}>
+							<Select>
+								<Option value='franchise'>
+									{t('Franchise')}
+								</Option>
+								<Option value='owner'>{t('Owner')}</Option>
+							</Select>
+						</Form.Item>
+						<Form.Item label={t('Address')} name='address'>
 							<Input />
 						</Form.Item>
+						<Form.Item label={t('Title')} name='title'>
+							<Input />
+						</Form.Item>
+						<Form.Item label={t('Describe')} name='desc'>
+							<Input />
+						</Form.Item>
+						<Form.Item name='city' label={t('City')}>
+							<Select>
+								<Option value='Ho Chi Minh'>
+									{t('Ho Chi Minh')}
+								</Option>
+								<Option value='Ha Noi'>{t('Ha Noi')}</Option>
+								<Option value='Da Nang'>{t('Da Nang')}</Option>
+							</Select>
+						</Form.Item>{' '}
+						<Form.Item name='services' label={t('Services')}>
+							<Select mode='multiple'>
+								<Option value='hotel'>{t('Hotel')}</Option>
+								<Option value='grooming'>
+									{t('Grooming')}
+								</Option>
+								<Option value='training'>
+									{t('Training')}
+								</Option>
+							</Select>
+						</Form.Item>
 						<Form.Item
-							label={t('Password')}
-							name='password'
+							label='File'
+							name='file'
 							rules={[
 								{
 									required: true,
-									message: 'Please enter your password!',
-								},
-								{
-									min: 6,
-									message:
-										'Password must be minimum 6 characters.',
+									message: 'Please input your File!',
 								},
 							]}>
-							<Input.Password />
+							<Dragger
+								accept='.png,.jpeg'
+								maxCount={3}
+								multiple={true}
+								onClick={() => setShowFile(true)}
+								onPreview={handlePreview}
+								listType='picture'
+								defaultFileList={[...fileList]}
+								className='upload-list-inline'
+								{...props}>
+								<p className='ant-upload-drag-icon'>
+									<InboxOutlined />
+								</p>
+								<p className='ant-upload-text'>
+									Click or drag file to this area to upload
+								</p>
+								<p className='ant-upload-hint'>
+									Support for a single or bulk upload.
+									Strictly prohibit from uploading company
+									data or other band files
+								</p>
+							</Dragger>
 						</Form.Item>
-						<Form.Item
-							label={t('Confirm Password')}
-							name='confirm'
-							dependencies={['password']}
-							hasFeedback
-							rules={[
-								{
-									required: true,
-									message: 'Please confirm your password!',
-								},
-								({ getFieldValue }) => ({
-									validator(_, value) {
-										if (
-											!value ||
-											getFieldValue('password') === value
-										) {
-											return Promise.resolve();
-										}
-										return Promise.reject(
-											new Error(
-												'The two passwords that you entered do not match!',
-											),
-										);
-									},
-								}),
-							]}>
-							<Input.Password />
-						</Form.Item>
-
-						<Button
-							style={{ margin: 15 }}
-							type='text'
-							onClick={() => setAdditionInfo(!additionInfo)}>
-							{t('Addition Information')}{' '}
-							{additionInfo ? (
-								<UpOutlined style={{ fontSize: 12 }} />
-							) : (
-								<DownOutlined style={{ fontSize: 12 }} />
-							)}
-						</Button>
-						{additionInfo && (
-							<>
-								<Form.Item
-									name='dob'
-									label={t('Date of Birth')}>
-									<DatePicker
-										disabledDate={(current) =>
-											current > moment()
-										}
-										format={
-											lang === 'vi' ? 'DD-MM-YYYY' : null
-										}
-									/>
-								</Form.Item>
-								<Form.Item name='gender' label={t('Gender')}>
-									<Select>
-										<Option value='male'>
-											{t('Male')}
-										</Option>
-										<Option value='female'>
-											{t('Female')}
-										</Option>
-										<Option value='other'>
-											{t('Other')}
-										</Option>
-									</Select>
-								</Form.Item>
-
-								<Form.Item name='tag' label={t('Tags')}>
-									<Select mode='tags'>
-										<Option value='vip'>
-											{t('V.I.P')}
-										</Option>
-										<Option value='OCD'>
-											{t('O.C.D')}
-										</Option>
-									</Select>
-								</Form.Item>
-								<Form.Item
-									type='number'
-									name='phone'
-									label={t('Phone Number')}>
-									<Input
-										style={{
-											width: '100%',
-										}}
-									/>
-								</Form.Item>
-							</>
-						)}
-
 						<Form.Item
 							wrapperCol={{
 								offset: 4,
@@ -553,7 +574,19 @@ export default function TableHotel() {
 					</Form>
 				) : null}
 			</Drawer>
-
+			<Modal
+				open={previewOpen}
+				title={previewTitle}
+				footer={null}
+				onCancel={handleCancel}>
+				<img
+					alt='example'
+					style={{
+						width: '100%',
+					}}
+					src={previewImage}
+				/>
+			</Modal>
 			{tableToolTip ? (
 				<div className='table_tooltip'>
 					<Select

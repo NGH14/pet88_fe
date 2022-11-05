@@ -473,8 +473,6 @@ function AppHeader() {
 									navBg
 										? {
 												backgroundColor: '#fff',
-												transition:
-													'background-color 0.5s ease-in-out',
 										  }
 										: {}
 								}>
@@ -594,7 +592,6 @@ function AppHeader() {
 														{t('account')}
 													</NavLink>
 												)}
-
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={

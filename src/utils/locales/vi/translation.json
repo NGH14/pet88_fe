@@ -1,10 +1,13 @@
 {
 	"Admin": "Quản trị viên",
 	"admin": "Quản trị viên",
-
+	"Ho Chi Minh": "Hồ Chí Minh",
+	"Ha Noi": "Hà Nội",
+	"Da Nang":"Đà Nẵng", 
 	"Manager": "Quản lí",
 	"manager": "Quản lí",
-
+	"franchise": "nhượng quyền",
+	"owner": "sở hữu",
 	"User": "Người dùng",
 	"user": "Người dùng",
 	"history": "Lịch sử",
@@ -20,8 +23,8 @@
 	"Create User": "Tạo Mới",
 	"Create Hotel": "Tạo Mới",
 	"management hotel": "quản lí khách sạn",
-	"Drop off": "Gửi thú cưng",
-	"Pick up": "Đón bé",
+	"Drop off": "Ngày Gửi",
+	"Pick up": "Ngày Đón",
 	"City name": "Tên thành phố",
 	"management users": "quản lí người dùng",
 	"Welcome to React": "Xin chào",

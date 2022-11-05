@@ -161,7 +161,24 @@ export const AuthContextProvider = ({ children }) => {
 			);
 			return res.data;
 		} catch (error) {
-			return console.error(error);
+			return error;
+		}
+	};
+
+	const UpdateHotel = async (id, value) => {
+		try {
+			const res = await axios.put(
+				`http://localhost:3001/api/hotel/${id}`,
+				value,
+				{
+					headers: {
+						Authorization: 'Bearer ' + token,
+					},
+				},
+			);
+			return res.data;
+		} catch (error) {
+			return error;
 		}
 	};
 
@@ -258,6 +275,7 @@ export const AuthContextProvider = ({ children }) => {
 				DeleteUser,
 				GetAllHotel,
 				DeleteHotel,
+				UpdateHotel,
 			}}>
 			{children}
 		</AuthContext.Provider>

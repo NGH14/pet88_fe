@@ -1,6 +1,6 @@
 import { LockOutlined, SearchOutlined } from '@ant-design/icons';
 
-import { Button, Form, Input, DatePicker } from 'antd';
+import { Button, Form, Input, DatePicker, Select } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,33 +8,25 @@ import { UserLanguage } from '../../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 import './style.css';
 const { RangePicker } = DatePicker;
+const { Option } = Select;
+
 const FormBookingHomepage = () => {
 	const [form] = Form.useForm();
 	const [, forceUpdate] = useState({});
-	const [destination, setDestination] = useState();
-	const [listSearch, setListSearch] = useState();
 	const navigate = useNavigate();
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
-	console.log(listSearch);
-	useEffect(() => {}, []);
 
-	const fetchHotelData = async (token, value) => {
+	const fetchHotelData = async (value) => {
 		try {
 			const res = await axios.get(
 				`http://localhost:3001/api/hotel/find-hotel`,
 				{
 					params: {
-						city: destination,
-					},
-				},
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
+						city: value.city,
 					},
 				},
 			);
-			setListSearch(res.data);
 			navigate('/hotel', {
 				state: res.data,
 			});
@@ -44,7 +36,7 @@ const FormBookingHomepage = () => {
 	};
 
 	const onFinish = (values) => {
-		fetchHotelData();
+		fetchHotelData(values);
 	};
 	return (
 		<Form
@@ -53,15 +45,25 @@ const FormBookingHomepage = () => {
 			form={form}
 			requiredMark={false}
 			name='form_bookinghomepage'
+			initialValues={{
+				city: 'Ho Chi Minh',
+			}}
 			onFinish={onFinish}>
-			<Form.Item style={{ width: '49%' }} name='city'>
-				<Input
-					prefix={<SearchOutlined />}
-					className='form-item_bookinghomepage'
-					onChange={(e) => setDestination(e.target.value)}
-					placeholder={t('City name')}
-				/>
+			<Form.Item style={{ width: '300px' }} name='city'>
+				<Select
+					showSearch
+					filterOption={(input, option) =>
+						(option?.value ?? '')
+							.toLowerCase()
+							.includes(input.toLowerCase())
+					}
+					className='form-item_bookinghomepage'>
+					<Option value='Ho Chi Minh'>{t('Ho Chi Minh')}</Option>
+					<Option value='Ha Noi'>{t('Ha Noi')}</Option>
+					<Option value='Da Nang'>{t('Da Nang')}</Option>
+				</Select>
 			</Form.Item>
+
 			<Form.Item style={{ width: '49%' }}>
 				<RangePicker
 					placeholder={[t('Drop off'), t('Pick up')]}
