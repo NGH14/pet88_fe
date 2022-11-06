@@ -26,7 +26,7 @@ const HeroBlockStyledNormal = styled.div`
 		url(${bgHeader});
 	width: 100%;
 
-	height: 150px;
+	height: 120px;
 `;
 
 function HeroImageHomePage({ HeaderText }) {
@@ -67,9 +67,9 @@ function HeroImageHomePage({ HeaderText }) {
 
 					default:
 						return (
-							<HeroBlockStyledNormal
+							<HeroInlineStyled
 								id='hero'
-								className='heroInline'></HeroBlockStyledNormal>
+								className='heroInline'></HeroInlineStyled>
 						);
 				}
 			})()}

@@ -6,13 +6,11 @@ general
 .ant-input {
 	border-radius: 5px;
 }
-.hotel-page {
+.department-page {
 	padding: 5px;
 	background-color: rgb(248, 249, 255) !important;
 }
-.hotel-breadcum{
-	padding-right: 15px;
-
+.department-breadcum{
 	max-width: 1300px;
 	font-size: 10px;
 	margin: auto;
@@ -20,7 +18,7 @@ general
 }
 
 
-.hotel-page_containner {
+.department-page_containner {
 	padding: 50px 15px;
 
 	max-width: 1300px;
@@ -30,17 +28,17 @@ general
 	min-height: 800px;
 }
 
- .hotel-toolbox{
+ .department-toolbox{
 	display: flex;
 	flex-direction: column;
 	width: 22%;
 }
 
-.hotel-page_content{
+.department-page_content{
 	width: 70%;
 }
 
-.hotel-page_title {
+.department-page_title {
 	text-transform: capitalize;
 	font-size: 3rem;
 	font-weight: bold;
@@ -53,11 +51,11 @@ general
 	margin-top: 30px;
 }
 
-.hotelLayout {
+.departmentLayout {
 	background-color: transparent !important;
 }
 
-.hotelLayout .ant-layout-header {
+.departmentLayout .ant-layout-header {
 	background-color: transparent !important;
 	padding: 0;
 	height: auto;
@@ -65,38 +63,13 @@ general
 }
 
 
-/* 
-      title holder
-      ------------
-      */
-.titleHolder {
-	text-align: center;
-	position: relative;
-	padding: 0 0 20px;
-	margin: 0 0 40px;
-}
 
-.titleHolder:after {
-	transform: translateX(-50%);
-	content: '';
-	background: #1890ff;
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	height: 3px;
-	width: 50px;
-}
-
-.titleHolder h2 {
-	font-size: 28px;
-	margin: 0;
-}
 
 /* 
       header
       ------ 
       */
-.hotelLayout .ant-layout-header {
+.departmentLayout .ant-layout-header {
 	transition: all 0.5s ease-in-out;
 	left: 0;
 	right: 0;
@@ -228,7 +201,7 @@ general
 }
 
 @media only screen and (max-width: 767px) {
-	.hotelLayout {
+	.departmentLayout {
 		font-size: 12px;
 	}
 	.swiper-slide img {

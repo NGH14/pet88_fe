@@ -34,7 +34,7 @@ export default function NotMatchPage() {
 			<video
 				loop
 				playsinline='playsinline'
-				class='autoplay-video'
+				className='autoplay-video'
 				preload='auto'
 				data-autoplay
 				src={CatVideo}

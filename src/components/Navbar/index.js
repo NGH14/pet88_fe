@@ -469,13 +469,11 @@ function AppHeader() {
 					default:
 						return (
 							<div
-								style={
-									navBg
-										? {
-												backgroundColor: '#fff',
-										  }
-										: {}
-								}>
+								style={{
+									backgroundColor: '#fff',
+									transition:
+										'background-color 0.5s ease-in-out',
+								}}>
 								<div className='container-fluid'>
 									<div className='header'>
 										<div className='mobileVisible'>
@@ -487,9 +485,7 @@ function AppHeader() {
 														style={{
 															transition:
 																'color 0.5s ease-in-out',
-															color: navBg
-																? 'black'
-																: 'white',
+															color: 'black',
 														}}
 													/>
 												}
@@ -499,9 +495,7 @@ function AppHeader() {
 													<ChangeLanguage
 														fullWidth
 														TextColor={
-															visible || navBg
-																? 'black'
-																: 'white'
+															'black'
 														}></ChangeLanguage>
 												}
 												width={300}
@@ -570,7 +564,7 @@ function AppHeader() {
 												})}
 												{user && (
 													<NavLink
-														to='./account'
+														to='/account'
 														style={{
 															transition:
 																'color 0.3s ease-in-out',
@@ -612,11 +606,7 @@ function AppHeader() {
 											<div className='logo'>
 												<NavLink to='/'>
 													<img
-														src={
-															navBg
-																? Logo
-																: LogoWhite
-														}
+														src={Logo}
 														alt=''
 														style={{
 															maxHeight: 30,
@@ -637,11 +627,7 @@ function AppHeader() {
 																transition:
 																	'color 0.3s ease-in-out',
 
-																color:
-																	visible ||
-																	navBg
-																		? 'black'
-																		: 'white',
+																color: 'black',
 																fontFamily:
 																	'Nunito Sans',
 																textTransform:
@@ -655,16 +641,6 @@ function AppHeader() {
 													);
 												})}
 											</div>
-										</div>
-
-										<div className='mobileHidden'>
-											<AuthButton
-												TextColor={
-													visible || navBg
-														? 'black'
-														: 'white'
-												}
-											/>
 										</div>
 									</div>
 								</div>

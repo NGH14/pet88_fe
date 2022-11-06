@@ -316,118 +316,75 @@ function SubNavBar() {
 					default:
 						return (
 							<div
-								style={
-									navBg
-										? {
-												backgroundColor: '#fff',
-										  }
-										: {}
-								}>
-								<div className='subheader mobileHidden'>
-									<div
-										className={
-											user?.role === 'admin'
-												? 'subheader-between'
-												: 'subheader-right'
-										}>
-										{user?.role === 'admin' && (
-											<NavLink
-												to='/admin'
-												style={{
-													transition:
-														'color 0.5s ease-in-out',
-													color:
-														visible || navBg
-															? 'black'
-															: 'white',
-													fontFamily: 'Nunito Sans',
-													cursor: 'pointer',
-													fontSize: 11,
-													margin: 0,
-													padding: '0 10px',
-												}}>
-												{t('Admin Centre')}
-											</NavLink>
+								style={{
+									backgroundColor: '#fff',
+									transition:
+										'background-color 0.5s ease-in-out',
+								}}>
+								<div className='subheader'>
+									<div className='subheader-right'>
+										<ChangeLanguage TextColor={'black'} />
+										{(user?.name ||
+											localStorage.getItem('name')) && (
+											<Dropdown
+												overlay={menu}
+												placement='bottomLeft'>
+												<NavLink
+													to='/account'
+													style={{
+														transition:
+															'color 0.5s ease-in-out',
+														color: 'black',
+														fontFamily:
+															'Nunito Sans',
+														cursor: 'pointer',
+														fontWeight: 700,
+														fontSize: 12,
+														margin: 0,
+														padding: '0 10px',
+													}}>
+													{user?.photoURL ? (
+														<Avatar
+															referrerpolicy='no-referrer'
+															referrerPolicy='no-referrer'
+															src={
+																<Image
+																	referrerpolicy='no-referrer'
+																	referrerPolicy='no-referrer'
+																	src={
+																		user?.photoURL ||
+																		localStorage.getItem(
+																			'photo',
+																		)
+																	}
+																/>
+															}
+															style={{
+																width: 20,
+																height: 20,
+																margin: '0 5px',
+															}}
+														/>
+													) : (
+														<Avatar
+															referrerPolicy='no-referrer'
+															size={20}
+															style={{
+																backgroundColor:
+																	'rgb(249,107,24)',
+																margin: '0 10',
+															}}
+															icon={
+																<UserOutlined />
+															}
+														/>
+													)}{' '}
+													{localStorage.getItem(
+														'name',
+													) || ` ${user?.name}`}
+												</NavLink>
+											</Dropdown>
 										)}
-										<div className='flex-right_subnavbar'>
-											<ChangeLanguage
-												TextColor={
-													visible || navBg
-														? 'black'
-														: 'white'
-												}
-											/>
-
-											{(user?.name ||
-												localStorage.getItem(
-													'name',
-												)) && (
-												<Dropdown
-													overlay={menu}
-													onClick={(e) =>
-														e?.stopPropagation()
-													}
-													placement='bottomLeft'>
-													<NavLink
-														to='/account'
-														style={{
-															transition:
-																'color 0.5s ease-in-out',
-															color:
-																visible || navBg
-																	? 'black'
-																	: 'white',
-															fontFamily:
-																'Nunito Sans',
-															cursor: 'pointer',
-															fontWeight: 700,
-															fontSize: 11,
-															margin: 0,
-															padding: '0 10px',
-														}}>
-														{user?.photoURL ? (
-															<Avatar
-																referrerpolicy='no-referrer'
-																referrerPolicy='no-referrer'
-																src={
-																	<Image
-																		referrerpolicy='no-referrer'
-																		referrerPolicy='no-referrer'
-																		src={
-																			user?.photoURL ||
-																			localStorage.getItem(
-																				'photo',
-																			)
-																		}
-																	/>
-																}
-																style={{
-																	width: 20,
-																	height: 20,
-																	margin: '0 5px',
-																}}
-															/>
-														) : (
-															<Avatar
-																referrerPolicy='no-referrer'
-																size={20}
-																style={{
-																	backgroundColor:
-																		'rgb(249,107,24)',
-																	margin: '0 5px',
-																}}
-																icon={
-																	<UserOutlined />
-																}
-															/>
-														)}{' '}
-														{localStorage.getItem(
-															'name',
-														) || ` ${user?.name}`}
-													</NavLink>
-												</Dropdown>
-											)}
-										</div>
 									</div>
 								</div>
 							</div>

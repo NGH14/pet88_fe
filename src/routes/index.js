@@ -59,8 +59,18 @@ export const routes = [
 	},
 
 	{
-		path: '/hotel',
+		path: '/department',
 		element: React.lazy(() => import('../container/Hotel')),
+		private: false,
+	},
+	{
+		path: '/department/:id',
+		element: React.lazy(() => import('../container/Department')),
+		private: false,
+	},
+	{
+		path: '/sucess',
+		element: React.lazy(() => import('../container/Terms')),
 		private: false,
 	},
 ];

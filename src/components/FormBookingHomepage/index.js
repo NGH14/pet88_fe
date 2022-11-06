@@ -1,6 +1,6 @@
 import { LockOutlined, SearchOutlined } from '@ant-design/icons';
 
-import { Button, Form, Input, DatePicker, Select } from 'antd';
+import { Button, Form, Input, DatePicker, Select, Paragraph } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +12,10 @@ const { Option } = Select;
 
 const FormBookingHomepage = () => {
 	const [form] = Form.useForm();
-	const [, forceUpdate] = useState({});
 	const navigate = useNavigate();
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
+	const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
 
 	const fetchHotelData = async (value) => {
 		try {
@@ -27,17 +27,51 @@ const FormBookingHomepage = () => {
 					},
 				},
 			);
-			navigate('/hotel', {
-				state: res.data,
-			});
+			return res.data;
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
-	const onFinish = (values) => {
-		fetchHotelData(values);
+	const fetchHotelNumber = async (value) => {
+		try {
+			const res = await axios.get(
+				`http://localhost:3001/api/hotel/countByCity?cities=${value.city}`,
+			);
+			return res.data;
+		} catch (error) {
+			console.error(error);
+		}
 	};
+
+	const onFinish = async (values) => {
+		const foundData = await fetchHotelData(values);
+		const foundNumber = await fetchHotelNumber(values);
+		if (values.dates) {
+			const days = dayDifference(
+				values.dates[0].toDate(),
+				values.dates[1].toDate(),
+			);
+			navigate('/department', {
+				state: { city: values.city, foundData, foundNumber, days },
+			});
+		}
+		navigate('/department', {
+			state: {
+				city: values.city,
+				foundData,
+				foundNumber,
+				days: undefined,
+			},
+		});
+	};
+
+	function dayDifference(date1, date2) {
+		const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+		const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+		return diffDays;
+	}
+
 	return (
 		<Form
 			className='form_bookinghomepage'
@@ -64,7 +98,7 @@ const FormBookingHomepage = () => {
 				</Select>
 			</Form.Item>
 
-			<Form.Item style={{ width: '49%' }}>
+			<Form.Item name='dates' style={{ width: '49%' }}>
 				<RangePicker
 					placeholder={[t('Drop off'), t('Pick up')]}
 					placement='bottomLeft'

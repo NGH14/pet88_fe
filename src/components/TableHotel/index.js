@@ -124,12 +124,7 @@ export default function TableHotel() {
 		},
 		beforeUpload: (file) => {
 			setFileList([...fileList, file]);
-			const isPNG = file.type === 'image/png';
-			const isJPG = file.type === 'image/jpg';
 
-			if (!isPNG || isJPG) {
-				message.error(`${file.name} is not a png/jpg file`);
-			}
 			return false;
 		},
 	};
