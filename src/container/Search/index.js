@@ -14,7 +14,10 @@ import {
 	Breadcrumb,
 	Avatar,
 	Typography,
+	Empty,
 } from 'antd';
+import moment from 'moment';
+
 import SubNavBar from '../../components/SubNavBar';
 import AppHeader from '../../components/Navbar';
 import viVN from 'antd/es/locale/vi_VN';
@@ -31,12 +34,18 @@ const { Meta } = Card;
 const { RangePicker } = DatePicker;
 const { Paragraph, Text } = Typography;
 
-export default function Hotel() {
+export default function Search() {
 	const { state } = useLocation();
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState(state);
+	const [type, setType] = useState(search?.services);
+	console.log(type);
 	const [form] = Form.useForm();
 	const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+	const currentDate = moment();
+	const futureMonth = moment(currentDate).add(1, 'M');
+	const futureWeek = moment(currentDate).add(1, 'W');
+
 	useEffect(() => {
 		setTimeout(() => {
 			setLoading(false);
@@ -51,19 +60,9 @@ export default function Hotel() {
 				{
 					params: {
 						city: value.city,
+						services: value.services,
 					},
 				},
-			);
-			return res.data;
-		} catch (error) {
-			console.error(error);
-		}
-	};
-	console.log(search);
-	const fetchHotelNumber = async (value) => {
-		try {
-			const res = await axios.get(
-				`http://localhost:3001/api/hotel/countByCity?cities=${value.city}`,
 			);
 			return res.data;
 		} catch (error) {
@@ -78,23 +77,52 @@ export default function Hotel() {
 	}
 
 	const onFinish = async (values) => {
+		setLoading(true);
 		const foundData = await fetchHotelData(values);
-		const foundNumber = await fetchHotelNumber(values);
-		if (values.dates) {
+
+		if (!values.datesHotels && !values.datesGrooming) {
+			setSearch({
+				services: values.services,
+				city: values.city,
+				foundData,
+				foundNumber: foundData?.length,
+			});
+			setLoading(false);
+		}
+
+		if (values.datesHotels) {
+			const date = [
+				values.datesHotels[0].toDate(),
+				values.datesHotels[1].toDate(),
+			];
 			const days = dayDifference(
-				values.dates[0].toDate(),
-				values.dates[1].toDate(),
+				values.datesHotels[0].toDate(),
+				values.datesHotels[1].toDate(),
 			);
-			setSearch({ city: values.city, foundData, foundNumber, days });
-		} else {
 			setSearch({
 				city: values.city,
 				foundData,
-				foundNumber,
-				days: undefined,
+				foundNumber: foundData.length,
+				days,
+				datesHotels: date,
 			});
+			setLoading(false);
+		}
+
+		if (values.datesGrooming) {
+			const date = values.datesGrooming.toDate().getTime();
+
+			setSearch({
+				services: type,
+				city: values.city,
+				foundData,
+				foundNumber: foundData?.length,
+				datesGrooming: date,
+			});
+			setLoading(false);
 		}
 	};
+
 	return (
 		<div>
 			<ConfigProvider locale={lang === 'vi' && viVN}>
@@ -117,55 +145,92 @@ export default function Hotel() {
 							</div>
 							<div className='hotel-page_containner'>
 								<div className='hotel-toolbox'>
-									{!loading ? (
-										<div>
-											<h4>{t('search')}</h4>
-											<Form
-												size='large'
-												form={form}
-												requiredMark={false}
-												name='form_bookinghomepage'
-												initialValues={{
-													city: 'Ho Chi Minh',
-												}}
-												onFinish={onFinish}>
-												<Form.Item name='city'>
-													<Select
-														showSearch
-														filterOption={(
-															input,
-															option,
-														) =>
-															(
-																option?.value ??
-																''
+									<div>
+										<h4>{t('search')}</h4>
+										<Form
+											size='large'
+											form={form}
+											requiredMark={false}
+											name='form_bookingdepartpage'
+											initialValues={{
+												city: search?.city,
+												datesHotels:
+													search.datesHotels && [
+														moment(
+															search?.datesHotels[0].getTime(),
+														),
+														moment(
+															search?.datesHotels[1].getTime(),
+														),
+													],
+												services: search?.services,
+											}}
+											onFinish={onFinish}>
+											<Form.Item name='services'>
+												<Select
+													onChange={(value) =>
+														setType(value)
+													}
+													placeholder={t('Services')}>
+													<Option value='hotel'>
+														{t('Hotel')}
+													</Option>
+													<Option value='grooming'>
+														{t('Grooming')}
+													</Option>
+													<Option value='training'>
+														{t('Training')}
+													</Option>
+												</Select>
+											</Form.Item>
+											<Form.Item name='city'>
+												<Select
+													showSearch
+													filterOption={(
+														input,
+														option,
+													) =>
+														(option?.value ?? '')
+															.toLowerCase()
+															.includes(
+																input.toLowerCase(),
 															)
-																.toLowerCase()
-																.includes(
-																	input.toLowerCase(),
-																)
-														}
-														className='form-item_bookinghomepage'>
-														<Option value='Ho Chi Minh'>
-															{t('Ho Chi Minh')}
-														</Option>
-														<Option value='Ha Noi'>
-															{t('Ha Noi')}
-														</Option>
-														<Option value='Da Nang'>
-															{t('Da Nang')}
-														</Option>
-													</Select>
-												</Form.Item>
-
-												<Form.Item name='dates'>
+													}
+													className='form-item_bookingdepartpage'>
+													<Option value='Ho Chi Minh'>
+														{t('Ho Chi Minh')}
+													</Option>
+													<Option value='Ha Noi'>
+														{t('Ha Noi')}
+													</Option>
+													<Option value='Da Nang'>
+														{t('Da Nang')}
+													</Option>
+												</Select>
+											</Form.Item>
+											{type === 'hotel' ? (
+												<Form.Item name='datesHotels'>
 													<RangePicker
+														ranges={{
+															[t('Today')]: [
+																moment(),
+																moment(),
+															],
+															[t('One Week')]: [
+																currentDate,
+																futureWeek,
+															],
+															[t('One Month')]: [
+																currentDate,
+																futureMonth,
+															],
+														}}
 														placeholder={[
 															t('Drop off'),
 															t('Pick up'),
 														]}
 														placement='bottomLeft'
-														className='form-item_bookinghomepage'
+														className='form-item_bookingdepartpage'
 														format={
 															lang === 'vi'
 																? 'DD-MM-YYYY'
@@ -173,20 +238,37 @@ export default function Hotel() {
 														}
 													/>
 												</Form.Item>
-												<Form.Item
-													shouldUpdate
-													style={{ width: '100%' }}>
-													<Button
-														type='primary'
-														block={true}
-														className='form-button_bookinghomepage'
-														htmlType='submit'>
-														{t('Search')}
-													</Button>
+											) : null}
+
+											{type === 'grooming' ? (
+												<Form.Item name='datesGrooming'>
+													<DatePicker
+														className='form-item_bookingdepartpage'
+														showTime={{
+															format: 'HH:mm',
+														}}
+														placement='bottomLeft'
+														format={
+															lang === 'vi'
+																? `HH:mm, DD-MM-YYYY`
+																: 'HH:mm, YYYY-MM-DD '
+														}
+													/>
 												</Form.Item>
-											</Form>{' '}
-										</div>
-									) : null}
+											) : null}
+											<Form.Item
+												shouldUpdate
+												style={{ width: '100%' }}>
+												<Button
+													type='primary'
+													block={true}
+													className='form-button_bookingdepartpage'
+													htmlType='submit'>
+													{t('Search')}
+												</Button>
+											</Form.Item>
+										</Form>{' '}
+									</div>
 								</div>
 								<div className='hotel-page_content'>
 									{!loading ? (
@@ -208,7 +290,7 @@ export default function Hotel() {
 									<Divider></Divider>
 
 									{!loading
-										? search.foundData.map(
+										? search?.foundData.map(
 												(depart, index) => {
 													console.log();
 													return (
@@ -232,10 +314,13 @@ export default function Hotel() {
 																	rows: 4,
 																}}>
 																<Meta
+																	style={{
+																		minHeight: 150,
+																	}}
 																	avatar={
 																		<Avatar
 																			style={{
-																				width: 120,
+																				width: 150,
 																				height: '100%',
 																				objectFit:
 																					'cover',
@@ -308,6 +393,10 @@ export default function Hotel() {
 														</Card>
 													);
 												})}
+
+									{search?.foundData?.length === 0 ? (
+										<Empty></Empty>
+									) : null}
 								</div>
 							</div>
 						</div>

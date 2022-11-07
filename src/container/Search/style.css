@@ -6,19 +6,22 @@ general
 .ant-input {
 	border-radius: 5px;
 }
-.hotel-page {
+.hotel-page  {
 	padding: 5px;
 	background-color: rgb(248, 249, 255) !important;
 }
-.hotel-breadcum{
+.hotel-breadcum .ant-breadcrumb{
 	padding-right: 15px;
-
 	max-width: 1300px;
-	font-size: 10px;
+	font-size: 12px !important;
 	margin: auto;
 	text-transform: capitalize;
 }
 
+.form-item_bookingdepartpage, .form_bookingdepartpage .ant-select-selector,.form-button_bookingdepartpage{
+	border-radius: 5px !important;
+	width: 100%;
+}
 
 .hotel-page_containner {
 	padding: 50px 15px;
@@ -30,7 +33,7 @@ general
 	min-height: 800px;
 }
 
- .hotel-toolbox{
+ .hotel-toolbox {
 	display: flex;
 	flex-direction: column;
 	width: 22%;
@@ -230,6 +233,19 @@ general
 @media only screen and (max-width: 767px) {
 	.hotelLayout {
 		font-size: 12px;
+	}
+	.hotel-toolbox {
+
+		width: 100%;
+	}
+	
+	.hotel-page_content{
+		width: 100%;
+	}
+	
+
+	.hotel-page_containner{
+		flex-wrap: wrap;
 	}
 	.swiper-slide img {
 		max-width: 50px;

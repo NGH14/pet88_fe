@@ -41,17 +41,12 @@ function HeroImageHomePage({ HeaderText }) {
 						return (
 							<HeroBlockStyled id='hero' className='heroBlock'>
 								<div className='content'>
-									<h3 className='content-title'>
+									{/* <h3 className='content-title'>
 										{t(
 											'established & trusted pet care service',
 										)}
-									</h3>
+									</h3> */}
 									<div className='herocontent-form'>
-										<h3 className='formcontent-title'>
-											{t(
-												'established & trusted pet care service',
-											)}
-										</h3>
 										<FormBookingHomepage></FormBookingHomepage>
 									</div>
 								</div>
