@@ -107,7 +107,6 @@ const Account = () => {
 				</Header>
 				<Content>
 					<HeroImage />
-
 					<div className='account-page'>
 						<div className='account-page_text'>
 							<h1 className='account-page_title'>
