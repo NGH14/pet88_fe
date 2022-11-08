@@ -10,13 +10,34 @@ general
 	padding: 5px;
 	background-color: rgb(248, 249, 255) !important;
 }
+
+
 .hotel-breadcum .ant-breadcrumb{
 	padding-right: 15px;
 	max-width: 1300px;
 	font-size: 12px !important;
-	margin: auto;
+	margin-bottom: 15px;
+	text-transform: capitalize;
+	font-weight: 600;
+}
+
+.hotel-toolbox .ant-form-item-label label{
+    font-weight: 600;
+    text-transform: capitalize;
+	font-size: 12px !important;
+}
+
+
+.hotel-page_titlelight{
+	font-weight: 600;
+	text-transform: none;
+}
+
+.hotel-toolbox, .ant-select-selector{
+    border-radius: 5px !important;
 	text-transform: capitalize;
 }
+
 
 .form-item_bookingdepartpage, .form_bookingdepartpage .ant-select-selector,.form-button_bookingdepartpage{
 	border-radius: 5px !important;
@@ -25,11 +46,10 @@ general
 
 .hotel-page_containner {
 	padding: 50px 15px;
-
 	max-width: 1300px;
 	margin: auto;
 	display: flex;
-	gap: 30px;
+	gap: 40px;
 	min-height: 800px;
 }
 
@@ -46,8 +66,15 @@ general
 .hotel-page_title {
 	text-transform: capitalize;
 	font-size: 3rem;
-	font-weight: bold;
+	font-weight: 800;
 	color: rgb(63, 63, 122);
+}
+
+.hotel-page_subtitle {
+	text-transform: capitalize;
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #888;
 }
 
 .tabpane_formtext .form-title {
@@ -67,6 +94,16 @@ general
 	line-height: 1.6;
 }
 
+.card-depart_tilte{
+	font-weight: 600;
+	text-transform: capitalize;
+	margin-bottom: 0.05rem;
+	font-size: 20px;
+}
+.card-depart_address {
+	font-size: 13px;
+	color: #444;
+}
 
 /* 
       title holder
@@ -231,6 +268,17 @@ general
 }
 
 @media only screen and (max-width: 767px) {
+	.hotel-page .ant-card-meta{
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		width: fit-content;
+	}
+
+	.card_avatar{
+		width: fit-content !important;
+	}
+
 	.hotelLayout {
 		font-size: 12px;
 	}

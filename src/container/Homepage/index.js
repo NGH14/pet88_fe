@@ -73,6 +73,20 @@ const SECOND_IMAGE = {
 	imageUrl: SECOND,
 };
 
+const cardVariants = {
+	offscreen: {
+		y: 150,
+	},
+	onscreen: {
+		y: 0,
+		transition: {
+			type: 'spring',
+			bounce: 0.4,
+			duration: 0.5,
+		},
+	},
+};
+
 function Homepage() {
 	const [countUp, setCountUp] = React.useState(false);
 	const { token } = UserAuth();
@@ -246,7 +260,9 @@ function Homepage() {
 						</div>
 					</div>
 					<div className='grey'>
-						<div className='homepage-servicecontent'>
+						<div
+							className='homepage-servicecontent'
+							variants={cardVariants}>
 							<h3 className='homepage-servicecontent_title'>
 								{t('One platform, everything pet service')}
 							</h3>
@@ -300,11 +316,16 @@ function Homepage() {
 							)}
 						</ScrollTrigger>
 					</div>
-					<div>
+					<motion.div
+						initial='offscreen'
+						whileInView='onscreen'
+						viewport={{ once: true, amount: 0.8 }}>
 						<p className='title-homepage'>
 							{t('Service makes the difference')}
 						</p>
-						<div className='slider-beforeafter'>
+						<motion.div
+							className='slider-beforeafter'
+							variants={cardVariants}>
 							<div className='slider-contain'>
 								<ReactBeforeSliderComponent
 									currentPercentPosition='65'
@@ -322,8 +343,8 @@ function Homepage() {
 								</h2>
 								<p className='slider-text_span'>Pet88</p>
 							</div>
-						</div>
-					</div>
+						</motion.div>
+					</motion.div>
 				</Content>
 				<Footer>
 					<FooterWave></FooterWave>

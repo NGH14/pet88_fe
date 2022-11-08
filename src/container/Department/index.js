@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
 	Card,
 	ConfigProvider,
@@ -21,7 +21,8 @@ import FooterWave from '../../components/Footer';
 import { useTranslation } from 'react-i18next';
 
 import './style.css';
-import Payment from './../../components/Payment/index';
+import axios from 'axios';
+import { UserAuth } from '../../context/AuthContext';
 
 const { Option } = Select;
 const { Header, Content, Footer } = Layout;
@@ -32,6 +33,8 @@ export default function Department() {
 	const { state } = useLocation();
 	const [loading, setLoading] = useState(true);
 	const [form] = Form.useForm();
+	const { user } = UserAuth();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -40,6 +43,18 @@ export default function Department() {
 	});
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
+
+	const handleCheckout = () => {
+		axios
+			.post(`http://localhost:3001/create-checkout-session`, {
+				email: user.email,
+			})
+			.then((response) => {
+				// console.log(response);
+				window.location.href = response.data.url;
+			})
+			.catch((err) => console.log(err.message));
+	};
 
 	return (
 		<div>
@@ -71,7 +86,12 @@ export default function Department() {
 									{!loading ? (
 										<div>
 											<h4>{t('search')}</h4>
-											<Payment></Payment>
+											<button
+												onClick={() =>
+													handleCheckout()
+												}>
+												Check out
+											</button>
 										</div>
 									) : null}
 								</div>

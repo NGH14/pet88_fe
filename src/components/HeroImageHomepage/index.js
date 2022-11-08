@@ -10,8 +10,8 @@ import { useLocation } from 'react-router-dom';
 import FormBookingHomepage from './../FormBookingHomepage/index';
 
 const HeroBlockStyled = styled.div`
-	background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)),
-		url(${dogImg}) no-repeat center center;
+	background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2)),
+		url(${dogImg}) no-repeat;
 	width: 100%;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;

@@ -17,6 +17,7 @@ import {
 	Empty,
 } from 'antd';
 import moment from 'moment';
+import { RightOutlined } from '@ant-design/icons';
 
 import SubNavBar from '../../components/SubNavBar';
 import AppHeader from '../../components/Navbar';
@@ -27,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import departImg from '../../assets/images/e10adb13acb1f3da8724a9149a58bd00.jpg';
 import './style.css';
+import Column from 'antd/lib/table/Column';
 
 const { Option } = Select;
 const { Header, Content, Footer } = Layout;
@@ -45,6 +47,7 @@ export default function Search() {
 	const currentDate = moment();
 	const futureMonth = moment(currentDate).add(1, 'M');
 	const futureWeek = moment(currentDate).add(1, 'W');
+	const [imgVisible, setImgVisible] = useState(false);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -133,25 +136,22 @@ export default function Search() {
 					</Header>
 					<Content>
 						<div className='hotel-page'>
-							<div className='hotel-breadcum'>
-								<Breadcrumb>
-									<Breadcrumb.Item>
-										<NavLink to='/'>{t('home')}</NavLink>
-									</Breadcrumb.Item>
-									<Breadcrumb.Item>
-										{t('list search')}
-									</Breadcrumb.Item>
-								</Breadcrumb>
-							</div>
 							<div className='hotel-page_containner'>
 								<div className='hotel-toolbox'>
 									<div>
-										<h4>{t('search')}</h4>
+										<h4
+											style={{
+												textTransform: 'uppercase',
+												fontWeight: 700,
+												marginBottom: 15,
+											}}>
+											{t('search')}
+										</h4>
 										<Form
-											size='large'
 											form={form}
 											requiredMark={false}
 											name='form_bookingdepartpage'
+											layout='vertical'
 											initialValues={{
 												city: search?.city,
 												datesHotels:
@@ -164,9 +164,16 @@ export default function Search() {
 														),
 													],
 												services: search?.services,
+												datesGrooming:
+													search.datesGrooming &&
+													moment(
+														search?.datesGrooming,
+													),
 											}}
 											onFinish={onFinish}>
-											<Form.Item name='services'>
+											<Form.Item
+												name='services'
+												label={t('Services')}>
 												<Select
 													onChange={(value) =>
 														setType(value)
@@ -183,7 +190,10 @@ export default function Search() {
 													</Option>
 												</Select>
 											</Form.Item>
-											<Form.Item name='city'>
+											<Form.Item
+												name='city'
+												placeholder={t('City name')}
+												label={t('City name')}>
 												<Select
 													showSearch
 													filterOption={(
@@ -209,7 +219,9 @@ export default function Search() {
 												</Select>
 											</Form.Item>
 											{type === 'hotel' ? (
-												<Form.Item name='datesHotels'>
+												<Form.Item
+													name='datesHotels'
+													label={t('For these days')}>
 													<RangePicker
 														ranges={{
 															[t('Today')]: [
@@ -241,7 +253,9 @@ export default function Search() {
 											) : null}
 
 											{type === 'grooming' ? (
-												<Form.Item name='datesGrooming'>
+												<Form.Item
+													name='datesGrooming'
+													label={t('Booking time')}>
 													<DatePicker
 														className='form-item_bookingdepartpage'
 														showTime={{
@@ -272,11 +286,37 @@ export default function Search() {
 								</div>
 								<div className='hotel-page_content'>
 									{!loading ? (
-										<h3 className='hotel-page_title'>
-											{t(search?.city)}: {t('found')}{' '}
-											{search?.foundNumber}{' '}
-											{t('properties')}
-										</h3>
+										<>
+											<div className='hotel-breadcum'>
+												<Breadcrumb separator='>'>
+													<Breadcrumb.Item>
+														<NavLink to='/'>
+															{t('home')}
+														</NavLink>
+													</Breadcrumb.Item>
+													<Breadcrumb.Item>
+														{t('list search')}
+													</Breadcrumb.Item>
+												</Breadcrumb>
+											</div>
+											<h3 className='hotel-page_title'>
+												<span className='hotel-page_titlelight'>
+													{t('Available for')}{' '}
+													<span className='hotel-page_title'>
+														{' '}
+														{t(type)}
+													</span>{' '}
+													{t('in')}{' '}
+												</span>
+												{t(search?.city)}
+											</h3>
+											<h3 className='hotel-page_subtitle'>
+												{t('found')}{' '}
+												{search?.foundNumber}{' '}
+												{t('properties')}
+											</h3>
+											<Divider></Divider>
+										</>
 									) : (
 										<Skeleton
 											active
@@ -287,85 +327,104 @@ export default function Search() {
 											}}
 										/>
 									)}
-									<Divider></Divider>
 
 									{!loading
 										? search?.foundData.map(
 												(depart, index) => {
-													console.log();
 													return (
-														<Card
+														<NavLink
 															key={depart._id}
-															hoverable
-															style={{
-																borderRadius: 15,
-																width: '100%',
-																marginTop: 16,
-															}}>
-															<Skeleton
-																active
-																size='large'
-																shape='round'
-																loading={
-																	loading
-																}
-																avatar
-																paragraph={{
-																	rows: 4,
+															to={`/department/${depart._id}`}>
+															<Card
+																hoverable
+																style={{
+																	borderRadius: 15,
+																	width: '100%',
+																	marginTop: 16,
+																	boxShadow:
+																		'rgb(0 0 0 / 5%) 0px 1px 1px, rgb(0 0 0 / 5%) 0px 2px 2px, rgb(0 0 0 / 5%) 0px 1px 1px, rgb(0 0 0 / 5%) 0px 1px 1px, rgb(0 0 0 / 5%) 0px 2px 10px',
 																}}>
-																<Meta
-																	style={{
-																		minHeight: 150,
-																	}}
-																	avatar={
-																		<Avatar
-																			style={{
-																				width: 150,
-																				height: '100%',
-																				objectFit:
-																					'cover',
-																			}}
-																			shape='square'
-																			src={
-																				depart
-																					.photos
-																					.length >
-																				0
-																					? depart
-																							.photos[0]
-																					: departImg
-																			}
-																		/>
+																<Skeleton
+																	active
+																	size='large'
+																	shape='round'
+																	loading={
+																		loading
 																	}
-																	title={
-																		<NavLink
-																			to={`/department/${depart._id}`}>
-																			{t(
-																				depart.name,
-																			)}
-																		</NavLink>
-																	}
-																	description={
-																		<>
-																			<Paragraph
-																				ellipsis={{
-																					rows: 3,
-																				}}>
-																				{t(
-																					depart.desc,
-																				)}
-																			</Paragraph>
-																			<Button>
-																				asda
-																			</Button>
-																			<Button>
-																				asda
-																			</Button>
-																		</>
-																	}
-																/>
-															</Skeleton>
-														</Card>
+																	avatar
+																	paragraph={{
+																		rows: 4,
+																	}}>
+																	<Meta
+																		style={{
+																			minHeight: 150,
+																		}}
+																		avatar={
+																			<Avatar
+																				className='card_avatar'
+																				style={{
+																					width: 300,
+																					height: '100%',
+																					objectFit:
+																						'cover',
+																					borderRadius: 15,
+																				}}
+																				shape='square'
+																				src={
+																					depart
+																						.photos
+																						.length >
+																					0
+																						? depart
+																								.photos[0]
+																						: departImg
+																				}
+																			/>
+																		}
+																		title={
+																			<div>
+																				<h3 className='card-depart_tilte'>
+																					{t(
+																						depart.name,
+																					)}
+																				</h3>
+																				<p className='card-depart_address'>
+																					{t(
+																						depart.address,
+																					)}
+
+																					,{' '}
+																					{t(
+																						depart.city,
+																					)}
+																				</p>
+																			</div>
+																		}
+																		description={
+																			<div className='card-depart_desc'>
+																				<Paragraph
+																					ellipsis={{
+																						rows: 4,
+																					}}>
+																					{t(
+																						depart.desc,
+																					)}
+																				</Paragraph>
+																				<p
+																					style={{
+																						textAlign:
+																							'right',
+																					}}>
+																					~
+																					{
+																						search?.days
+																					}
+																				</p>
+																			</div>
+																		}></Meta>
+																</Skeleton>
+															</Card>
+														</NavLink>
 													);
 												},
 										  )

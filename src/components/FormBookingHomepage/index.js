@@ -103,16 +103,27 @@ const FormBookingHomepage = () => {
 	};
 
 	return (
-		<div>
+		<div className='form_bookingservice'>
 			<div
 				style={{
 					display: 'flex',
 					gap: 15,
 					alignItems: 'center',
+					justifyContent: 'space-between',
+					fontWeight: 'bold',
+					fontSize: 16,
+					backgroundColor: 'rgb(244, 245, 246)',
+					padding: 20,
+					borderRadius: 15,
+					marginBlock: '10px 20px',
 				}}>
-				<span>{t("I'm looking for service")}</span>
+				<span>{t("I'm looking for service")}:</span>
 				<Radio.Group
-					style={{ display: 'flex', gap: 15 }}
+					style={{
+						display: 'flex',
+						gap: 15,
+						textTransform: 'capitalize',
+					}}
 					defaultValue='hotel'
 					size='large'
 					onChange={(e) => setType(e.target.value)}>
@@ -120,21 +131,30 @@ const FormBookingHomepage = () => {
 						{t('hotel')}
 					</Radio>
 					<Radio value='grooming'>{t('grooming')}</Radio>
+					<Radio value='training'>{t('training')}</Radio>
 				</Radio.Group>
 			</div>
-			<Divider />
 			<Form
 				className='form_bookinghomepage'
 				size='large'
 				form={form}
 				requiredMark={false}
 				name='form_bookinghomepage'
-				initialValues={{
-					city: 'Ho Chi Minh',
-				}}
+				initialValues={{}}
+				layout='vertical'
 				onFinish={onFinish}>
-				<Form.Item style={{ width: '40%' }} name='city'>
+				<Form.Item
+					className='form-item_bookinghomepage form-item_bookinghomepage_city'
+					name='city'
+					label={t('City name')}
+					rules={[
+						{
+							required: true,
+							message: t('Please enter the location'),
+						},
+					]}>
 					<Select
+						placeholder={t('City name')}
 						showSearch
 						filterOption={(input, option) =>
 							(option?.value ?? '')
@@ -148,7 +168,10 @@ const FormBookingHomepage = () => {
 					</Select>
 				</Form.Item>
 				{type === 'hotel' ? (
-					<Form.Item name='datesHotels' style={{ width: '50%' }}>
+					<Form.Item
+						className='form-item_bookinghomepage_others'
+						name='datesHotels'
+						label={t('For these days')}>
 						<RangePicker
 							ranges={{
 								[t('Today')]: [moment(), moment()],
@@ -164,7 +187,10 @@ const FormBookingHomepage = () => {
 				) : null}
 
 				{type === 'grooming' ? (
-					<Form.Item name='datesGrooming' style={{ width: '55%' }}>
+					<Form.Item
+						className='form-item_bookinghomepage_others'
+						name='datesGrooming'
+						label={t('Booking time')}>
 						<DatePicker
 							showTime={{
 								format: 'HH:mm',
@@ -175,7 +201,7 @@ const FormBookingHomepage = () => {
 									? `HH:mm, DD-MM-YYYY`
 									: 'HH:mm, YYYY-MM-DD '
 							}
-							className='form-item_bookinghomepage'
+							className='form-item_bookinghomepage booking_grooming'
 						/>
 					</Form.Item>
 				) : null}
