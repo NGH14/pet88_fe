@@ -65,6 +65,15 @@ export const AuthContextProvider = ({ children }) => {
 		});
 	};
 
+	const getOrderByUser = async (id) => {
+		try {
+			const res = await axios.get(`http://localhost:3001/api/order`);
+			return res.data;
+		} catch (error) {
+			return console.error(error);
+		}
+	};
+
 	const emailSignIn = (email, password) => {
 		return signInWithEmailAndPassword(auth, email, password);
 	};
@@ -276,6 +285,7 @@ export const AuthContextProvider = ({ children }) => {
 				GetAllHotel,
 				DeleteHotel,
 				UpdateHotel,
+				getOrderByUser,
 			}}>
 			{children}
 		</AuthContext.Provider>

@@ -46,17 +46,6 @@ const FormBookingHomepage = () => {
 		}
 	};
 
-	// const fetchHotelNumber = async (value) => {
-	// 	try {
-	// 		const res = await axios.get(
-	// 			`http://localhost:3001/api/hotel/countByCity?cities=${value.city}`,
-	// 		);
-	// 		return res.data;
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// };
-
 	const onFinish = async (values) => {
 		const foundData = await fetchHotelData(values);
 

@@ -41,22 +41,25 @@ export default function Search() {
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState(state);
 	const [type, setType] = useState(search?.services);
-	console.log(type);
+
 	const [form] = Form.useForm();
 	const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
 	const currentDate = moment();
 	const futureMonth = moment(currentDate).add(1, 'M');
 	const futureWeek = moment(currentDate).add(1, 'W');
-	const [imgVisible, setImgVisible] = useState(false);
+	const dayDefault = search?.days || dayDifference(search?.datesHotels);
 
 	useEffect(() => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 2000);
-	});
+	}, []);
+
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const fetchHotelData = async (value) => {
+		setLoading(true);
+
 		try {
 			const res = await axios.get(
 				`http://localhost:3001/api/hotel/find-hotel`,
@@ -67,14 +70,17 @@ export default function Search() {
 					},
 				},
 			);
+			setLoading(false);
+
 			return res.data;
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
-	function dayDifference(date1, date2) {
-		const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+	function dayDifference(date) {
+		if (!date || date?.length === 0) return;
+		const timeDiff = Math.abs(date[1].getTime() - date[0].getTime());
 		const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
 		return diffDays;
 	}
@@ -98,10 +104,8 @@ export default function Search() {
 				values.datesHotels[0].toDate(),
 				values.datesHotels[1].toDate(),
 			];
-			const days = dayDifference(
-				values.datesHotels[0].toDate(),
-				values.datesHotels[1].toDate(),
-			);
+			const days = dayDifference(date);
+
 			setSearch({
 				city: values.city,
 				foundData,
@@ -111,7 +115,6 @@ export default function Search() {
 			});
 			setLoading(false);
 		}
-
 		if (values.datesGrooming) {
 			const date = values.datesGrooming.toDate().getTime();
 
@@ -334,7 +337,11 @@ export default function Search() {
 													return (
 														<NavLink
 															key={depart._id}
-															to={`/department/${depart._id}`}>
+															to={`/department/${depart._id}`}
+															state={{
+																...depart,
+																days: dayDefault,
+															}}>
 															<Card
 																hoverable
 																style={{

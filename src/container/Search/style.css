@@ -70,6 +70,10 @@ general
 	color: rgb(63, 63, 122);
 }
 
+.hotel-page .ant-card-meta-detail {
+	width: 100%;
+}
+
 .hotel-page_subtitle {
 	text-transform: capitalize;
 	font-size: 1.2rem;

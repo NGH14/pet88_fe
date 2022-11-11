@@ -10,11 +10,13 @@ general
 	padding: 5px;
 	background-color: rgb(248, 249, 255) !important;
 }
-.department-breadcum{
+.department-breadcum .ant-breadcrumb{
+	padding-right: 15px;
 	max-width: 1300px;
-	font-size: 10px;
-	margin: auto;
+	font-size: 12px !important;
+	margin-bottom: 15px;
 	text-transform: capitalize;
+	font-weight: 600;
 }
 
 
@@ -61,14 +63,6 @@ general
 	height: auto;
 	line-height: 1.6;
 }
-.ant-breadcrumb{
-	padding-right: 15px;
-	max-width: 1300px;
-	font-size: 12px !important;
-	margin: auto;
-	text-transform: capitalize;
-}
-
 
 
 /* 

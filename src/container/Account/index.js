@@ -37,14 +37,26 @@ const Account = () => {
 	const [loading, setLoading] = useState(false);
 	const [passwordLoading, setPasswordLoading] = useState(false);
 	const { lang } = UserLanguage();
-	const { user, updateProfile, updateUser, UpdatePassword } = UserAuth();
+	const { user, updateProfile, updateUser, UpdatePassword, getOrderByUser } =
+		UserAuth();
 	const [name, setName] = React.useState(user?.name);
 	const [password, setPassword] = React.useState();
 	const [oldPassword, setOldPassword] = React.useState();
 	const [dob, setdob] = React.useState(user?.dob);
+	const [orderList, setOrderList] = React.useState([]);
 	const [gender, setGender] = React.useState(user?.gender);
 	const [phone, setPhone] = React.useState(user?.phone);
 	const { t } = useTranslation();
+
+	React.useEffect(() => {
+		getOrder();
+	}, []);
+
+	const getOrder = async () => {
+		const orders = await getOrderByUser(user.id, user.email);
+		console.log(orders);
+		setOrderList(orders);
+	};
 
 	const handleGenderChange = (value) => {
 		setGender(value);
@@ -89,7 +101,6 @@ const Account = () => {
 					fontSize: 14,
 				}}>
 				<Option value='84'>+84</Option>
-				<Option value='87'>+87</Option>
 			</Select>
 		</Form.Item>
 	);
@@ -368,7 +379,13 @@ const Account = () => {
 						<div className='form-account'>
 							<Tabs tabPosition='top'>
 								<TabPane tab={t('History')} key='3'>
-									<Empty className='account-tabpane empty-tab' />
+									{orderList.length === 0 ? (
+										<Empty className='account-tabpane empty-tab' />
+									) : (
+										orderList?.map((order) => {
+											return <p>{order.email}</p>;
+										})
+									)}
 								</TabPane>
 							</Tabs>
 						</div>
