@@ -12,6 +12,7 @@
 }
 .loginform a {
 	color: #000 !important;
+	font-weight: 700;
 }
 
 
@@ -98,5 +99,5 @@ label {
 	padding-left: 5px;
 	display: block;
 	font-size: 13px;
-	font-weight: 600;
+	font-weight: 600 !important;
 }

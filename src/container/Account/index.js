@@ -177,8 +177,9 @@ const Account = () => {
 												rules={[
 													{
 														required: true,
-														message:
+														message: t(
 															'Please input your username!',
+														),
 													},
 												]}>
 												<Input />
@@ -293,8 +294,9 @@ const Account = () => {
 												rules={[
 													{
 														required: true,
-														message:
+														message: t(
 															'Please enter your password!',
+														),
 													},
 												]}>
 												<Input.Password />
@@ -308,13 +310,17 @@ const Account = () => {
 												rules={[
 													{
 														required: true,
-														message:
-															'Please enter your password!',
+														message: t(
+															t(
+																'Please enter your password!',
+															),
+														),
 													},
 													{
 														min: 6,
-														message:
+														message: t(
 															'Password must be minimum 6 characters.',
+														),
 													},
 												]}>
 												<Input.Password />
@@ -327,8 +333,9 @@ const Account = () => {
 												rules={[
 													{
 														required: true,
-														message:
+														message: t(
 															'Please confirm your password!',
+														),
 													},
 													({ getFieldValue }) => ({
 														validator(_, value) {
@@ -342,7 +349,9 @@ const Account = () => {
 															}
 															return Promise.reject(
 																new Error(
-																	'The two passwords that you entered do not match!',
+																	t(
+																		'The two passwords that you entered do not match!',
+																	),
 																),
 															);
 														},

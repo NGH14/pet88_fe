@@ -84,11 +84,11 @@ const SignInForm = () => {
 					rules={[
 						{
 							type: 'email',
-							message: 'The input is not valid E-mail!',
+							message: t('The input is not valid E-mail!'),
 						},
 						{
 							required: true,
-							message: 'Please input your E-mail!',
+							message: t('Please input your E-mail!'),
 						},
 					]}>
 					<Input
@@ -104,7 +104,7 @@ const SignInForm = () => {
 					rules={[
 						{
 							required: true,
-							message: 'Please enter your password!',
+							message: t('Please enter your password!'),
 						},
 					]}>
 					<Input.Password

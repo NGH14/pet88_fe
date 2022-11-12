@@ -74,7 +74,7 @@ const SignUpForm = () => {
 					rules={[
 						{
 							required: true,
-							message: 'Please enter your name!',
+							message: t('Please enter your name!'),
 						},
 					]}>
 					<Input
@@ -91,14 +91,14 @@ const SignUpForm = () => {
 					rules={[
 						{
 							required: true,
-							message: 'Please enter your email!',
+							message: t('Please enter your email!'),
 						},
 						{
 							type: 'email',
-							message: 'Invalid enter your email!',
+							message: t('Invalid enter your email!'),
 						},
 					]}
-					help={emailStatus && 'Email is already used'}>
+					help={emailStatus && t('Email is already used')}>
 					<Input
 						onChange={(e) => handleEmail(e.target.value)}
 						placeholder={t('Email')}
@@ -113,11 +113,13 @@ const SignUpForm = () => {
 					rules={[
 						{
 							required: true,
-							message: 'Please enter your password!',
+							message: t('Please enter your password!'),
 						},
 						{
 							min: 6,
-							message: 'Password must be minimum 6 characters.',
+							message: t(
+								'Password must be minimum 6 characters.',
+							),
 						},
 					]}>
 					<Input.Password
@@ -134,7 +136,7 @@ const SignUpForm = () => {
 					rules={[
 						{
 							required: true,
-							message: 'Please confirm your password!',
+							message: t('Please confirm your password!'),
 						},
 						({ getFieldValue }) => ({
 							validator(_, value) {

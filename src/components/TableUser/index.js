@@ -344,7 +344,7 @@ export default function TableUser() {
 							rules={[
 								{
 									required: true,
-									message: 'Please input your username!',
+									message: t('Please input your username!'),
 								},
 							]}>
 							<Input />
@@ -454,7 +454,7 @@ export default function TableUser() {
 							rules={[
 								{
 									required: true,
-									message: 'Please input your name!',
+									message: t('Please input your name!'),
 								},
 							]}>
 							<Input />
@@ -465,11 +465,11 @@ export default function TableUser() {
 							rules={[
 								{
 									required: true,
-									message: 'Please enter your email!',
+									message: t('Please enter your email!'),
 								},
 								{
 									type: 'email',
-									message: 'Invalid enter your email!',
+									message: t('Invalid enter your email!'),
 								},
 							]}>
 							<Input />
@@ -480,12 +480,13 @@ export default function TableUser() {
 							rules={[
 								{
 									required: true,
-									message: 'Please enter your password!',
+									message: t('Please enter your password!'),
 								},
 								{
 									min: 6,
-									message:
+									message: t(
 										'Password must be minimum 6 characters.',
+									),
 								},
 							]}>
 							<Input.Password />
@@ -498,7 +499,7 @@ export default function TableUser() {
 							rules={[
 								{
 									required: true,
-									message: 'Please confirm your password!',
+									message: t('Please confirm your password!'),
 								},
 								({ getFieldValue }) => ({
 									validator(_, value) {

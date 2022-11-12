@@ -230,13 +230,13 @@ export default function TableHotel() {
 			title: t('Type'),
 			dataIndex: 'type',
 			key: 'type',
-			render: (text) => <p>{text}</p>,
+			render: (text) => <p>{t(text)}</p>,
 		},
 		{
 			title: t('City'),
 			dataIndex: 'city',
 			key: 'City',
-			render: (text) => <p>{text}</p>,
+			render: (text) => <p>{t(text)}</p>,
 			sorter: (a, b) => a.City.length - b.City.length,
 		},
 		{
@@ -252,7 +252,7 @@ export default function TableHotel() {
 			render: (services) =>
 				services.map((service) => (
 					<Tag color={service?.length > 5 ? 'cyan' : 'gold'}>
-						{service}
+						{t(service)}
 					</Tag>
 				)),
 		},

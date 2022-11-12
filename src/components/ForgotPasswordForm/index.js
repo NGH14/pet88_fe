@@ -28,7 +28,7 @@ const ForgotPasswordForm = () => {
 			setSendedEmail(true);
 			setLoading(false);
 		} catch (e) {
-			toast.error('Sorry, an error has occurred.');
+			toast.error(t('Sorry, an error has occurred'));
 			console.log(e.message);
 			setLoading(false);
 		}
@@ -116,11 +116,11 @@ const ForgotPasswordForm = () => {
 					rules={[
 						{
 							type: 'email',
-							message: 'The input is not valid E-mail!',
+							message: t('The input is not valid E-mail!'),
 						},
 						{
 							required: true,
-							message: 'Please input your E-mail!',
+							message: t('Please input your E-mail!'),
 						},
 					]}>
 					<Input
