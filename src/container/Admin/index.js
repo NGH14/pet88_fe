@@ -29,6 +29,10 @@ import SubNavBar from './../../components/SubNavBar/index';
 import { UserLanguage } from '../../context/LanguageContext';
 import TableUser from './../../components/TableUser/index';
 import TableHotel from '../../components/TableHotel';
+import { RiCoupon3Line } from 'react-icons/ri';
+import { MdOutlinePayments } from 'react-icons/md';
+import { CgUserList } from 'react-icons/cg';
+
 const { Header, Content, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -40,17 +44,6 @@ function getItem(label, key, icon, children) {
 	};
 }
 
-const items = [
-	getItem('Option 1', '/admin', <PieChartOutlined />),
-	getItem('Option 2', '/admin/management-hotel', <ReconciliationOutlined />),
-	getItem('User', '/admin/management-user', <UserOutlined />),
-	getItem('Team', 'sub2', <TeamOutlined />, [
-		getItem('Team 1', '6'),
-		getItem('Team 2', '8'),
-	]),
-	getItem('Files', '9', <FileOutlined />),
-];
-
 export default function Admin() {
 	const location = useLocation();
 	const [loading, setLoading] = useState(true);
@@ -60,6 +53,26 @@ export default function Admin() {
 	const [collapsed, setCollapsed] = useState(true);
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const { lang, SetLanguage } = UserLanguage();
+
+	const items = [
+		getItem('Option 1', '/admin', <PieChartOutlined />),
+		getItem(
+			t('Department'),
+			'/admin/management-hotel',
+			<ReconciliationOutlined />,
+		),
+		getItem(t('User'), '/admin/management-user', <CgUserList />),
+		getItem(
+			t('Promotion'),
+			'/admin/management-promotion',
+			<RiCoupon3Line />,
+		),
+		getItem(t('Order'), '/admin/management-order', <MdOutlinePayments />),
+		getItem('Team', 'sub2', <TeamOutlined />, [
+			getItem('Team 1', '6'),
+			getItem('Team 2', '8'),
+		]),
+	];
 
 	useEffect(() => {
 		if (!user?.role || user?.role !== 'admin') {
@@ -150,8 +163,8 @@ export default function Admin() {
 											return <TableUser />;
 										case '/admin/management-hotel':
 											return <TableHotel />;
-										// case '/forgot-password':
-										// return <ForgotPasswordForm />;
+										case '/admin/management-promotion':
+											return <TableHotel />;
 										default:
 											return null;
 									}

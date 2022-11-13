@@ -59,6 +59,12 @@ export const routes = [
 	},
 
 	{
+		path: '/admin/management-promotion',
+		element: React.lazy(() => import('../container/Admin')),
+		private: true,
+	},
+
+	{
 		path: '/search',
 		element: React.lazy(() => import('../container/Search')),
 		private: false,

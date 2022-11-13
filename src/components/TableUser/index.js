@@ -41,12 +41,20 @@ import './style.css';
 const { Option } = Select;
 
 export default function TableUser() {
+	const {
+		user,
+		GetAllUser,
+		DeleteUser,
+		updateUserByAdmin,
+		AddUserToDBByAdmin,
+	} = UserAuth();
 	const [tableLoading, setTableLoading] = React.useState(true);
 	const [userRecord, setUserRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listUsers, setListUsers] = React.useState();
 	const [additionInfo, setAdditionInfo] = React.useState(false);
+	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
 	const [size, setSize] = useState('large');
 
@@ -60,13 +68,6 @@ export default function TableUser() {
 	const { t } = useTranslation();
 	const [page, setPage] = React.useState(1);
 
-	const {
-		user,
-		GetAllUser,
-		DeleteUser,
-		updateUserByAdmin,
-		AddUserToDBByAdmin,
-	} = UserAuth();
 	const { lang } = UserLanguage();
 	useEffect(() => {
 		getAllUserData();
@@ -79,6 +80,14 @@ export default function TableUser() {
 
 	const handleOpenCreateUser = () => {
 		setOpenCreate(true);
+	};
+	const onSelectChange = (newSelectedRowKeys) => {
+		console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+		setSelectedRowKeys(newSelectedRowKeys);
+	};
+	const rowSelection = {
+		selectedRowKeys,
+		onChange: onSelectChange,
 	};
 
 	const onFinishUpdate = async (value) => {
@@ -135,7 +144,8 @@ export default function TableUser() {
 					},
 				},
 			);
-			return res.data;
+			const listData = { ...res.data, key: res.data.id };
+			return listData;
 		} catch (error) {
 			console.error(error);
 		}
@@ -175,12 +185,21 @@ export default function TableUser() {
 		console.log('Failed:', errorInfo);
 	};
 
+	const handleDeleteMultipleUser = () => {
+		setListUsers(
+			listUsers.filter((item) => !selectedRowKeys.includes(item.id)),
+		);
+		setSearchDataSource(
+			searchDataSource.filter(
+				(item) => !selectedRowKeys.includes(item.id),
+			),
+		);
+		toast.success(t('Delete Success'));
+	};
 	const columns = [
 		{
 			title: t('Name'),
 			dataIndex: 'name',
-			key: 'name',
-			render: (text) => <p>{text}</p>,
 			sorter: (a, b) => a.name.length - b.name.length,
 		},
 
@@ -230,11 +249,6 @@ export default function TableUser() {
 			key: 'action',
 			render: (_, record) => (
 				<Space size='middle'>
-					<Button
-						type='text'
-						key='update'
-						icon={<EditOutlined />}
-						onClick={() => handleOpenUpdateUser(record)}></Button>
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
@@ -244,6 +258,11 @@ export default function TableUser() {
 							type='text'
 							icon={<DeleteOutlined />}></Button>
 					</Popconfirm>
+					<Button
+						type='text'
+						key='update'
+						icon={<EditOutlined />}
+						onClick={() => handleOpenUpdateUser(record)}></Button>
 				</Space>
 			),
 		},
@@ -255,8 +274,7 @@ export default function TableUser() {
 		try {
 			const users = await GetAllUser();
 			users.forEach((doc) => {
-				// doc.data() is never undefined for query doc
-				list.push({ id: doc.id, ...doc.data() });
+				list.push({ id: doc.id, ...doc.data(), key: doc.id });
 			});
 			setListUsers(list);
 			setSearchDataSource(list);
@@ -264,7 +282,6 @@ export default function TableUser() {
 		} catch (error) {
 			toast.error(t('Fail to load user data'));
 			setTableLoading(false);
-
 			console.log(error);
 		}
 	};
@@ -284,8 +301,8 @@ export default function TableUser() {
 				<div className='tableuser_rightheader'>
 					<SearchTableInput
 						columns={columns}
-						dataSource={listUsers} // 🔴 Original dataSource
-						setDataSource={setSearchDataSource} // 🔴 Newly created setSearchDataSource from useState hook
+						dataSource={listUsers}
+						setDataSource={setSearchDataSource}
 						inputProps={{
 							placeholder: t('Search'),
 							prefix: <SearchOutlined />,
@@ -309,7 +326,6 @@ export default function TableUser() {
 						type='text'></Button>
 				</div>
 			</div>
-
 			<Drawer
 				title={t('Update')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
@@ -632,7 +648,6 @@ export default function TableUser() {
 					</Form>
 				) : null}
 			</Drawer>
-
 			{tableToolTip ? (
 				<div className='table_tooltip'>
 					<Select
@@ -659,8 +674,22 @@ export default function TableUser() {
 					</ExportTableButton>
 				</div>
 			) : null}
-
+			{selectedRowKeys.length > 0 ? (
+				<div className='table_deletemulpti'>
+					<span>
+						{selectedRowKeys.length} {t('selected')} |
+					</span>
+					<Button type='text' onClick={() => setSelectedRowKeys([])}>
+						{t('Deselect')}
+					</Button>
+					<Button onClick={() => handleDeleteMultipleUser()}>
+						{t('Delete')}
+					</Button>
+				</div>
+			) : null}
 			<Table
+				rowKey={(record) => record.key}
+				rowSelection={rowSelection}
 				size={size}
 				style={{
 					backgroundColor: 'white',

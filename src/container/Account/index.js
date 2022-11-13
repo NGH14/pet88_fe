@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import {
 	Button,
@@ -10,7 +10,13 @@ import {
 	Select,
 	DatePicker,
 	Popconfirm,
+	Space,
+	Table,
+	Radio,
+	Tabs,
+	Tag,
 } from 'antd';
+
 import viVN from 'antd/es/locale/vi_VN';
 
 import { useNavigate } from 'react-router-dom';
@@ -22,9 +28,7 @@ import HeroImage from '../../components/HeroImageHomepage/index';
 import FooterWave from './../../components/Footer/index';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { Radio, Space, Tabs } from 'antd';
 import TabPane from 'antd/lib/tabs/TabPane';
-import { async } from '@firebase/util';
 import { toast } from 'react-toastify';
 import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
@@ -33,8 +37,19 @@ import { Timestamp } from '@firebase/firestore';
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
 
+const columns = [
+	{
+		title: 'Name',
+		dataIndex: 'email',
+		key: 'email',
+		render: (text) => <a>{text}</a>,
+	},
+];
+
 const Account = () => {
 	const [loading, setLoading] = useState(false);
+	const [loadingOrder, setLoadingOrder] = useState(false);
+	const navigate = useNavigate();
 	const [passwordLoading, setPasswordLoading] = useState(false);
 	const { lang } = UserLanguage();
 	const { user, updateProfile, updateUser, UpdatePassword, getOrderByUser } =
@@ -48,14 +63,29 @@ const Account = () => {
 	const [phone, setPhone] = React.useState(user?.phone);
 	const { t } = useTranslation();
 
-	React.useEffect(() => {
+	useEffect(() => {
+		if (!user) {
+			navigate('/');
+		}
+	}, [user]);
+
+	useEffect(() => {
 		getOrder();
 	}, []);
 
+	console.log(orderList);
+
 	const getOrder = async () => {
-		const orders = await getOrderByUser(user.id, user.email);
-		console.log(orders);
-		setOrderList(orders);
+		setLoadingOrder(true);
+		try {
+			const orders = await getOrderByUser();
+			setOrderList(orders);
+			setLoadingOrder(false);
+			console.log(orders);
+		} catch (error) {
+			console.log(error);
+			setLoadingOrder(false);
+		}
 	};
 
 	const handleGenderChange = (value) => {
@@ -388,13 +418,11 @@ const Account = () => {
 						<div className='form-account'>
 							<Tabs tabPosition='top'>
 								<TabPane tab={t('History')} key='3'>
-									{orderList.length === 0 ? (
-										<Empty className='account-tabpane empty-tab' />
-									) : (
-										orderList?.map((order) => {
-											return <p>{order.email}</p>;
-										})
-									)}
+									<Table
+										loading={loadingOrder}
+										columns={columns}
+										dataSource={orderList}
+									/>
 								</TabPane>
 							</Tabs>
 						</div>

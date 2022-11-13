@@ -67,7 +67,9 @@ export const AuthContextProvider = ({ children }) => {
 
 	const getOrderByUser = async (id) => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/order`);
+			const res = await axios.get(
+				`http://localhost:3001/api/order/user/${user.id}`,
+			);
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -216,6 +218,19 @@ export const AuthContextProvider = ({ children }) => {
 		}
 	};
 
+	const MultipleDeleteDepart = async (listDelete) => {
+		console.log(listDelete);
+		try {
+			const res = await axios.patch(
+				`http://localhost:3001/api/hotel/multiple-delete`,
+				listDelete,
+			);
+			return res.data;
+		} catch (error) {
+			return error;
+		}
+	};
+
 	const GetAllUser = async () => {
 		return await getDocs(collection(storage, 'users'));
 	};
@@ -286,6 +301,7 @@ export const AuthContextProvider = ({ children }) => {
 				DeleteHotel,
 				UpdateHotel,
 				getOrderByUser,
+				MultipleDeleteDepart,
 			}}>
 			{children}
 		</AuthContext.Provider>

@@ -41,6 +41,7 @@ import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
 import './style.css';
+import { async } from '@firebase/util';
 const { Option } = Select;
 
 const getBase64 = (file) =>
@@ -78,6 +79,7 @@ export default function TableHotel() {
 		AddUserToDBByAdmin,
 		GetAllHotel,
 		UpdateHotel,
+		MultipleDeleteDepart,
 	} = UserAuth();
 	const { lang } = UserLanguage();
 
@@ -87,8 +89,8 @@ export default function TableHotel() {
 	const [fileList, setFileList] = React.useState([]);
 	const [resetUpload, setResetUpload] = React.useState(true);
 	const [showFile, setShowFile] = React.useState(true);
-
 	const [uploading, setUploading] = React.useState(false);
+	const [selectedRowKeys, setSelectedRowKeys] = React.useState([]);
 
 	const handleUpload = async (e) => {
 		try {
@@ -218,6 +220,25 @@ export default function TableHotel() {
 		console.log('Failed:', errorInfo);
 	};
 
+	const handleMulptiUser = () => {
+		setListHotels(
+			listHotels.filter((item) => !selectedRowKeys.includes(item.id)),
+		);
+		setSearchDataSource(
+			searchDataSource.filter(
+				(item) => !selectedRowKeys.includes(item.id),
+			),
+		);
+	};
+
+	const onSelectChange = (newSelectedRowKeys) => {
+		console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+		setSelectedRowKeys(newSelectedRowKeys);
+	};
+	const rowSelection = {
+		selectedRowKeys,
+		onChange: onSelectChange,
+	};
 	const columns = [
 		{
 			title: t('Name'),
@@ -263,11 +284,6 @@ export default function TableHotel() {
 			key: 'action',
 			render: (_, record) => (
 				<Space size='middle'>
-					<Button
-						type='text'
-						key='update'
-						icon={<EditOutlined />}
-						onClick={() => handleOpenUpdateUser(record)}></Button>
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
@@ -277,16 +293,47 @@ export default function TableHotel() {
 							type='text'
 							icon={<DeleteOutlined />}></Button>
 					</Popconfirm>
+					<Button
+						type='text'
+						key='update'
+						icon={<EditOutlined />}
+						onClick={() => handleOpenUpdateUser(record)}></Button>
 				</Space>
 			),
 		},
 	];
+	console.log(selectedRowKeys);
+
+	const handleDeleteMultipleUser = async () => {
+		try {
+			await MultipleDeleteDepart(selectedRowKeys);
+			setListHotels(
+				listHotels.filter(
+					(item) => !selectedRowKeys.includes(item._id),
+				),
+			);
+			setSearchDataSource(
+				searchDataSource.filter(
+					(item) => !selectedRowKeys.includes(item._id),
+				),
+			);
+
+			toast.success(t('Delete Success'));
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	const getAllHotelData = async () => {
 		setTableLoading(true);
 		try {
 			const res = await GetAllHotel();
-			setListHotels(res);
-			setSearchDataSource(res);
+			const list = [];
+			res.forEach((doc) => {
+				list.push({ ...doc, key: doc._id });
+			});
+			setListHotels(list);
+			setSearchDataSource(list);
+
 			setTableLoading(false);
 		} catch (error) {
 			console.error(error);
@@ -609,7 +656,22 @@ export default function TableHotel() {
 				</div>
 			) : null}
 
+			{selectedRowKeys.length > 0 ? (
+				<div className='table_deletemulpti'>
+					<span>
+						{selectedRowKeys.length} {t('selected')} |
+					</span>
+					<Button type='text' onClick={() => setSelectedRowKeys([])}>
+						{t('Deselect')}
+					</Button>
+					<Button onClick={() => handleDeleteMultipleUser()}>
+						{t('Delete')}
+					</Button>
+				</div>
+			) : null}
 			<Table
+				rowKey={(record) => record.key}
+				rowSelection={rowSelection}
 				size={size}
 				style={{
 					backgroundColor: 'white',
