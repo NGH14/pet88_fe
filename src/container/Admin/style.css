@@ -32,3 +32,25 @@
   .ant-layout-header  {
     all: unset;
   }
+
+  .table_deletemulpti{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .table_deletemulpti-deselect {
+    font-weight: 600;
+  }
+
+  .table_deletemulpti-delete {
+    font-weight: 600;
+
+
+  border-radius: 5px;  }
+
+  .table_deletemulpti-span {
+    font-weight: 400;
+    color: #999;
+    text-transform: lowercase;
+  }

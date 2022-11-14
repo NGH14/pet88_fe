@@ -32,12 +32,15 @@ import {
 	Select,
 	DatePicker,
 	Popconfirm,
+	Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
 import './style.css';
+import { GrFormClose } from 'react-icons/gr';
+import { AiOutlineClose } from 'react-icons/ai';
 const { Option } = Select;
 
 export default function TableUser() {
@@ -47,9 +50,14 @@ export default function TableUser() {
 		DeleteUser,
 		updateUserByAdmin,
 		AddUserToDBByAdmin,
+		getNewUserInCurrentMonth,
 	} = UserAuth();
 	const [tableLoading, setTableLoading] = React.useState(true);
 	const [userRecord, setUserRecord] = React.useState({});
+	const [newUserInCurrentMonth, setNewUserInCurrentMonth] = React.useState(
+		[],
+	);
+
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listUsers, setListUsers] = React.useState();
@@ -66,12 +74,32 @@ export default function TableUser() {
 	const { token } = UserAuth();
 	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
 	const { t } = useTranslation();
-	const [page, setPage] = React.useState(1);
+
+	const [openModal, setOpenModal] = useState(false);
+	const [confirmLoadingModal, setConfirmLoadingModal] = useState(false);
 
 	const { lang } = UserLanguage();
 	useEffect(() => {
+		newUserMonthly();
 		getAllUserData();
 	}, []);
+	const newUserMonthly = async () => {
+		const data = await getNewUserInCurrentMonth();
+		setNewUserInCurrentMonth(data);
+	};
+
+	const showModal = () => {
+		setOpenModal(true);
+	};
+	const handleOkModal = () => {
+		setConfirmLoadingModal(true);
+		handleDeleteMultipleUser();
+		setOpenModal(false);
+	};
+	const handleCancelModal = () => {
+		console.log('Clicked cancel button');
+		setOpenModal(false);
+	};
 
 	const handleOpenUpdateUser = (record) => {
 		setUserRecord(record);
@@ -674,15 +702,49 @@ export default function TableUser() {
 					</ExportTableButton>
 				</div>
 			) : null}
+			<Modal
+				title='Title'
+				open={openModal}
+				onOk={handleOkModal}
+				confirmLoading={confirmLoadingModal}
+				onCancel={handleCancelModal}>
+				<p>
+					{selectedRowKeys.length} {t('selected')}
+				</p>
+			</Modal>
+			{newUserInCurrentMonth.length > 0 ? (
+				<div className='newuserStatic'>
+					<p className='newuserStatic-span'>
+						{newUserInCurrentMonth.length}
+					</p>
+				</div>
+			) : null}
 			{selectedRowKeys.length > 0 ? (
 				<div className='table_deletemulpti'>
-					<span>
+					<span className='table_deletemulpti-span'>
 						{selectedRowKeys.length} {t('selected')} |
 					</span>
-					<Button type='text' onClick={() => setSelectedRowKeys([])}>
+					<Button
+						type='text'
+						onClick={() => setSelectedRowKeys([])}
+						className='table_deletemulpti-deselect'>
 						{t('Deselect')}
 					</Button>
-					<Button onClick={() => handleDeleteMultipleUser()}>
+					<Button
+						danger
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+						icon={
+							<AiOutlineClose
+								color='red'
+								style={{ marginRight: 5 }}
+							/>
+						}
+						onClick={() => showModal()}
+						className='table_deletemulpti-delete'>
 						{t('Delete')}
 					</Button>
 				</div>
@@ -702,9 +764,6 @@ export default function TableUser() {
 					x: 800,
 				}}
 				pagination={{
-					onChange(current) {
-						setPage(current);
-					},
 					defaultPageSize: 5,
 					showSizeChanger: true,
 					pageSizeOptions: ['5', '10', '20', '30'],

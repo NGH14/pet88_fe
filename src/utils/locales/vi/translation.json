@@ -7,6 +7,10 @@
 	"department": "Chi nhánh",
 	"Promotion": "Khuyến mãi",
 	"Department": "Chi nhánh",
+	"Deselect": "Hủy chọn",
+	"Delete": "Xóa",
+	"selected": "đã chọn",
+
 
 	"Update Department Success": "Cập nhật thành công",
 	"The input is not valid Email!": "Email không hợp lệ",

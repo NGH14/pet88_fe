@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import {
 	Table,
 	ExportTableButton,
@@ -21,6 +20,7 @@ import {
 	UploadOutlined,
 	InboxOutlined,
 } from '@ant-design/icons';
+import { AiOutlineClose } from 'react-icons/ai';
 
 import {
 	Button,
@@ -41,7 +41,6 @@ import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
 import './style.css';
-import { async } from '@firebase/util';
 const { Option } = Select;
 
 const getBase64 = (file) =>
@@ -91,6 +90,24 @@ export default function TableHotel() {
 	const [showFile, setShowFile] = React.useState(true);
 	const [uploading, setUploading] = React.useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = React.useState([]);
+
+	const [openModal, setOpenModal] = useState(false);
+	const [confirmLoadingModal, setConfirmLoadingModal] = useState(false);
+
+	const fullWidth = global.window.innerWidth;
+
+	const showModal = () => {
+		setOpenModal(true);
+	};
+	const handleOkModal = async () => {
+		setConfirmLoadingModal(true);
+		await handleDeleteMultipleHotel();
+		setOpenModal(false);
+	};
+	const handleCancelModal = () => {
+		console.log('Clicked cancel button');
+		setOpenModal(false);
+	};
 
 	const handleUpload = async (e) => {
 		try {
@@ -172,8 +189,6 @@ export default function TableHotel() {
 	};
 	useEffect(() => form.resetFields(), [deparmentRecord, openCreate]);
 
-	const fullWidth = global.window.innerWidth;
-
 	const onCloseUpdateDepartment = () => {
 		SetDeparmentRecord({});
 		setOpenUpdate(false);
@@ -220,17 +235,6 @@ export default function TableHotel() {
 		console.log('Failed:', errorInfo);
 	};
 
-	const handleMulptiUser = () => {
-		setListHotels(
-			listHotels.filter((item) => !selectedRowKeys.includes(item.id)),
-		);
-		setSearchDataSource(
-			searchDataSource.filter(
-				(item) => !selectedRowKeys.includes(item.id),
-			),
-		);
-	};
-
 	const onSelectChange = (newSelectedRowKeys) => {
 		console.log('selectedRowKeys changed: ', newSelectedRowKeys);
 		setSelectedRowKeys(newSelectedRowKeys);
@@ -244,27 +248,25 @@ export default function TableHotel() {
 			title: t('Name'),
 			dataIndex: 'name',
 			key: 'name',
-			render: (text) => <p>{text}</p>,
-			sorter: (a, b) => a.name.length - b.name.length,
 		},
 		{
 			title: t('Type'),
 			dataIndex: 'type',
 			key: 'type',
-			render: (text) => <p>{t(text)}</p>,
+			render: (text) => <span>{t(text)},</span>,
 		},
 		{
 			title: t('City'),
 			dataIndex: 'city',
 			key: 'City',
-			render: (text) => <p>{t(text)}</p>,
-			sorter: (a, b) => a.City.length - b.City.length,
+			render: (text) => <span>{t(text)}</span>,
+
+			sorter: (a, b) => a.city.length - b.city.length,
 		},
 		{
 			title: t('Address'),
 			dataIndex: 'address',
 			key: 'address',
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: t('Services'),
@@ -302,9 +304,8 @@ export default function TableHotel() {
 			),
 		},
 	];
-	console.log(selectedRowKeys);
 
-	const handleDeleteMultipleUser = async () => {
+	const handleDeleteMultipleHotel = async () => {
 		try {
 			await MultipleDeleteDepart(selectedRowKeys);
 			setListHotels(
@@ -548,15 +549,7 @@ export default function TableHotel() {
 								</Option>
 							</Select>
 						</Form.Item>
-						<Form.Item
-							label='File'
-							name='file'
-							rules={[
-								{
-									required: true,
-									message: 'Please input your File!',
-								},
-							]}>
+						<Form.Item label='File' name='file'>
 							<Dragger
 								accept='.png,.jpeg'
 								maxCount={3}
@@ -656,15 +649,42 @@ export default function TableHotel() {
 				</div>
 			) : null}
 
+			<Modal
+				title='Title'
+				open={openModal}
+				onOk={handleOkModal}
+				confirmLoading={confirmLoadingModal}
+				onCancel={handleCancelModal}>
+				<p>
+					{selectedRowKeys.length} {t('selected')}
+				</p>
+			</Modal>
 			{selectedRowKeys.length > 0 ? (
 				<div className='table_deletemulpti'>
-					<span>
+					<span className='table_deletemulpti-span'>
 						{selectedRowKeys.length} {t('selected')} |
 					</span>
-					<Button type='text' onClick={() => setSelectedRowKeys([])}>
+					<Button
+						type='text'
+						onClick={() => setSelectedRowKeys([])}
+						className='table_deletemulpti-deselect'>
 						{t('Deselect')}
 					</Button>
-					<Button onClick={() => handleDeleteMultipleUser()}>
+					<Button
+						danger
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+						icon={
+							<AiOutlineClose
+								color='red'
+								style={{ marginRight: 5 }}
+							/>
+						}
+						onClick={() => showModal()}
+						className='table_deletemulpti-delete'>
 						{t('Delete')}
 					</Button>
 				</div>

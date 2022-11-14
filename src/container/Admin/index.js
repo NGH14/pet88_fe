@@ -32,6 +32,7 @@ import TableHotel from '../../components/TableHotel';
 import { RiCoupon3Line } from 'react-icons/ri';
 import { MdOutlinePayments } from 'react-icons/md';
 import { CgUserList } from 'react-icons/cg';
+import CalendarAdmin from './../../components/CalendarAdmin/index,';
 
 const { Header, Content, Sider } = Layout;
 
@@ -127,7 +128,6 @@ export default function Admin() {
 							style={{
 								display: 'flex',
 								justifyContent: 'space-between',
-								// maxWidth: 1350,
 								padding: 0,
 								margin: 'auto	',
 							}}>
@@ -159,6 +159,8 @@ export default function Admin() {
 								{' '}
 								{(() => {
 									switch (location.pathname) {
+										case '/admin':
+											return <CalendarAdmin />;
 										case '/admin/management-user':
 											return <TableUser />;
 										case '/admin/management-hotel':

@@ -219,12 +219,21 @@ export const AuthContextProvider = ({ children }) => {
 	};
 
 	const MultipleDeleteDepart = async (listDelete) => {
-		console.log(listDelete);
 		try {
 			const res = await axios.patch(
 				`http://localhost:3001/api/hotel/multiple-delete`,
 				listDelete,
 			);
+			return res.data;
+		} catch (error) {
+			return error;
+		}
+	};
+
+	const getNewUserInCurrentMonth = async () => {
+		try {
+			const res = await axios.get(`http://localhost:3001/api/user/store`);
+			console.log(res.data);
 			return res.data;
 		} catch (error) {
 			return error;
@@ -302,6 +311,7 @@ export const AuthContextProvider = ({ children }) => {
 				UpdateHotel,
 				getOrderByUser,
 				MultipleDeleteDepart,
+				getNewUserInCurrentMonth,
 			}}>
 			{children}
 		</AuthContext.Provider>
