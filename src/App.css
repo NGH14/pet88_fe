@@ -69,3 +69,8 @@ textarea {
 .ant-tag{
 	border-radius: 45px;
 }
+
+.ant-tooltip-inner{
+	border-radius: 5px;
+
+}

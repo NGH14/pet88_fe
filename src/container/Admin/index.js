@@ -29,10 +29,10 @@ import SubNavBar from './../../components/SubNavBar/index';
 import { UserLanguage } from '../../context/LanguageContext';
 import TableUser from './../../components/TableUser/index';
 import TableHotel from '../../components/TableHotel';
-import { RiCoupon3Line } from 'react-icons/ri';
+import { RiCalendarEventLine, RiCoupon3Line } from 'react-icons/ri';
 import { MdOutlinePayments } from 'react-icons/md';
 import { CgUserList } from 'react-icons/cg';
-import CalendarAdmin from './../../components/CalendarAdmin/index,';
+import { CalendarAdmin } from './../../components/Calendar';
 
 const { Header, Content, Sider } = Layout;
 
@@ -56,7 +56,7 @@ export default function Admin() {
 	const { lang, SetLanguage } = UserLanguage();
 
 	const items = [
-		getItem('Option 1', '/admin', <PieChartOutlined />),
+		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
 		getItem(
 			t('Department'),
 			'/admin/management-hotel',
