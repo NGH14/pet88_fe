@@ -21,7 +21,6 @@ import {
 	LanguageContextProvider,
 	UserLanguage,
 } from './context/LanguageContext';
-
 function App() {
 	return (
 		<AuthContextProvider>

@@ -1,0 +1,35 @@
+.site-calendar-customize-header-wrapper{
+    width: 200px;
+}
+
+.ant-picker-calendar {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.ant-picker-date-panel .ant-picker-content th {
+    width: 20px;
+    
+}
+
+.calendar-container{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    height: 100%;
+gap: 20px;}
+
+.rbc-calendar {
+    height: 580px; 
+    flex: 1 1;
+}
+
+.rbc-date-cell.rbc-current >.rbc-button-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+    
+}

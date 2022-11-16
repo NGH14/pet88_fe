@@ -253,7 +253,7 @@ export default function TableHotel() {
 			title: t('Type'),
 			dataIndex: 'type',
 			key: 'type',
-			render: (text) => <span>{t(text)},</span>,
+			render: (text) => <span>{t(text)}</span>,
 		},
 		{
 			title: t('City'),
