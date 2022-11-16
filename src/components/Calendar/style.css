@@ -27,8 +27,13 @@ gap: 20px;}
     flex: 1 1;
 }
 
+.rbc-toolbar {
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
 .rbc-date-cell.rbc-current >.rbc-button-link {
-    color: black;
+    color: rgb(24, 144, 255);
     font-weight: bold;
     text-decoration: underline;
     
