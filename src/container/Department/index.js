@@ -88,7 +88,6 @@ export default function Department() {
 	);
 
 	const isAvailable = (roomNumber) => {
-		console.log(roomNumber);
 		const isFound = roomNumber.unavailableDates.some((date) =>
 			alldates.includes(new Date(date).getTime()),
 		);
@@ -96,21 +95,24 @@ export default function Department() {
 		return !isFound;
 	};
 
-	const handleCheckout = async (room) => {
+	const handleCheckout = async () => {
 		await axios
 			.post(
-				`http://localhost:3001/api/checkout/create-checkout-session`,
+				// `http://localhost:3001/api/checkout/create-checkout-session`,
+				`http://localhost:3001/api/checkout/find-price`,
+
 				{
 					email: user?.email,
 					userID: user?.id,
-					room: room,
+					roomList: selectedRooms,
+
 					photo: photo,
 					days: search.days,
 				},
 			)
 			.then((response) => {
-				console.log(response);
-				window.location.href = response.data.url;
+				console.log(response.data);
+				// window.location.href = response.data.url;
 			})
 			.catch((err) => console.log(err.message));
 	};
@@ -170,54 +172,51 @@ export default function Department() {
 									<img src={photo} alt='' />
 									{dataList?.map((room) => {
 										return (
-											<div>
-												<p>{room.title},</p>
-												{room.roomNumbers?.map(
-													(roomNumber) => {
-														return (
-															<>
-																<label>
-																	{
-																		roomNumber.number
-																	}
-																</label>
-																<input
-																	type='checkbox'
-																	value={
-																		roomNumber._id
-																	}
-																	onChange={
-																		handleSelect
-																	}
-																	disabled={
-																		!isAvailable(
-																			roomNumber,
-																		)
-																	}
-																/>
-															</>
-														);
-													},
-												)}
+											<>
+												<div>
+													<p>{room.title},</p>
+													{room.roomNumbers?.map(
+														(roomNumber) => {
+															return (
+																<>
+																	<label>
+																		{
+																			roomNumber.number
+																		}
+																	</label>
+																	<input
+																		type='checkbox'
+																		value={
+																			roomNumber._id
+																		}
+																		onChange={
+																			handleSelect
+																		}
+																		disabled={
+																			!isAvailable(
+																				roomNumber,
+																			)
+																		}
+																	/>
+																</>
+															);
+														},
+													)}
 
-												{/* <Button
+													{/* <Button
 													onClick={
 														// handleCheckout(room)
 														handleClick
 													}>
 													Check out
 												</Button> */}
-												<Button
-													onClick={
-														() =>
-															handleCheckout(room)
-														// handleClick
-													}>
-													Check out
-												</Button>
-											</div>
+												</div>
+											</>
 										);
 									})}
+									<Button onClick={handleCheckout}>
+										Check out
+									</Button>
 								</div>
 							</div>
 						</div>
