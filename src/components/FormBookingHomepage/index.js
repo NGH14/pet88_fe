@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserLanguage } from '../../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 import './style.css';
+import { SearchData } from '../../context/SearchContext';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -28,6 +29,7 @@ const FormBookingHomepage = () => {
 	const currentDate = moment();
 	const futureMonth = moment(currentDate).add(1, 'M');
 	const futureWeek = moment(currentDate).add(1, 'W');
+	const { search, setSearchList } = SearchData();
 
 	const fetchHotelData = async (value) => {
 		try {
@@ -48,47 +50,16 @@ const FormBookingHomepage = () => {
 
 	const onFinish = async (values) => {
 		const foundData = await fetchHotelData(values);
+		setSearchList({
+			services: type,
+			city: values.city,
+			foundData,
+			foundNumber: foundData?.length,
+			datesHotels: values.datesHotels || null,
+			datesGrooming: values.datesGrooming || null,
+		});
 
-		if (!values.datesHotels && !values.datesGrooming) {
-			navigate('/search', {
-				state: {
-					services: type,
-					city: values.city,
-					foundData,
-					foundNumber: foundData?.length,
-				},
-			});
-		}
-
-		if (values.datesHotels) {
-			const date = [
-				values.datesHotels[0].toDate(),
-				values.datesHotels[1].toDate(),
-			];
-
-			navigate('/search', {
-				state: {
-					services: type,
-					city: values.city,
-					foundData,
-					foundNumber: foundData?.length,
-					datesHotels: date,
-				},
-			});
-		}
-
-		if (values.datesGrooming) {
-			const date = values.datesGrooming.toDate().getTime();
-			navigate('/search', {
-				state: {
-					services: type,
-					city: values.city,
-					foundData,
-					foundNumber: foundData?.length,
-					datesGrooming: date,
-				},
-			});
-		}
+		navigate('/search');
 	};
 
 	return (

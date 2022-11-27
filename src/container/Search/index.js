@@ -29,6 +29,7 @@ import axios from 'axios';
 import departImg from '../../assets/images/e10adb13acb1f3da8724a9149a58bd00.jpg';
 import './style.css';
 import Column from 'antd/lib/table/Column';
+import { SearchData } from '../../context/SearchContext';
 
 const { Option } = Select;
 const { Header, Content, Footer } = Layout;
@@ -39,17 +40,16 @@ const { Paragraph, Text } = Typography;
 export default function Search() {
 	const { state } = useLocation();
 	const [loading, setLoading] = useState(true);
-	const [search, setSearch] = useState(state);
+	const { search, setSearchList } = SearchData();
 	const [type, setType] = useState(search?.services);
-
 	const [form] = Form.useForm();
-	const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
 	const currentDate = moment();
 	const futureMonth = moment(currentDate).add(1, 'M');
 	const futureWeek = moment(currentDate).add(1, 'W');
-	const dayDefault = search?.days || dayDifference(search?.datesHotels);
 
 	useEffect(() => {
+		onFinish(search);
+
 		setTimeout(() => {
 			setLoading(false);
 		}, 2000);
@@ -78,55 +78,17 @@ export default function Search() {
 		}
 	};
 
-	function dayDifference(date) {
-		if (!date || date?.length === 0) return;
-		const timeDiff = Math.abs(date[1].getTime() - date[0].getTime());
-		const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
-		return diffDays;
-	}
-
 	const onFinish = async (values) => {
 		setLoading(true);
 		const foundData = await fetchHotelData(values);
-
-		if (!values.datesHotels && !values.datesGrooming) {
-			setSearch({
-				services: values.services,
-				city: values.city,
-				foundData,
-				foundNumber: foundData?.length,
-			});
-			setLoading(false);
-		}
-
-		if (values.datesHotels) {
-			const date = [
-				values.datesHotels[0].toDate(),
-				values.datesHotels[1].toDate(),
-			];
-			const days = dayDifference(date);
-
-			setSearch({
-				city: values.city,
-				foundData,
-				foundNumber: foundData.length,
-				days,
-				datesHotels: date,
-			});
-			setLoading(false);
-		}
-		if (values.datesGrooming) {
-			const date = values.datesGrooming.toDate().getTime();
-
-			setSearch({
-				services: type,
-				city: values.city,
-				foundData,
-				foundNumber: foundData?.length,
-				datesGrooming: date,
-			});
-			setLoading(false);
-		}
+		setSearchList({
+			foundData,
+			services: type,
+			city: values.city,
+			foundNumber: foundData?.length,
+			datesHotels: values.datesHotels || null,
+			datesGrooming: values.datesGrooming || null,
+		});
 	};
 
 	return (
@@ -160,10 +122,12 @@ export default function Search() {
 												datesHotels:
 													search.datesHotels && [
 														moment(
-															search?.datesHotels[0].getTime(),
+															search
+																?.datesHotels[0],
 														),
 														moment(
-															search?.datesHotels[1].getTime(),
+															search
+																?.datesHotels[1],
 														),
 													],
 												services: search?.services,
@@ -331,7 +295,7 @@ export default function Search() {
 										/>
 									)}
 
-									{!loading
+									{!loading && search?.foundData
 										? search?.foundData.map(
 												(depart, index) => {
 													return (
@@ -340,7 +304,6 @@ export default function Search() {
 															to={`/department/${depart._id}`}
 															state={{
 																...depart,
-																days: dayDefault,
 															}}>
 															<Card
 																hoverable
@@ -408,26 +371,28 @@ export default function Search() {
 																			</div>
 																		}
 																		description={
-																			<div className='card-depart_desc'>
-																				<Paragraph
-																					ellipsis={{
-																						rows: 4,
-																					}}>
-																					{t(
-																						depart.desc,
-																					)}
-																				</Paragraph>
-																				<p
-																					style={{
-																						textAlign:
-																							'right',
-																					}}>
-																					~
-																					{
-																						search?.days
-																					}
-																				</p>
-																			</div>
+																			search?.days ? (
+																				<div className='card-depart_desc'>
+																					<Paragraph
+																						ellipsis={{
+																							rows: 4,
+																						}}>
+																						{t(
+																							depart.desc,
+																						)}
+																					</Paragraph>
+																					<p
+																						style={{
+																							textAlign:
+																								'right',
+																						}}>
+																						~
+																						{
+																							search?.days
+																						}
+																					</p>
+																				</div>
+																			) : null
 																		}></Meta>
 																</Skeleton>
 															</Card>

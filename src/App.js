@@ -21,26 +21,29 @@ import {
 	LanguageContextProvider,
 	UserLanguage,
 } from './context/LanguageContext';
+import { SearchContextProvider } from './context/SearchContext';
 function App() {
 	return (
 		<AuthContextProvider>
 			<LanguageContextProvider>
 				<I18nextProvider i18n={i18n}>
-					<BrowserRouter>
-						<ToastContainer
-							position='top-right'
-							autoClose={5000}
-							hideProgressBar={false}
-							newestOnTop={false}
-							closeOnClick
-							rtl={false}
-							pauseOnFocusLoss
-							draggable
-							pauseOnHover
-							theme='light'
-						/>
-						<Routes>{listRoute(routes)}</Routes>
-					</BrowserRouter>
+					<SearchContextProvider>
+						<BrowserRouter>
+							<ToastContainer
+								position='top-right'
+								autoClose={5000}
+								hideProgressBar={false}
+								newestOnTop={false}
+								closeOnClick
+								rtl={false}
+								pauseOnFocusLoss
+								draggable
+								pauseOnHover
+								theme='light'
+							/>
+							<Routes>{listRoute(routes)}</Routes>
+						</BrowserRouter>
+					</SearchContextProvider>
 				</I18nextProvider>
 			</LanguageContextProvider>
 		</AuthContextProvider>
