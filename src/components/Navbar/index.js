@@ -642,6 +642,9 @@ function AppHeader() {
 												})}
 											</div>
 										</div>
+										<div className='mobileHidden'>
+											<AuthButton TextColor={'black'} />
+										</div>
 									</div>
 								</div>
 							</div>
