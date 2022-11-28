@@ -6,11 +6,13 @@ general
 .ant-input {
 	border-radius: 5px;
 }
-.department-page {
+.checkout-page {
 	padding: 5px;
-	background-color: rgb(248, 249, 255) !important;
+	background-color: rgb(255, 255, 255) !important;
+	min-height: 800px;
+	padding: 50px 50px;
 }
-.department-breadcum .ant-breadcrumb{
+.checkout-breadcum .ant-breadcrumb{
 	padding-right: 15px;
 	max-width: 1300px;
 	font-size: 12px !important;
@@ -20,7 +22,7 @@ general
 }
 
 
-.department-page_containner {
+.checkout-page_containner {
 	padding: 50px 15px;
 
 	max-width: 1350px;
@@ -28,17 +30,17 @@ general
 	min-height: 800px;
 }
 
- .department-toolbox{
+ .checkout-toolbox{
 	display: flex;
 	flex-direction: column;
 	width: 22%;
 }
 
-.department-page_content{
+.checkout-page_content{
 	width: 70%;
 }
 
-.department-page_title {
+.checkout-page_title {
 	text-transform: capitalize;
 	font-size: 3rem;
 	font-weight: bold;
@@ -51,11 +53,11 @@ general
 	margin-top: 30px;
 }
 
-.departmentLayout {
+.checkoutLayout {
 	background-color: transparent !important;
 }
 
-.departmentLayout .ant-layout-header {
+.checkoutLayout .ant-layout-header {
 	background-color: transparent !important;
 	padding: 0;
 	height: auto;
@@ -67,7 +69,7 @@ general
       header
       ------ 
       */
-.departmentLayout .ant-layout-header {
+.checkoutLayout .ant-layout-header {
 	transition: all 0.5s ease-in-out;
 	left: 0;
 	right: 0;
@@ -199,7 +201,7 @@ general
 }
 
 @media only screen and (max-width: 767px) {
-	.departmentLayout {
+	.checkoutLayout {
 		font-size: 12px;
 	}
 	.swiper-slide img {

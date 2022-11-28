@@ -12,11 +12,9 @@ export const SearchContextProvider = ({ children }) => {
 			foundNumber: null,
 			datesHotels: null,
 			datesGrooming: null,
-			days: null,
+			days: 0,
 		},
 	);
-
-	console.log(search);
 
 	const setSearchList = (data) => {
 		function dayDifference() {

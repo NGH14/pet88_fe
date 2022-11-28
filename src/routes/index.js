@@ -74,7 +74,11 @@ export const routes = [
 		element: React.lazy(() => import('../container/Department')),
 		private: false,
 	},
-
+	{
+		path: '/checkout',
+		element: React.lazy(() => import('../container/Checkout')),
+		private: false,
+	},
 	{
 		path: '/checkout/cancel/:id',
 		element: React.lazy(() => import('../container/CancelPayment')),

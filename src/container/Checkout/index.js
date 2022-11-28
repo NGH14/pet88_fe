@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
 	Card,
 	ConfigProvider,
@@ -30,16 +29,10 @@ const { Step } = Steps;
 const description = 'This is a description.';
 const { Header, Content, Footer } = Layout;
 
-export default function PaymentSuccess() {
+export default function Checkout() {
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
-	const navigate = useNavigate();
-	const handleClick = () => {
-		navigate(-3, { replace: true });
-	};
 
-	const location = useLocation();
-	const id = location.pathname.split('/')[3];
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
 			<Layout className='departhtLayout'>
@@ -48,7 +41,7 @@ export default function PaymentSuccess() {
 					<AppHeader></AppHeader>
 				</Header>
 				<Content>
-					<div className='success_payment-page'>
+					<div className='checkout-page'>
 						<Steps current={1}>
 							<Step title='Finished' description={description} />
 							<Step
@@ -58,7 +51,6 @@ export default function PaymentSuccess() {
 							/>
 							<Step title='Waiting' description={description} />
 						</Steps>
-						<Button onClick={() => handleClick()}>Back</Button>
 					</div>
 				</Content>
 				<Footer>
