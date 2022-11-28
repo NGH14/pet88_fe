@@ -328,6 +328,7 @@ function SubNavBar() {
 								<div className='subheader'>
 									<div className='subheader-right'>
 										<ChangeLanguage TextColor={'black'} />
+
 										{(user?.name ||
 											localStorage.getItem('name')) && (
 											<Dropdown
