@@ -69,10 +69,6 @@ export default function Admin() {
 			<RiCoupon3Line />,
 		),
 		getItem(t('Order'), '/admin/management-order', <MdOutlinePayments />),
-		getItem('Team', 'sub2', <TeamOutlined />, [
-			getItem('Team 1', '6'),
-			getItem('Team 2', '8'),
-		]),
 	];
 
 	useEffect(() => {

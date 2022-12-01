@@ -1,0 +1,39 @@
+.underpage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.underpage-form{
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    width: 45%;
+
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+}
+
+
+
+@media only screen and (max-width: 1150px) {
+	.underpage-form {
+		width: 80%;
+        font-size: 10px;
+	}
+
+}
+
+@media only screen and (max-width: 650px) {
+	.underpage-form {
+		width: 100%;
+        height: 100%;
+        font-size: 10px;
+	}
+    .underpage{
+        background-image: none !important;
+    }
+    
+}

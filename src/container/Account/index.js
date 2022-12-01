@@ -37,15 +37,6 @@ import { Timestamp } from '@firebase/firestore';
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
 
-const columns = [
-	{
-		title: 'Name',
-		dataIndex: 'email',
-		key: 'email',
-		render: (text) => <a>{text}</a>,
-	},
-];
-
 const Account = () => {
 	const [loading, setLoading] = useState(false);
 	const [loadingOrder, setLoadingOrder] = useState(false);
@@ -63,6 +54,55 @@ const Account = () => {
 	const [phone, setPhone] = React.useState(user?.phone);
 	const { t } = useTranslation();
 
+	const columns = [
+		{
+			title: 'Order ID',
+			dataIndex: '_id',
+			key: 'email',
+			render: (text) => <span>{text}</span>,
+		},
+		{
+			title: 'Room Booking',
+			dataIndex: 'products',
+			key: 'products',
+			render: (products) => products.map((_) => <p>{_.roomNumber}</p>),
+		},
+		{
+			title: 'Date (Nights)',
+			dataIndex: 'days',
+			key: 'days',
+			render: (text) => <span>{text}</span>,
+		},
+		{
+			title: 'Price',
+			dataIndex: 'price',
+			key: 'price',
+			render: (text) => (
+				<span>
+					{new Intl.NumberFormat('vi-VI', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(text)}
+				</span>
+			),
+		},
+		{
+			title: 'Booking Date',
+			dataIndex: 'createdAt',
+			key: 'createdAt',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
+		},
+		{
+			title: 'Status',
+			dataIndex: 'paid',
+			key: 'paid',
+			render: (text) => (
+				<Tag color={text === 'success' ? 'green' : 'red'}>{text}</Tag>
+			),
+		},
+	];
+
+	console.log(orderList);
 	useEffect(() => {
 		if (!user) {
 			navigate('/');

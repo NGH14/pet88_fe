@@ -21,13 +21,13 @@ import SubNavBar from '../../components/SubNavBar';
 import AppHeader from '../../components/Navbar';
 import FooterWave from '../../components/Footer';
 import './style.css';
+import { VscError } from 'react-icons/vsc';
 
 import viVN from 'antd/es/locale/vi_VN';
 import { UserLanguage } from '../../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 
 const { Step } = Steps;
-const description = 'This is a description.';
 const { Header, Content, Footer } = Layout;
 
 export default function PaymentCancel() {
@@ -38,7 +38,7 @@ export default function PaymentCancel() {
 	const fetchDeleteData = async () => {
 		try {
 			const res = await axios.put(
-				`http://localhost:3001/api/order/${id}`,
+				`http://localhost:3001/api/order/cancel/${id}`,
 			);
 			console.log(res.data);
 		} catch (error) {
@@ -64,16 +64,60 @@ export default function PaymentCancel() {
 				</Header>
 				<Content>
 					<div className='cancel_payment-page'>
-						<Steps current={1}>
-							<Step title='Finished' description={description} />
-							<Step
-								title='In Progress'
-								description={description}
-								subTitle='Left 00:00:08'
-							/>
-							<Step title='Waiting' description={description} />
-						</Steps>
-						<Button onClick={() => handleClick()}>Back</Button>
+						<div className='checkoutpage_step'>
+							<Steps current={2} size='small' status='error'>
+								<Step
+									title={t('Your Selection')}
+									description={t('Finish')}
+								/>
+								<Step
+									title={t('Your Details')}
+									description={t('Finish')}
+								/>
+								<Step
+									title={t('Your Payment')}
+									description={t('Checkout Fail')}
+								/>
+							</Steps>
+						</div>
+						<div className='payment_status-page'>
+							<VscError
+								color='#FF4D4F'
+								style={{
+									fontSize: 100,
+									marginBottom: 30,
+								}}></VscError>
+							<h1 style={{ fontWeight: 700 }}>
+								{' '}
+								{t('Oh no, your payment failed')}
+							</h1>
+							<p>
+								{' '}
+								{t(
+									'Do not worry, please check the information',
+								)}
+							</p>
+
+							<Button
+								type='primary'
+								htmlType='submit'
+								style={{
+									height: 'fit-content',
+									width: '150px',
+									fontSize: 16,
+									lineHeight: 1.8,
+									marginTop: 30,
+									fontWeight: 700,
+									backgroundColor: '#FF4D4F',
+									borderColor: '#FF4D4F',
+									borderRadius: 45,
+									boxShadow:
+										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
+								}}
+								onClick={() => handleClick()}>
+								{t('Go Back')}
+							</Button>
+						</div>
 					</div>
 				</Content>
 				<Footer>

@@ -55,6 +55,24 @@ export default function Search() {
 		}, 2000);
 	}, []);
 
+	const getDatesInRange = (startDate, endDate) => {
+		const start = new Date(startDate);
+		const end = new Date(endDate);
+		const date = new Date(start.getTime());
+		const dates = [];
+		while (date <= end) {
+			dates.push(new Date(date).getTime());
+			date.setDate(date.getDate() + 1);
+		}
+
+		return dates;
+	};
+
+	const alldates =
+		search.datesHotels || search.datesHotels?.length > 0
+			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
+			: [];
+
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const fetchHotelData = async (value) => {
@@ -70,13 +88,67 @@ export default function Search() {
 					},
 				},
 			);
-			setLoading(false);
+			const dataList = await Promise.all(
+				res.data.map((hotel) => {
+					const f = axios.post(
+						`http://localhost:3001/api/hotel/availability/${hotel._id}`,
+						{
+							dates: alldates,
+						},
+					);
+					return f;
+				}),
+			);
 
+			setLoading(false);
+			console.log({ dataList, res: res.data });
 			return res.data;
 		} catch (error) {
 			console.error(error);
 		}
 	};
+
+	// const findHotel = async () => {
+	// 	const value = {
+	// 		services: 'hotel',
+	// 		city: 'Ha Noi',
+	// 		datesHotels: [
+	// 			'2025-11-29T10:01:27.168Z',
+	// 			'2025-12-29T10:01:27.168Z',
+	// 		],
+	// 	};
+	// 	try {
+	// 		const res = await axios.get(
+	// 			`http://localhost:3001/api/hotel/find-hotel`,
+	// 			{
+	// 				params: {
+	// 					city: value.city,
+	// 					services: value.services,
+	// 				},
+	// 			},
+	// 		);
+	// 		const dataList = await Promise.all(
+	// 			res.data.map((hotel) => {
+	// 				const f = axios.post(
+	// 					`http://localhost:3001/api/hotel/availability/${hotel._id}`,
+	// 					{
+	// 						dates: [
+	// 							'2025-11-29T10:01:27.168Z',
+	// 							'2025-12-29T10:01:27.168Z',
+	// 						],
+	// 					},
+	// 				);
+	// 				return f;
+	// 			}),
+	// 		);
+
+	// 		console.log(dataList);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
+
+	// findHotel();
 
 	const onFinish = async (values) => {
 		setLoading(true);

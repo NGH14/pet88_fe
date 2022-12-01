@@ -89,4 +89,9 @@ export const routes = [
 		element: React.lazy(() => import('../container/SucessPayment')),
 		private: false,
 	},
+	{
+		path: '/undercontruction',
+		element: React.lazy(() => import('../container/UnderDev')),
+		private: false,
+	},
 ];

@@ -7,51 +7,92 @@ general
 	border-radius: 5px;
 }
 .checkout-page {
-	padding: 5px;
 	background-color: rgb(255, 255, 255) !important;
 	min-height: 800px;
 	padding: 50px 50px;
+
 }
-.checkout-breadcum .ant-breadcrumb{
-	padding-right: 15px;
-	max-width: 1300px;
-	font-size: 12px !important;
-	margin-bottom: 15px;
-	text-transform: capitalize;
-	font-weight: 600;
+.checkout_toolbox {
+	margin-bottom: 10px;
+	border: 1px solid #e7e7e7;
+	border-radius: 10px;
+	padding: 15px;
 }
 
+.checkout-page .ant-form-vertical .ant-form-item-label {
+	padding: 0;
+}
 
-.checkout-page_containner {
-	padding: 50px 15px;
-
-	max-width: 1350px;
+.checkout_wrapper{
+	max-width: 1250px;
 	margin: auto;
+}
+
+.checkoutpage_step {
+	margin-block: 40px;
+}
+
+.ant-steps-item-title {
+	font-weight: 700;
+}
+
+.checkoutpage_content-right {
+	width: 50%;
+}
+
+
+.checkoutpage_containner {
+	padding: 50px 15px;
 	min-height: 800px;
 }
+.checkout_counting {
+	display: flex;
+	justify-content: space-between;
+	gap: 5px;
+}
 
- .checkout-toolbox{
+.checkoutpage_content-left {
+	width: 45%;
+}
+.toolbox_title {
+	font-weight: 700;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.checkout_date {
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+
+}
+
+.checkout-sub {
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.checkout-dates_text {
+	font-weight: 800;
+}
+
+
+.checkoutpage_content {
+	display: flex;
+	gap: 40px;
+}
+
+
+.checkoutpage_content {
+	display: flex;
+	gap: 40px;
+}
+.checkoutpage_content-left {
 	display: flex;
 	flex-direction: column;
-	width: 22%;
 }
 
-.checkout-page_content{
-	width: 70%;
-}
 
-.checkout-page_title {
-	text-transform: capitalize;
-	font-size: 3rem;
-	font-weight: bold;
-	color: rgb(63, 63, 122);
-}
-
-.tabpane_formtext .form-title {
-	text-transform: capitalize;
-	font-weight: 600;
-	margin-top: 30px;
-}
 
 .checkoutLayout {
 	background-color: transparent !important;

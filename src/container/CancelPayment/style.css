@@ -21,6 +21,18 @@ general
 	font-weight: 600;
 }
 
+.ant-steps-item-title {
+	font-weight: 700;
+}
+
+.payment_status-page {
+	text-align: center;
+	min-height: 500px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
 
 .cancel_payment-page_containner {
 	padding: 50px 15px;

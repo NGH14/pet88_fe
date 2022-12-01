@@ -17,6 +17,16 @@
 	"Please enter your name!": "Vui lòng nhập tên",
 	"Please enter your email!": "Vui lòng nhập email",
 	"Please confirm your password!": "Vui lòng xác nhận mật khẩu",
+	"Your Selection": "Lựa Chọn",
+	"Your Details": "Thông tin",
+	"Your Payment": "Thanh Toán",
+	"Next": "Kế Tiếp",
+	"Finish": "Hoàn Thành",
+	"In Progress": "Đang Tiến Hành",
+
+
+
+
 	"Password must be minimum 6 characters.": "Mật khẩu phải có tối thiểu 6 ký tự.",
 	"The two passwords that you entered do not match!": "Hai mật khẩu bạn đã nhập không khớp!",
 	"Email is already used": "Email đã được sử dụng",

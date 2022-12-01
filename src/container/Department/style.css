@@ -19,6 +19,12 @@ general
 	font-weight: 600;
 }
 
+.page_roomcontent .ant-select-selector{
+	border-radius: 5px !important;
+	width: 100%;
+}
+
+
 
 .department-page_containner {
 	padding: 50px 15px;

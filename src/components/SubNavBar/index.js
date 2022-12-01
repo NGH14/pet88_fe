@@ -325,7 +325,7 @@ function SubNavBar() {
 									transition:
 										'background-color 0.5s ease-in-out',
 								}}>
-								<div className='subheader'>
+								<div className='subheader mobileHidden'>
 									<div className='subheader-right'>
 										<ChangeLanguage TextColor={'black'} />
 
