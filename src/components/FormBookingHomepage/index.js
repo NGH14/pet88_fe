@@ -31,15 +31,31 @@ const FormBookingHomepage = () => {
 	const futureWeek = moment(currentDate).add(1, 'W');
 	const { search, setSearchList } = SearchData();
 
+	const getDatesInRange = (startDate, endDate) => {
+		const start = new Date(startDate);
+		const end = new Date(endDate);
+		const date = new Date(start.getTime());
+		const dates = [];
+		while (date <= end) {
+			dates.push(new Date(date).getTime());
+			date.setDate(date.getDate() + 1);
+		}
+		return dates;
+	};
+
+	const alldates =
+		search.datesHotels || search.datesHotels?.length > 0
+			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
+			: [];
+
 	const fetchHotelData = async (value) => {
 		try {
-			const res = await axios.get(
-				`http://localhost:3001/api/hotel/find-hotel`,
+			const res = await axios.post(
+				`http://localhost:3001/api/hotel/find-hotel-able`,
 				{
-					params: {
-						city: value.city,
-						services: type,
-					},
+					city: value.city,
+					dates: alldates,
+					services: type,
 				},
 			);
 			return res.data;

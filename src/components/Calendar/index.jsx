@@ -10,6 +10,8 @@ import {
 	Calendar,
 	Col,
 	ConfigProvider,
+	Dropdown,
+	Menu,
 	Radio,
 	Row,
 	Select,
@@ -33,6 +35,8 @@ import { UserLanguage } from '../../context/LanguageContext';
 
 import viVN from 'antd/es/locale/vi_VN';
 import './style.css';
+import { useTranslation } from 'react-i18next';
+import { display } from '@mui/system';
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
 	{
@@ -69,11 +73,12 @@ export const CalendarAdmin = () => {
 	const { lang } = UserLanguage();
 	const [allEvents, setAllEvents] = useState(events);
 	const [defaultDate, setDefaultDate] = useState(new Date());
-
+	const { t } = useTranslation();
 	const localizer = momentLocalizer(moment);
 	const onPanelChange = (value, mode) => {
 		console.log(value.format('YYYY-MM-DD'), mode);
 	};
+
 	const onSubCalendarSelected = (newValue) => {
 		setDefaultDate(newValue.toDate());
 	};
@@ -151,45 +156,107 @@ export const CalendarAdmin = () => {
 					<Calendar
 						headerRender={({ value, onChange }) => {
 							const date = value.format('MMMM, YYYY');
+							const menu = (
+								<Menu>
+									<Menu.Item>
+										<Button
+											size='middle'
+											onClick={() => {
+												const newValue = moment(
+													value,
+												).add(1, 'W');
+												onChange(newValue);
+											}}>
+											1 {t('week')}
+										</Button>
+										<Button
+											size='middle'
+											onClick={() => {
+												const newValue = moment(
+													value,
+												).add(2, 'M');
+												onChange(newValue);
+											}}>
+											2 {t('weeks')}
+										</Button>
+									</Menu.Item>
+									<Menu.Item>
+										<Button
+											size='middle'
+											onClick={() => {
+												const newValue = moment(
+													value,
+												).add(3, 'W');
+												onChange(newValue);
+											}}>
+											3 {t('week')}
+										</Button>
+										<Button
+											size='middle'
+											onClick={() => {
+												const newValue = moment(
+													value,
+												).add(4, 'M');
+												onChange(newValue);
+											}}>
+											4 {t('weeks')}
+										</Button>
+									</Menu.Item>
+								</Menu>
+							);
 							return (
-								<div
-									style={{
-										display: 'flex',
-										justifyContent: 'space-between',
-										alignItems: 'center',
-									}}>
-									<span
+								<div>
+									<div
 										style={{
-											textTransform: 'capitalize',
-											fontSize: 14,
-											fontWeight: 600
+											display: 'flex',
+											justifyContent: 'space-between',
+											alignItems: 'center',
 										}}>
-										{date}
-									</span>
-									<div style={{ display: 'flex', gap: 5 }}>
-										<Button
-											style={{ padding: 0 }}
-											type='text'
-											onClick={() => {
-												const newValue = moment(
-													value,
-												).subtract(1, 'M');
-												onChange(newValue);
+										<span
+											style={{
+												textTransform: 'capitalize',
+												fontSize: 14,
+												fontWeight: 600,
 											}}>
-											<IoIosArrowBack />
-										</Button>
-										<Button
-											style={{ padding: 0 }}
-											type='text'
-											onClick={() => {
-												const newValue = moment(
-													value,
-												).add(1, 'M');
-												onChange(newValue);
-											}}>
-											<IoIosArrowForward />
-										</Button>
+											{date}
+										</span>
+										<div
+											style={{ display: 'flex', gap: 5 }}>
+											<Button
+												style={{ padding: 0 }}
+												type='text'
+												onClick={() => {
+													const newValue = moment(
+														value,
+													).subtract(1, 'M');
+													onChange(newValue);
+												}}>
+												<IoIosArrowBack />
+											</Button>
+											<Button
+												style={{ padding: 0 }}
+												type='text'
+												onClick={() => {
+													const newValue = moment(
+														value,
+													).add(1, 'M');
+													onChange(newValue);
+												}}>
+												<IoIosArrowForward />
+											</Button>
+										</div>
 									</div>
+									<Dropdown overlay={menu}>
+										<Button
+											block
+											style={{
+												marginBlock: 20,
+												boxShadow:
+													'rgb(112 144 176 / 20%) 0px 2px 8px',
+											}}>
+											{t('Quick Jump')}
+										</Button>
+									</Dropdown>
 								</div>
 							);
 						}}
@@ -212,7 +279,7 @@ export const CalendarAdmin = () => {
 					date={defaultDate}
 					culture={lang}
 					events={allEvents}
-					defaultView="day"
+					defaultView='day'
 					onEventResize={resizeEvent}
 					onEventDrop={moveEvent}
 					step={15}

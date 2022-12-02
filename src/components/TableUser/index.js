@@ -703,14 +703,40 @@ export default function TableUser() {
 				</div>
 			) : null}
 			<Modal
-				title='Title'
+				width={400}
+				closable={false}
+				footer={null}
 				open={openModal}
-				onOk={handleOkModal}
-				confirmLoading={confirmLoadingModal}
-				onCancel={handleCancelModal}>
-				<p>
-					{selectedRowKeys.length} {t('selected')}
-				</p>
+				confirmLoading={confirmLoadingModal}>
+				<div>
+					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
+						{t('Delete')} {selectedRowKeys.length} {t('user')}{' '}
+						{t('selected')}?
+					</h6>
+					<p style={{ fontWeight: 500, fontSize: 14 }}>
+						{t('This will permanently remove')} {t('user')}
+					</p>
+					<div
+						style={{
+							marginTop: 20,
+							display: 'flex',
+							gap: 5,
+							justifyContent: 'flex-end',
+						}}>
+						<Button
+							onClick={handleCancelModal}
+							style={{ borderRadius: 8 }}>
+							Cancel
+						</Button>
+						<Button
+							onClick={handleOkModal}
+							style={{ borderRadius: 8 }}
+							type='primary'
+							danger>
+							Delete
+						</Button>
+					</div>
+				</div>
 			</Modal>
 			{newUserInCurrentMonth.length > 0 ? (
 				<div className='newuserStatic'>

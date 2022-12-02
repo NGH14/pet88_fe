@@ -41,6 +41,8 @@ export default function Search() {
 	const { state } = useLocation();
 	const [loading, setLoading] = useState(true);
 	const { search, setSearchList } = SearchData();
+	const [searchState, setSearchState] = useState(true);
+
 	const [type, setType] = useState(search?.services);
 	const [form] = Form.useForm();
 	const currentDate = moment();
@@ -48,8 +50,6 @@ export default function Search() {
 	const futureWeek = moment(currentDate).add(1, 'W');
 
 	useEffect(() => {
-		onFinish(search);
-
 		setTimeout(() => {
 			setLoading(false);
 		}, 2000);
@@ -64,7 +64,6 @@ export default function Search() {
 			dates.push(new Date(date).getTime());
 			date.setDate(date.getDate() + 1);
 		}
-
 		return dates;
 	};
 
@@ -76,79 +75,21 @@ export default function Search() {
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const fetchHotelData = async (value) => {
-		setLoading(true);
-
 		try {
-			const res = await axios.get(
-				`http://localhost:3001/api/hotel/find-hotel`,
+			const res = await axios.post(
+				`http://localhost:3001/api/hotel/find-hotel-able`,
 				{
-					params: {
-						city: value.city,
-						services: value.services,
-					},
+					city: value.city,
+					dates: alldates,
+					services: value.services,
 				},
 			);
-			const dataList = await Promise.all(
-				res.data.map((hotel) => {
-					const f = axios.post(
-						`http://localhost:3001/api/hotel/availability/${hotel._id}`,
-						{
-							dates: alldates,
-						},
-					);
-					return f;
-				}),
-			);
 
-			setLoading(false);
-			console.log({ dataList, res: res.data });
 			return res.data;
 		} catch (error) {
 			console.error(error);
 		}
 	};
-
-	// const findHotel = async () => {
-	// 	const value = {
-	// 		services: 'hotel',
-	// 		city: 'Ha Noi',
-	// 		datesHotels: [
-	// 			'2025-11-29T10:01:27.168Z',
-	// 			'2025-12-29T10:01:27.168Z',
-	// 		],
-	// 	};
-	// 	try {
-	// 		const res = await axios.get(
-	// 			`http://localhost:3001/api/hotel/find-hotel`,
-	// 			{
-	// 				params: {
-	// 					city: value.city,
-	// 					services: value.services,
-	// 				},
-	// 			},
-	// 		);
-	// 		const dataList = await Promise.all(
-	// 			res.data.map((hotel) => {
-	// 				const f = axios.post(
-	// 					`http://localhost:3001/api/hotel/availability/${hotel._id}`,
-	// 					{
-	// 						dates: [
-	// 							'2025-11-29T10:01:27.168Z',
-	// 							'2025-12-29T10:01:27.168Z',
-	// 						],
-	// 					},
-	// 				);
-	// 				return f;
-	// 			}),
-	// 		);
-
-	// 		console.log(dataList);
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// };
-
-	// findHotel();
 
 	const onFinish = async (values) => {
 		setLoading(true);
@@ -161,6 +102,7 @@ export default function Search() {
 			datesHotels: values.datesHotels || null,
 			datesGrooming: values.datesGrooming || null,
 		});
+		setLoading(false);
 	};
 
 	return (

@@ -7,6 +7,14 @@
 	"department": "Chi nhánh",
 	"Promotion": "Khuyến mãi",
 	"Department": "Chi nhánh",
+	"Departments": "Chi nhánh",
+	"Room": "Phòng",
+	"Rooms": "Phòng",
+	"Price": "Tổng",
+	"nights": "đêm",
+	"night": "đêm",
+	"For": "cho",
+	"Quick Jump": "Di chuyển nhanh",
 	"Deselect": "Hủy chọn",
 	"Delete": "Xóa",
 	"selected": "đã chọn",
@@ -23,8 +31,9 @@
 	"Next": "Kế Tiếp",
 	"Finish": "Hoàn Thành",
 	"In Progress": "Đang Tiến Hành",
-
-
+	"week": "tuần",
+	"weeks": "tuần",
+	
 
 
 	"Password must be minimum 6 characters.": "Mật khẩu phải có tối thiểu 6 ký tự.",

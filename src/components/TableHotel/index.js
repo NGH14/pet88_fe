@@ -41,6 +41,7 @@ import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
 import './style.css';
+import { borderRadius } from '@mui/system';
 const { Option } = Select;
 
 const getBase64 = (file) =>
@@ -59,7 +60,6 @@ export default function TableHotel() {
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listHotels, setListHotels] = React.useState();
-	const [additionInfo, setAdditionInfo] = React.useState(false);
 	const [size, setSize] = useState('large');
 
 	const [openUpdate, setOpenUpdate] = useState(false);
@@ -74,8 +74,7 @@ export default function TableHotel() {
 	const {
 		CreateHotel,
 		DeleteHotel,
-		updateUserByAdmin,
-		AddUserToDBByAdmin,
+
 		GetAllHotel,
 		UpdateHotel,
 		MultipleDeleteDepart,
@@ -101,11 +100,12 @@ export default function TableHotel() {
 	};
 	const handleOkModal = async () => {
 		setConfirmLoadingModal(true);
+		setSelectedRowKeys([]);
 		await handleDeleteMultipleHotel();
+
 		setOpenModal(false);
 	};
 	const handleCancelModal = () => {
-		console.log('Clicked cancel button');
 		setOpenModal(false);
 	};
 
@@ -650,14 +650,41 @@ export default function TableHotel() {
 			) : null}
 
 			<Modal
-				title='Title'
+				width={400}
+				closable={false}
+				footer={null}
 				open={openModal}
-				onOk={handleOkModal}
-				confirmLoading={confirmLoadingModal}
-				onCancel={handleCancelModal}>
-				<p>
-					{selectedRowKeys.length} {t('selected')}
-				</p>
+				confirmLoading={confirmLoadingModal}>
+				<div>
+					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
+						{t('Delete')} {selectedRowKeys.length} {t('department')}{' '}
+						{t('selected')}?
+					</h6>
+					<p style={{ fontWeight: 500, fontSize: 14 }}>
+						{t('This will permanently remove')} {t('department')}
+					</p>
+					<div
+						style={{
+							marginTop: 20,
+
+							display: 'flex',
+							gap: 5,
+							justifyContent: 'flex-end',
+						}}>
+						<Button
+							onClick={handleCancelModal}
+							style={{ borderRadius: 8 }}>
+							Cancel
+						</Button>
+						<Button
+							onClick={handleOkModal}
+							style={{ borderRadius: 8 }}
+							type='primary'
+							danger>
+							Delete
+						</Button>
+					</div>
+				</div>
 			</Modal>
 			{selectedRowKeys.length > 0 ? (
 				<div className='table_deletemulpti'>

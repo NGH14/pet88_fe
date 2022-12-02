@@ -57,10 +57,19 @@ export default function Admin() {
 
 	const items = [
 		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
+		// getItem(
+		// 	t('Department'),
+		// 	'/admin/management-hotel',
+		// 	<ReconciliationOutlined />,
+		// ),
 		getItem(
-			t('Department'),
+			t('Business'),
 			'/admin/management-hotel',
 			<ReconciliationOutlined />,
+			[
+				getItem(t('Departments'), '/admin/management-hotel'),
+				getItem(t('Rooms'), '/admin/management-room'),
+			],
 		),
 		getItem(t('User'), '/admin/management-user', <CgUserList />),
 		getItem(
@@ -68,6 +77,7 @@ export default function Admin() {
 			'/admin/management-promotion',
 			<RiCoupon3Line />,
 		),
+
 		getItem(t('Order'), '/admin/management-order', <MdOutlinePayments />),
 	];
 

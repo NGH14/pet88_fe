@@ -78,3 +78,6 @@ textarea {
 .ant-layout-header {
     all: unset;
 }
+.ant-modal-content {
+	border-radius: 6px;
+}

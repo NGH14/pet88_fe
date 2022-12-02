@@ -12,6 +12,8 @@
     
 }
 
+
+
 .calendar-container{
     display: flex;
     flex-wrap: wrap;
@@ -21,6 +23,11 @@
     border-radius: 5px;
     height: 100%;
 gap: 20px;}
+
+.ant-dropdown-menu-title-content {
+    display: flex !important;
+    justify-content: space-around !important;
+}
 
 .rbc-calendar {
     height: 580px; 
@@ -38,3 +45,4 @@ gap: 20px;}
     text-decoration: underline;
     
 }
+
