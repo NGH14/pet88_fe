@@ -33,6 +33,7 @@ import { RiCalendarEventLine, RiCoupon3Line } from 'react-icons/ri';
 import { MdOutlinePayments } from 'react-icons/md';
 import { CgUserList } from 'react-icons/cg';
 import { CalendarAdmin } from './../../components/Calendar';
+import TableRooms from '../../components/TableRooms';
 
 const { Header, Content, Sider } = Layout;
 
@@ -57,20 +58,11 @@ export default function Admin() {
 
 	const items = [
 		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
-		// getItem(
-		// 	t('Department'),
-		// 	'/admin/management-hotel',
-		// 	<ReconciliationOutlined />,
-		// ),
-		getItem(
-			t('Business'),
-			'/admin/management-hotel',
-			<ReconciliationOutlined />,
-			[
-				getItem(t('Departments'), '/admin/management-hotel'),
-				getItem(t('Rooms'), '/admin/management-room'),
-			],
-		),
+
+		getItem(t('Business'), 'depart', <ReconciliationOutlined />, [
+			getItem(t('Departments'), '/admin/management-hotel'),
+			getItem(t('Room Categories'), '/admin/management-room-category'),
+		]),
 		getItem(t('User'), '/admin/management-user', <CgUserList />),
 		getItem(
 			t('Promotion'),
@@ -173,6 +165,8 @@ export default function Admin() {
 											return <TableHotel />;
 										case '/admin/management-promotion':
 											return <TableHotel />;
+										case '/admin/management-room-category':
+											return <TableRooms />;
 										default:
 											return null;
 									}

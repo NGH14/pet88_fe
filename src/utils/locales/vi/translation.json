@@ -33,7 +33,13 @@
 	"In Progress": "Đang Tiến Hành",
 	"week": "tuần",
 	"weeks": "tuần",
-	
+	"This will permanently remove": "Thao tác này sẽ xóa vĩnh viễn",
+	"delete": "Xóa",
+	"Cancel": "Hủy",
+	"Order": "Giao Dịch",
+	"Room Categories": "Loại Phòng",
+	"room categories": "Loại Phòng",
+	"management room categories": "Quản lý Loại Phòng",
 
 
 	"Password must be minimum 6 characters.": "Mật khẩu phải có tối thiểu 6 ký tự.",

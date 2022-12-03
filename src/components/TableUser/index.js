@@ -719,6 +719,7 @@ export default function TableUser() {
 					<div
 						style={{
 							marginTop: 20,
+
 							display: 'flex',
 							gap: 5,
 							justifyContent: 'flex-end',
@@ -726,14 +727,14 @@ export default function TableUser() {
 						<Button
 							onClick={handleCancelModal}
 							style={{ borderRadius: 8 }}>
-							Cancel
+							{t('Cancel')}
 						</Button>
 						<Button
 							onClick={handleOkModal}
 							style={{ borderRadius: 8 }}
 							type='primary'
 							danger>
-							Delete
+							{t('Delete')}
 						</Button>
 					</div>
 				</div>

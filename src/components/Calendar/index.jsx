@@ -49,14 +49,19 @@ const events = [
 ];
 
 const langMessage = {
-	en: null,
+	en:  {
+	
+		previous: '<',
+		next: '>',
+
+	},
 	vi: {
 		week: 'Tuần',
 		work_week: 'Ngày trong tuần',
 		day: 'Ngày',
 		month: 'Tháng',
-		previous: 'Trước',
-		next: 'Sau',
+		previous: '<',
+		next: '>',
 		today: 'Hôm nay',
 		agenda: 'Lịch trình',
 		date: 'Ngày',
@@ -90,7 +95,6 @@ export const CalendarAdmin = () => {
 		[],
 	);
 
-	console.log(allEvents);
 
 	const { messages } = useMemo(
 		() => ({
@@ -149,6 +153,9 @@ export const CalendarAdmin = () => {
 		[setAllEvents],
 	);
 
+	const onNavigate = useCallback((newDate) => setDefaultDate(newDate), [setDefaultDate])
+
+
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
 			<div className='calendar-container'>
@@ -160,6 +167,7 @@ export const CalendarAdmin = () => {
 								<Menu>
 									<Menu.Item>
 										<Button
+											block
 											size='middle'
 											onClick={() => {
 												const newValue = moment(
@@ -169,12 +177,15 @@ export const CalendarAdmin = () => {
 											}}>
 											1 {t('week')}
 										</Button>
+									</Menu.Item>
+									<Menu.Item>
 										<Button
+											block
 											size='middle'
 											onClick={() => {
 												const newValue = moment(
 													value,
-												).add(2, 'M');
+												).add(2, 'W');
 												onChange(newValue);
 											}}>
 											2 {t('weeks')}
@@ -182,6 +193,7 @@ export const CalendarAdmin = () => {
 									</Menu.Item>
 									<Menu.Item>
 										<Button
+											block
 											size='middle'
 											onClick={() => {
 												const newValue = moment(
@@ -191,12 +203,15 @@ export const CalendarAdmin = () => {
 											}}>
 											3 {t('week')}
 										</Button>
+									</Menu.Item>
+									<Menu.Item>
 										<Button
+											block	
 											size='middle'
 											onClick={() => {
 												const newValue = moment(
 													value,
-												).add(4, 'M');
+												).add(4, 'W');
 												onChange(newValue);
 											}}>
 											4 {t('weeks')}
@@ -280,6 +295,7 @@ export const CalendarAdmin = () => {
 					culture={lang}
 					events={allEvents}
 					defaultView='day'
+					onNavigate={onNavigate}
 					onEventResize={resizeEvent}
 					onEventDrop={moveEvent}
 					step={15}

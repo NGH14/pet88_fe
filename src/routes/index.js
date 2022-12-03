@@ -65,6 +65,12 @@ export const routes = [
 	},
 
 	{
+		path: '/admin/management-room-category',
+		element: React.lazy(() => import('../container/Admin')),
+		private: true,
+	},
+
+	{
 		path: '/search',
 		element: React.lazy(() => import('../container/Search')),
 		private: false,

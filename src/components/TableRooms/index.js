@@ -54,12 +54,12 @@ const getBase64 = (file) =>
 
 const { Dragger } = Upload;
 
-export default function TableHotel() {
+export default function TableRooms() {
 	const [tableLoading, setTableLoading] = React.useState(true);
 	const [deparmentRecord, SetDeparmentRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const [listHotels, setListHotels] = React.useState();
+	const [listRoomCategorys, setListRoomCategorys] = React.useState();
 	const [size, setSize] = useState('large');
 
 	const [openUpdate, setOpenUpdate] = useState(false);
@@ -68,17 +68,11 @@ export default function TableHotel() {
 
 	const [form] = Form.useForm();
 	const { token } = UserAuth();
-	const [searchDataSource, setSearchDataSource] = React.useState(listHotels);
+	const [searchDataSource, setSearchDataSource] =
+		React.useState(listRoomCategorys);
 	const { t } = useTranslation();
 	const [page, setPage] = React.useState(1);
-	const {
-		CreateHotel,
-		DeleteHotel,
 
-		GetAllHotel,
-		UpdateHotel,
-		MultipleDeleteDepart,
-	} = UserAuth();
 	const { lang } = UserLanguage();
 
 	const [previewOpen, setPreviewOpen] = React.useState(false);
@@ -95,44 +89,27 @@ export default function TableHotel() {
 
 	const fullWidth = global.window.innerWidth;
 
+	const GetAllRoomCategory = async () => {
+		try {
+			const res = await axios.get(`http://localhost:3001/api/hotel-room`);
+			return res.data;
+		} catch (error) {
+			return console.error(error);
+		}
+	};
+
 	const showModal = () => {
 		setOpenModal(true);
 	};
 	const handleOkModal = async () => {
 		setConfirmLoadingModal(true);
 		setSelectedRowKeys([]);
-		await handleDeleteMultipleHotel();
+		await handleDeleteMultipleRoomCategory();
 
 		setOpenModal(false);
 	};
 	const handleCancelModal = () => {
 		setOpenModal(false);
-	};
-
-	const handleUpload = async (e) => {
-		try {
-			const list = await Promise.all(
-				Object.values(fileList).map(async (file) => {
-					const data = new FormData();
-					data.append('file', file);
-					data.append('upload_preset', 'pet88_upload');
-					data.append('folder', 'c26b8c7d0d092585470a0265ebfa1f9779');
-
-					const uploadRes = await axios.post(
-						'https://api.cloudinary.com/v1_1/dggxjymsy/image/upload',
-						data,
-					);
-
-					const { url } = uploadRes.data;
-					setFileList([]);
-					setResetUpload(!resetUpload);
-					return url;
-				}),
-			);
-			return list;
-		} catch (err) {
-			return err;
-		}
 	};
 
 	const props = {
@@ -162,7 +139,7 @@ export default function TableHotel() {
 	};
 
 	useEffect(() => {
-		getAllHotelData();
+		getAllRoomCategoryData();
 	}, []);
 
 	const handleOpenUpdateUser = (record) => {
@@ -177,11 +154,11 @@ export default function TableHotel() {
 	const onFinishUpdate = async (value) => {
 		setLoading(true);
 		try {
-			await UpdateHotel(deparmentRecord._id, value);
+			// await UpdateRoomCategory(deparmentRecord._id, value);
 			setLoading(false);
 			toast.success(t('Update Department Success'));
 			setOpenUpdate(false);
-			getAllHotelData();
+			getAllRoomCategoryData();
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
 			console.log(e.message);
@@ -199,10 +176,12 @@ export default function TableHotel() {
 		setOpenCreate(false);
 	};
 
-	const handleDeleteHotel = async (id) => {
+	const handleDeleteRoomCategory = async (id) => {
 		try {
-			await DeleteHotel(id);
-			setListHotels(listHotels.filter((item) => item._id !== id));
+			// await DeleteRoomCategory(id);
+			setListRoomCategorys(
+				listRoomCategorys.filter((item) => item._id !== id),
+			);
 			setSearchDataSource(
 				searchDataSource.filter((item) => item._id !== id),
 			);
@@ -211,20 +190,17 @@ export default function TableHotel() {
 		}
 	};
 
-	const onFinishCreateHotel = async (value) => {
+	const onFinishCreateRoomCategory = async (value) => {
 		setLoadingCreate(true);
 		try {
-			const listImg = await handleUpload();
-
 			const data = {
 				...value,
-				photos: listImg,
 			};
-			await CreateHotel(data);
+			// await CreateRoomCategory(data);
 
 			setLoadingCreate(false);
 			setOpenCreate(false);
-			getAllHotelData();
+			getAllRoomCategoryData();
 			toast.success(t('Created department'));
 		} catch (e) {
 			console.log(e.message);
@@ -270,48 +246,13 @@ export default function TableHotel() {
 			dataIndex: 'address',
 			key: 'address',
 		},
-		{
-			title: t('Services'),
-			dataIndex: 'services',
-			key: 'services',
-			render: (services) =>
-				services.map((service) => (
-					<Tag color={service?.length > 5 ? 'cyan' : 'gold'}>
-						{t(service)}
-					</Tag>
-				)),
-		},
-		{
-			width: 110,
-			title: t('Action'),
-			fixed: 'right',
-			key: 'action',
-			render: (_, record) => (
-				<Space size='middle'>
-					<Popconfirm
-						key='delete'
-						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteHotel(record._id)}>
-						<Button
-							danger
-							type='text'
-							icon={<DeleteOutlined />}></Button>
-					</Popconfirm>
-					<Button
-						type='text'
-						key='update'
-						icon={<EditOutlined />}
-						onClick={() => handleOpenUpdateUser(record)}></Button>
-				</Space>
-			),
-		},
 	];
 
-	const handleDeleteMultipleHotel = async () => {
+	const handleDeleteMultipleRoomCategory = async () => {
 		try {
-			await MultipleDeleteDepart(selectedRowKeys);
-			setListHotels(
-				listHotels.filter(
+			// await MultipleDeleteDepart(selectedRowKeys);
+			setListRoomCategorys(
+				listRoomCategorys.filter(
 					(item) => !selectedRowKeys.includes(item._id),
 				),
 			);
@@ -326,15 +267,15 @@ export default function TableHotel() {
 			console.log(error);
 		}
 	};
-	const getAllHotelData = async () => {
+	const getAllRoomCategoryData = async () => {
 		setTableLoading(true);
 		try {
-			const res = await GetAllHotel();
+			const res = await GetAllRoomCategory();
 			const list = [];
 			res.forEach((doc) => {
 				list.push({ ...doc, key: doc._id });
 			});
-			setListHotels(list);
+			setListRoomCategorys(list);
 			setSearchDataSource(list);
 
 			setTableLoading(false);
@@ -344,22 +285,23 @@ export default function TableHotel() {
 		}
 	};
 
+	console.log(searchDataSource);
 	return (
 		<>
-			<div className='tablehotel-header'>
-				<div className='tablehotel_leftheader'>
-					<h2 className='tablehotel-header-title'>
-						{t('management deparment')}
+			<div className='tableroom-header'>
+				<div className='tableroom_leftheader'>
+					<h2 className='tableroom-header-title'>
+						{t('management room categories')}
 					</h2>
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
 						onClick={() => setTableToolTip(!tableToolTip)}
 						type='text'></Button>
 				</div>
-				<div className='tablehotel_rightheader'>
+				<div className='tableroom_rightheader'>
 					<SearchTableInput
 						columns={columns}
-						dataSource={listHotels}
+						dataSource={listRoomCategorys}
 						setDataSource={setSearchDataSource}
 						inputProps={{
 							placeholder: t('Search'),
@@ -367,7 +309,7 @@ export default function TableHotel() {
 						}}
 					/>
 					<Button
-						className='tablehotel_createbutton'
+						className='tableroom_createbutton'
 						loading={loadingCreate}
 						type='primary'
 						onClick={handleOpenCreateUser}>
@@ -380,7 +322,7 @@ export default function TableHotel() {
 								style={{ fontSize: 14 }}
 							/>
 						}
-						onClick={() => getAllHotelData()}
+						onClick={() => getAllRoomCategoryData()}
 						type='text'></Button>
 				</div>
 			</div>
@@ -445,7 +387,9 @@ export default function TableHotel() {
 						</Form.Item>{' '}
 						<Form.Item name='services' label={t('Services')}>
 							<Select mode='multiple'>
-								<Option value='hotel'>{t('Hotel')}</Option>
+								<Option value='RoomCategory'>
+									{t('RoomCategory')}
+								</Option>
 								<Option value='grooming'>
 									{t('Grooming')}
 								</Option>
@@ -492,7 +436,7 @@ export default function TableHotel() {
 			</Drawer>
 
 			<Drawer
-				title={t('Create Hotel')}
+				title={t('Create RoomCategory')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}
@@ -504,10 +448,10 @@ export default function TableHotel() {
 						form={form}
 						validateTrigger='onBlur'
 						labelCol={{ span: 4 }}
-						name='Create Hotel'
+						name='Create RoomCategory'
 						size={'medium'}
 						initialValues={{}}
-						onFinish={onFinishCreateHotel}
+						onFinish={onFinishCreateRoomCategory}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
@@ -542,7 +486,9 @@ export default function TableHotel() {
 						</Form.Item>{' '}
 						<Form.Item name='services' label={t('Services')}>
 							<Select mode='multiple'>
-								<Option value='hotel'>{t('Hotel')}</Option>
+								<Option value='RoomCategory'>
+									{t('RoomCategory')}
+								</Option>
 								<Option value='grooming'>
 									{t('Grooming')}
 								</Option>
@@ -639,7 +585,7 @@ export default function TableHotel() {
 					</Select>
 
 					<ExportTableButton
-						dataSource={listHotels}
+						dataSource={listRoomCategorys}
 						columns={columns}
 						btnProps={{
 							type: 'primary',
@@ -763,7 +709,7 @@ export default function TableHotel() {
 					pageSizeOptions: ['5', '10', '20', '30'],
 				}}
 				columns={columns}
-				dataSource={searchDataSource || listHotels}
+				dataSource={searchDataSource || listRoomCategorys}
 				loading={tableLoading}
 			/>
 		</>

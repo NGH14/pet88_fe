@@ -132,11 +132,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const GetAllHotel = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/hotel/`, {
-				headers: {
-					Authorization: 'Bearer ' + token,
-				},
-			});
+			const res = await axios.get(`http://localhost:3001/api/hotel/`, {});
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -147,11 +143,7 @@ export const AuthContextProvider = ({ children }) => {
 		try {
 			const res = await axios.delete(
 				`http://localhost:3001/api/hotel/${id}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
+				{},
 			);
 			return res.data;
 		} catch (error) {
@@ -164,11 +156,7 @@ export const AuthContextProvider = ({ children }) => {
 			const res = await axios.post(
 				`http://localhost:3001/api/hotel`,
 				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
+				{},
 			);
 			return res.data;
 		} catch (error) {
@@ -181,11 +169,7 @@ export const AuthContextProvider = ({ children }) => {
 			const res = await axios.put(
 				`http://localhost:3001/api/hotel/${id}`,
 				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
+				{},
 			);
 			return res.data;
 		} catch (error) {

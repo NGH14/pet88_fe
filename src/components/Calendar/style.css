@@ -24,11 +24,44 @@
     height: 100%;
 gap: 20px;}
 
-.ant-dropdown-menu-title-content {
+.calendar-container .ant-dropdown-menu-title-content {
     display: flex !important;
     justify-content: space-around !important;
 }
 
+
+.calendar-container .rbc-btn-group  {
+    border: unset;
+    background-color: #f8f9fe;
+    color: #101928;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px 0 hsl(0deg 0% 88% / 50%);
+}
+
+.rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
+    border: unset;
+    background-color: #101928;
+    color: #f8f9fe;
+    border-radius: 8px;   
+}
+
+.rbc-toolbar button:active:hover, .rbc-toolbar button:active:focus, .rbc-toolbar button.rbc-active:hover, .rbc-toolbar button.rbc-active:focus {
+    color: #f8f9fe;
+    background-color: #101928;
+    border-color: #101928;
+}
+
+
+.calendar-container .rbc-btn-group button {
+    border: unset;
+    border-radius: 8px;   
+    padding-inline: 15px;
+}
+
+.rbc-btn-group > button:not(:first-child):not(:last-child) {
+    border-radius: 8px;
+}
 .rbc-calendar {
     height: 580px; 
     flex: 1 1;
