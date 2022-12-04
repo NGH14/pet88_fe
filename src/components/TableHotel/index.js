@@ -165,7 +165,7 @@ export default function TableHotel() {
 		getAllHotelData();
 	}, []);
 
-	const handleOpenUpdateUser = (record) => {
+	const handleOpenUpdateHotel = (record) => {
 		SetDeparmentRecord(record);
 		setOpenUpdate(true);
 	};
@@ -270,6 +270,7 @@ export default function TableHotel() {
 			dataIndex: 'address',
 			key: 'address',
 		},
+
 		{
 			title: t('Services'),
 			dataIndex: 'services',
@@ -301,7 +302,7 @@ export default function TableHotel() {
 						type='text'
 						key='update'
 						icon={<EditOutlined />}
-						onClick={() => handleOpenUpdateUser(record)}></Button>
+						onClick={() => handleOpenUpdateHotel(record)}></Button>
 				</Space>
 			),
 		},

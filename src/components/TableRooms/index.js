@@ -35,6 +35,7 @@ import {
 	Upload,
 	message,
 	Modal,
+	InputNumber,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
@@ -56,12 +57,11 @@ const { Dragger } = Upload;
 
 export default function TableRooms() {
 	const [tableLoading, setTableLoading] = React.useState(true);
-	const [deparmentRecord, SetDeparmentRecord] = React.useState({});
+	const [roomRecord, setRoomRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listRoomCategorys, setListRoomCategorys] = React.useState();
 	const [size, setSize] = useState('large');
-
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openCreate, setOpenCreate] = useState(false);
 	const [tableToolTip, setTableToolTip] = useState(false);
@@ -79,6 +79,8 @@ export default function TableRooms() {
 	const [previewImage, setPreviewImage] = React.useState('');
 	const [previewTitle, setPreviewTitle] = React.useState('');
 	const [fileList, setFileList] = React.useState([]);
+	const [hotelData, setHotelData] = React.useState([]);
+
 	const [resetUpload, setResetUpload] = React.useState(true);
 	const [showFile, setShowFile] = React.useState(true);
 	const [uploading, setUploading] = React.useState(false);
@@ -92,6 +94,15 @@ export default function TableRooms() {
 	const GetAllRoomCategory = async () => {
 		try {
 			const res = await axios.get(`http://localhost:3001/api/hotel-room`);
+			return res.data;
+		} catch (error) {
+			return console.error(error);
+		}
+	};
+
+	const GetAllHotel = async () => {
+		try {
+			const res = await axios.get(`http://localhost:3001/api/hotel`);
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -112,63 +123,52 @@ export default function TableRooms() {
 		setOpenModal(false);
 	};
 
-	const props = {
-		onRemove: (file) => {
-			const index = fileList.indexOf(file);
-			const newFileList = fileList.slice();
-			newFileList.splice(index, 1);
-			setFileList(newFileList);
-		},
-		beforeUpload: (file) => {
-			setFileList([...fileList, file]);
-
-			return false;
-		},
-	};
-
 	const handleCancel = () => setPreviewOpen(false);
-	const handlePreview = async (file) => {
-		if (!file.url && !file.preview) {
-			file.preview = await getBase64(file.originFileObj);
-		}
-		setPreviewImage(file.url || file.preview);
-		setPreviewOpen(true);
-		setPreviewTitle(
-			file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
-		);
-	};
 
 	useEffect(() => {
 		getAllRoomCategoryData();
+		getAllHotelData();
 	}, []);
 
-	const handleOpenUpdateUser = (record) => {
-		SetDeparmentRecord(record);
+	const handleOpenUpdateCategory = (record) => {
+		setRoomRecord(record);
 		setOpenUpdate(true);
 	};
 
-	const handleOpenCreateUser = () => {
+	const handleOpenCreateRoom = async () => {
 		setOpenCreate(true);
 	};
 
 	const onFinishUpdate = async (value) => {
 		setLoading(true);
 		try {
-			// await UpdateRoomCategory(deparmentRecord._id, value);
+			const roomNumbers = value.roomNumbers.map((room) => ({
+				number: room,
+			}));
+
+			const data = {
+				...value,
+				roomNumbers,
+			};
+
+			await axios.put(
+				`http://localhost:3001/api/hotel-room/${roomRecord._id}`,
+				data,
+			);
+
 			setLoading(false);
-			toast.success(t('Update Department Success'));
+			toast.success(t('Update Room Success'));
 			setOpenUpdate(false);
 			getAllRoomCategoryData();
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
-			console.log(e.message);
 			setLoading(false);
 		}
 	};
-	useEffect(() => form.resetFields(), [deparmentRecord, openCreate]);
+	useEffect(() => form.resetFields(), [roomRecord, openCreate]);
 
-	const onCloseUpdateDepartment = () => {
-		SetDeparmentRecord({});
+	const onCloseUpdateRoom = () => {
+		setRoomRecord({});
 		setOpenUpdate(false);
 	};
 
@@ -178,30 +178,52 @@ export default function TableRooms() {
 
 	const handleDeleteRoomCategory = async (id) => {
 		try {
-			// await DeleteRoomCategory(id);
+			const res = await axios.delete(
+				`http://localhost:3001/api/hotel-room/${id}`,
+				{},
+			);
+
 			setListRoomCategorys(
 				listRoomCategorys.filter((item) => item._id !== id),
 			);
 			setSearchDataSource(
 				searchDataSource.filter((item) => item._id !== id),
 			);
-		} catch (err) {
-			console.log(err);
+			toast.success(t('Delete Success'));
+
+			return res.data;
+		} catch (error) {
+			return console.error(error);
 		}
 	};
 
 	const onFinishCreateRoomCategory = async (value) => {
 		setLoadingCreate(true);
 		try {
+			const departmentID = value.department;
+
+			delete value.department;
+			const roomNumbers = value.roomNumbers.map((room) => ({
+				number: room,
+			}));
+
 			const data = {
 				...value,
+				hotelID: departmentID,
+				roomNumbers,
 			};
-			// await CreateRoomCategory(data);
+
+			await axios.post(
+				`http://localhost:3001/api/hotel-room/${departmentID}`,
+				data,
+			);
+
+			console.log({ data, departmentID });
 
 			setLoadingCreate(false);
 			setOpenCreate(false);
 			getAllRoomCategoryData();
-			toast.success(t('Created department'));
+			toast.success(t('Created Room'));
 		} catch (e) {
 			console.log(e.message);
 			setLoadingCreate(false);
@@ -213,18 +235,18 @@ export default function TableRooms() {
 	};
 
 	const onSelectChange = (newSelectedRowKeys) => {
-		console.log('selectedRowKeys changed: ', newSelectedRowKeys);
 		setSelectedRowKeys(newSelectedRowKeys);
 	};
 	const rowSelection = {
 		selectedRowKeys,
 		onChange: onSelectChange,
 	};
+
 	const columns = [
 		{
 			title: t('Name'),
-			dataIndex: 'name',
-			key: 'name',
+			dataIndex: 'title',
+			key: 'title',
 		},
 
 		{
@@ -234,23 +256,69 @@ export default function TableRooms() {
 			render: (text) => <span>{t(text)}</span>,
 		},
 		{
-			title: t('City'),
-			dataIndex: 'city',
-			key: 'City',
-			render: (text) => <span>{t(text)}</span>,
+			title: t('Price'),
+			dataIndex: 'price',
+			key: 'price',
+			render: (text) => (
+				<span>
+					{' '}
+					{new Intl.NumberFormat('vi-VI', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(text)}
+				</span>
+			),
 
-			sorter: (a, b) => a.city.length - b.city.length,
+			sorter: (a, b) => a.price - b.price,
 		},
 		{
-			title: t('Address'),
-			dataIndex: 'address',
-			key: 'address',
+			title: t('In Hotel'),
+			dataIndex: 'Hotel',
+			key: 'hotelID',
+			render: (_, record) => (
+				<span>
+					{
+						hotelData.find((hotel) => hotel._id === record.hotelID)
+							?.name
+					}
+				</span>
+			),
+		},
+
+		{
+			width: 110,
+			title: t('Action'),
+			fixed: 'right',
+			key: 'action',
+			render: (_, record) => (
+				<Space size='middle'>
+					<Popconfirm
+						key='delete'
+						title={t('Are you sure to delete?')}
+						onConfirm={() => handleDeleteRoomCategory(record._id)}>
+						<Button
+							danger
+							type='text'
+							icon={<DeleteOutlined />}></Button>
+					</Popconfirm>
+					<Button
+						type='text'
+						key='update'
+						icon={<EditOutlined />}
+						onClick={() =>
+							handleOpenUpdateCategory(record)
+						}></Button>
+				</Space>
+			),
 		},
 	];
 
 	const handleDeleteMultipleRoomCategory = async () => {
 		try {
-			// await MultipleDeleteDepart(selectedRowKeys);
+			await axios.patch(
+				`http://localhost:3001/api/hotel-room/multiple-delete`,
+				selectedRowKeys,
+			);
 			setListRoomCategorys(
 				listRoomCategorys.filter(
 					(item) => !selectedRowKeys.includes(item._id),
@@ -285,7 +353,64 @@ export default function TableRooms() {
 		}
 	};
 
-	console.log(searchDataSource);
+	const getAllHotelData = async () => {
+		try {
+			const res = await GetAllHotel();
+			const list = [];
+			res.forEach((doc) => {
+				list.push({ ...doc, key: doc._id });
+			});
+			setHotelData(list);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const expandedRowRender = (record) => {
+		const subColumns = [
+			{
+				title: 'ID',
+				dataIndex: '_id',
+				key: '_id',
+			},
+			{
+				title: t('Room Number'),
+				dataIndex: 'number',
+				key: 'number',
+			},
+			{
+				title: t('Room Number'),
+				dataIndex: 'number',
+				key: 'number',
+			},
+		];
+		return (
+			<>
+				<Table
+					columns={subColumns}
+					dataSource={record.roomNumbers}
+					pagination={false}
+				/>
+				<p
+					style={{
+						margin: 15,
+					}}>
+					{t('Created Date')}
+					{t(': ')}
+					{new Date(record.createdAt).toLocaleString()}
+				</p>
+				<p
+					style={{
+						margin: 15,
+					}}>
+					{t('Last Update Date')}
+					{t(': ')}
+					{new Date(record.updatedAt).toLocaleString()}
+				</p>
+			</>
+		);
+	};
+
 	return (
 		<>
 			<div className='tableroom-header'>
@@ -312,8 +437,8 @@ export default function TableRooms() {
 						className='tableroom_createbutton'
 						loading={loadingCreate}
 						type='primary'
-						onClick={handleOpenCreateUser}>
-						{t('Create Deparment')}
+						onClick={handleOpenCreateRoom}>
+						{t('Create new')}
 					</Button>
 					<Button
 						icon={
@@ -330,7 +455,7 @@ export default function TableRooms() {
 			<Drawer
 				title={t('Update')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
-				onClose={onCloseUpdateDepartment}
+				onClose={onCloseUpdateRoom}
 				open={openUpdate}
 				bodyStyle={{
 					paddingBottom: 80,
@@ -340,63 +465,55 @@ export default function TableRooms() {
 						form={form}
 						validateTrigger='onBlur'
 						labelCol={{ span: 4 }}
-						name='update user'
+						name='update room'
 						size={'large'}
 						initialValues={{
-							name: deparmentRecord?.name,
-							tag: deparmentRecord?.tag,
-							type: deparmentRecord?.type,
-							city: deparmentRecord?.city,
-							address: deparmentRecord?.address,
-							title: deparmentRecord?.title,
-							desc: deparmentRecord?.desc,
-							services: deparmentRecord?.services,
+							type: roomRecord?.type,
+							price: roomRecord?.price,
+							title: roomRecord?.title,
+							maxPet: roomRecord.maxPet,
+							desc: roomRecord?.desc,
+							roomNumbers: roomRecord?.roomNumbers?.map(
+								(object) => object['number'],
+							),
 						}}
 						onFinish={onFinishUpdate}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item label={t('Name')} name='name'>
+						<Form.Item label={t('Title')} name='title'>
 							<Input />
 						</Form.Item>
 						<Form.Item name='type' label={t('Type')}>
 							<Select>
-								<Option value='franchise'>
-									{t('Franchise')}
+								<Option value='dogandcat'>
+									{t('Dog and Cat')}
 								</Option>
-								<Option value='owner'>{t('Owner')}</Option>
+								<Option value='reptile '>
+									{t('Reptile ')}
+								</Option>
 							</Select>
 						</Form.Item>
-						<Form.Item label={t('Address')} name='address'>
-							<Input />
-						</Form.Item>
-						<Form.Item label={t('Title')} name='title'>
-							<Input />
+						<Form.Item label={t('Price')} name='price'>
+							<InputNumber
+								formatter={(value) =>
+									`${value}`.replace(
+										/\B(?=(\d{3})+(?!\d))/g,
+										',',
+									)
+								}
+								prefix={'₫'}
+								style={{ width: '100%' }}
+							/>
 						</Form.Item>
 						<Form.Item label={t('Describe')} name='desc'>
 							<Input />
 						</Form.Item>
-						<Form.Item name='city' label={t('City')}>
-							<Select>
-								<Option value='Ho Chi Minh'>
-									{t('Ho Chi Minh')}
-								</Option>
-								<Option value='Ha Noi'>{t('Ha Noi')}</Option>
-								<Option value='Da Nang'>{t('Da Nang')}</Option>
-							</Select>
-						</Form.Item>{' '}
-						<Form.Item name='services' label={t('Services')}>
-							<Select mode='multiple'>
-								<Option value='RoomCategory'>
-									{t('RoomCategory')}
-								</Option>
-								<Option value='grooming'>
-									{t('Grooming')}
-								</Option>
-								<Option value='training'>
-									{t('Training')}
-								</Option>
-							</Select>
+						<Form.Item label={t('Max Pet')} name='maxPet'>
+							<InputNumber style={{ width: '100%' }} />
+						</Form.Item>
+						<Form.Item name='roomNumbers' label={t('Room Number')}>
+							<Select mode='tags' />
 						</Form.Item>
 						<Form.Item
 							wrapperCol={{
@@ -413,11 +530,11 @@ export default function TableRooms() {
 									boxShadow:
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
-								onClick={onCloseUpdateDepartment}>
+								onClick={onCloseCreateUser}>
 								{t('Close')}
 							</Button>
 							<Button
-								loading={loading}
+								loading={loadingCreate}
 								style={{
 									height: 'fit-content',
 									fontSize: 16,
@@ -436,7 +553,7 @@ export default function TableRooms() {
 			</Drawer>
 
 			<Drawer
-				title={t('Create RoomCategory')}
+				title={t('Create Room Category')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}
@@ -455,71 +572,48 @@ export default function TableRooms() {
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item label={t('Name')} name='name'>
-							<Input />
-						</Form.Item>
-						<Form.Item name='type' label={t('Type')}>
+						<Form.Item name='department' label={t('Department')}>
 							<Select>
-								<Option value='franchise'>
-									{t('Franchise')}
-								</Option>
-								<Option value='owner'>{t('Owner')}</Option>
+								{hotelData.map((data) => (
+									<Select.Option value={data?._id}>
+										{data?.name}
+									</Select.Option>
+								))}
 							</Select>
-						</Form.Item>
-						<Form.Item label={t('Address')} name='address'>
-							<Input />
 						</Form.Item>
 						<Form.Item label={t('Title')} name='title'>
 							<Input />
 						</Form.Item>
+						<Form.Item name='type' label={t('Type')}>
+							<Select>
+								<Option value='dogandcat'>
+									{t('Dog and Cat')}
+								</Option>
+								<Option value='reptile '>
+									{t('Reptile ')}
+								</Option>
+							</Select>
+						</Form.Item>
+						<Form.Item label={t('Price')} name='price'>
+							<InputNumber
+								formatter={(value) =>
+									`${value}`.replace(
+										/\B(?=(\d{3})+(?!\d))/g,
+										',',
+									)
+								}
+								prefix={'₫'}
+								style={{ width: '100%' }}
+							/>
+						</Form.Item>
 						<Form.Item label={t('Describe')} name='desc'>
 							<Input />
 						</Form.Item>
-						<Form.Item name='city' label={t('City')}>
-							<Select>
-								<Option value='Ho Chi Minh'>
-									{t('Ho Chi Minh')}
-								</Option>
-								<Option value='Ha Noi'>{t('Ha Noi')}</Option>
-								<Option value='Da Nang'>{t('Da Nang')}</Option>
-							</Select>
-						</Form.Item>{' '}
-						<Form.Item name='services' label={t('Services')}>
-							<Select mode='multiple'>
-								<Option value='RoomCategory'>
-									{t('RoomCategory')}
-								</Option>
-								<Option value='grooming'>
-									{t('Grooming')}
-								</Option>
-								<Option value='training'>
-									{t('Training')}
-								</Option>
-							</Select>
+						<Form.Item label={t('Max Pet')} name='maxPet'>
+							<InputNumber style={{ width: '100%' }} />
 						</Form.Item>
-						<Form.Item label='File' name='file'>
-							<Dragger
-								accept='.png,.jpeg'
-								maxCount={3}
-								multiple={true}
-								onClick={() => setShowFile(true)}
-								onPreview={handlePreview}
-								listType='picture'
-								defaultFileList={[...fileList]}
-								className='upload-list-inline'
-								{...props}>
-								<p className='ant-upload-drag-icon'>
-									<InboxOutlined />
-								</p>
-								<p className='ant-upload-text'>
-									Click or drag file to this area to upload
-								</p>
-								<p className='ant-upload-hint'>
-									Support for a single or bulk upload.
-									Strictly prohibit from uploading company
-									data or other band files
-								</p>
-							</Dragger>
+						<Form.Item name='roomNumbers' label={t('Room Number')}>
+							<Select mode='tags' />
 						</Form.Item>
 						<Form.Item
 							wrapperCol={{
@@ -605,11 +699,11 @@ export default function TableRooms() {
 				confirmLoading={confirmLoadingModal}>
 				<div>
 					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
-						{t('Delete')} {selectedRowKeys.length} {t('department')}{' '}
+						{t('Delete')} {selectedRowKeys.length} {t('room')}{' '}
 						{t('selected')}?
 					</h6>
 					<p style={{ fontWeight: 500, fontSize: 14 }}>
-						{t('This will permanently remove')} {t('department')}
+						{t('This will permanently remove')} {t('room')}
 					</p>
 					<div
 						style={{
@@ -679,26 +773,7 @@ export default function TableRooms() {
 					x: 800,
 				}}
 				expandable={{
-					expandedRowRender: (record) => (
-						<>
-							<p
-								style={{
-									margin: 0,
-								}}>
-								{t('Created Date')}
-								{t(': ')}
-								{new Date(record.createdAt).toLocaleString()}
-							</p>
-							<p
-								style={{
-									margin: 0,
-								}}>
-								{t('Last Update Date')}
-								{t(': ')}
-								{new Date(record.updatedAt).toLocaleString()}
-							</p>
-						</>
-					),
+					expandedRowRender: (record) => expandedRowRender(record),
 				}}
 				pagination={{
 					onChange(current) {

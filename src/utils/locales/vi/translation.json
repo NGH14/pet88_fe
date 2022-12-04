@@ -10,7 +10,7 @@
 	"Departments": "Chi nhánh",
 	"Room": "Phòng",
 	"Rooms": "Phòng",
-	"Price": "Tổng",
+	"Price": "Chi Phí",
 	"nights": "đêm",
 	"night": "đêm",
 	"For": "cho",
@@ -36,6 +36,8 @@
 	"This will permanently remove": "Thao tác này sẽ xóa vĩnh viễn",
 	"delete": "Xóa",
 	"Cancel": "Hủy",
+	"Close": "Đóng",
+
 	"Order": "Giao Dịch",
 	"Room Categories": "Loại Phòng",
 	"room categories": "Loại Phòng",
