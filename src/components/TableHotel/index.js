@@ -450,9 +450,6 @@ export default function TableHotel() {
 								<Option value='grooming'>
 									{t('Grooming')}
 								</Option>
-								<Option value='training'>
-									{t('Training')}
-								</Option>
 							</Select>
 						</Form.Item>
 						<Form.Item
@@ -546,9 +543,6 @@ export default function TableHotel() {
 								<Option value='hotel'>{t('Hotel')}</Option>
 								<Option value='grooming'>
 									{t('Grooming')}
-								</Option>
-								<Option value='training'>
-									{t('Training')}
 								</Option>
 							</Select>
 						</Form.Item>

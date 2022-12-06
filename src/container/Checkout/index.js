@@ -34,7 +34,7 @@ export default function Checkout() {
 	const location = useLocation();
 	const priceWithoutVAT = location.state.price;
 	const VAT = (location.state.price * 8) / 100;
-	const totalPrice = Number((priceWithoutVAT + VAT).toFixed(3));
+	const totalPrice = Number((priceWithoutVAT + VAT).toFixed(0));
 	const sumPriceMap = location.state.priceList;
 
 	const depart = location.state.depart;

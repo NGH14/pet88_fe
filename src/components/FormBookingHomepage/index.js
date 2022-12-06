@@ -107,7 +107,6 @@ const FormBookingHomepage = () => {
 						{t('hotel')}
 					</Radio>
 					<Radio value='grooming'>{t('grooming')}</Radio>
-					<Radio value='training'>{t('training')}</Radio>
 				</Radio.Group>
 			</div>
 			<Form
@@ -169,13 +168,15 @@ const FormBookingHomepage = () => {
 						label={t('Booking time')}>
 						<DatePicker
 							showTime={{
-								format: 'HH:mm',
+								format: 'HH:mm A',
 							}}
+							minuteStep={15}
+							use12Hours
 							placement='bottomLeft'
 							format={
 								lang === 'vi'
-									? `HH:mm, DD-MM-YYYY`
-									: 'HH:mm, YYYY-MM-DD '
+									? `HH:mm A, DD-MM-YYYY`
+									: 'HH:mm A, YYYY-MM-DD '
 							}
 							className='form-item_bookinghomepage booking_grooming'
 						/>

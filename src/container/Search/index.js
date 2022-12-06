@@ -75,19 +75,37 @@ export default function Search() {
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const fetchHotelData = async (value) => {
-		try {
-			const res = await axios.post(
-				`http://localhost:3001/api/hotel/find-hotel-able`,
-				{
-					city: value.city,
-					dates: alldates,
-					services: value.services,
-				},
-			);
+		if (type === 'hotel') {
+			try {
+				const res = await axios.post(
+					`http://localhost:3001/api/hotel/find-hotel-able`,
+					{
+						city: value.city,
+						dates: alldates,
+						services: value.services,
+					},
+				);
 
-			return res.data;
-		} catch (error) {
-			console.error(error);
+				return res.data;
+			} catch (error) {
+				console.error(error);
+			}
+		}
+
+		if (type === 'grooming') {
+			try {
+				const res = await axios.post(
+					`http://localhost:3001/api/hotel/find-grooming-able`,
+					{
+						city: value.city,
+						services: value.services,
+					},
+				);
+
+				return res.data;
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	};
 
@@ -165,9 +183,6 @@ export default function Search() {
 													</Option>
 													<Option value='grooming'>
 														{t('Grooming')}
-													</Option>
-													<Option value='training'>
-														{t('Training')}
 													</Option>
 												</Select>
 											</Form.Item>

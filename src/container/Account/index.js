@@ -102,7 +102,6 @@ const Account = () => {
 		},
 	];
 
-	console.log(orderList);
 	useEffect(() => {
 		if (!user) {
 			navigate('/');
@@ -113,15 +112,12 @@ const Account = () => {
 		getOrder();
 	}, []);
 
-	console.log(orderList);
-
 	const getOrder = async () => {
 		setLoadingOrder(true);
 		try {
 			const orders = await getOrderByUser();
 			setOrderList(orders);
 			setLoadingOrder(false);
-			console.log(orders);
 		} catch (error) {
 			console.log(error);
 			setLoadingOrder(false);

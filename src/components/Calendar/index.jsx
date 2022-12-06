@@ -77,12 +77,16 @@ const langMessage = {
 export const CalendarAdmin = () => {
 	const { lang } = UserLanguage();
 	const [allEvents, setAllEvents] = useState(events);
+	const [event, setEvent] = useState({});
 	const [defaultDate, setDefaultDate] = useState(new Date());
 	const { t } = useTranslation();
 	const localizer = momentLocalizer(moment);
+
+
 	const onPanelChange = (value, mode) => {
 		console.log(value.format('YYYY-MM-DD'), mode);
 	};
+	console.log(event)
 
 	const onSubCalendarSelected = (newValue) => {
 		setDefaultDate(newValue.toDate());
@@ -107,6 +111,8 @@ export const CalendarAdmin = () => {
 		({ start, end }) => {
 			const title = window.prompt('New Event name');
 			if (title) {
+
+				setEvent({ id: uid(), start: start.getTime(), end: end.getTime(), title })
 				setAllEvents((prev) => [
 					...prev,
 					{ id: uid(), start, end, title },

@@ -38,8 +38,6 @@ export default function Department() {
 	const id = location.pathname.split('/')[2];
 
 	const { search, setSearchList } = SearchData();
-
-	const days = location.state.days;
 	const [loading, setLoading] = useState(true);
 	const [loadingTable, setLoadingTable] = useState(true);
 	const [form] = Form.useForm();
@@ -67,11 +65,10 @@ export default function Department() {
 		const sum = selectedRooms.reduce((sum, n) => sum + Number(n.price), 0);
 
 		setSumPrice(sum);
-
 		Object.entries(selectedRooms).forEach(([k, v]) => {
 			if (v === 0) delete selectedRooms[k];
 		});
-	}, [selectedRooms]);
+	}, [selectedRooms, loadingTable]);
 
 	const onFinish = async (values) => {
 		setLoadingTable(true);
@@ -130,11 +127,15 @@ export default function Department() {
 	};
 
 	const handleLoadData = async () => {
+		setDataList([]);
+
 		await axios
 			.post(`http://localhost:3001/api/hotel/availability/${id}`, {
 				dates: alldates,
 			})
 			.then((response) => {
+				setSumPrice(0);
+				setSelectedRooms([]);
 				setDataList(response.data);
 				setLoading(false);
 				setLoadingTable(false);
