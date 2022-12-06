@@ -43,17 +43,18 @@ const FormBookingHomepage = () => {
 		return dates;
 	};
 
-	const alldates =
-		search.datesHotels || search.datesHotels?.length > 0
-			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
-			: [];
-
 	const fetchHotelData = async (value) => {
+		const city = value?.city || search?.city;
+
+		const alldates =
+			value.datesHotels || value.datesHotels?.length > 0
+				? getDatesInRange(value.datesHotels[0], value.datesHotels[1])
+				: [];
 		try {
 			const res = await axios.post(
 				`http://localhost:3001/api/hotel/find-hotel-able`,
 				{
-					city: value.city,
+					city: city,
 					dates: alldates,
 					services: type,
 				},

@@ -53,17 +53,6 @@ export default function Checkout() {
 	};
 
 	const handleCheckout = async (value) => {
-		// console.log({
-		// 	email: user?.email,
-		// 	userID: user?.id,
-		// 	roomList: sumPriceMap,
-		// 	photo: photo,
-		// 	days: search.days,
-		// 	price: totalPrice,
-		// 	start: search.datesHotels[0],
-		// 	end: search.datesHotels[1],
-		// 	...value,
-		// });
 		await axios
 			.post(
 				`http://localhost:3001/api/checkout/create-checkout-session`,

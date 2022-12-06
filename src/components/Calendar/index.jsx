@@ -37,6 +37,7 @@ import viVN from 'antd/es/locale/vi_VN';
 import './style.css';
 import { useTranslation } from 'react-i18next';
 import { display } from '@mui/system';
+import axios from 'axios';
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
 	{
@@ -49,11 +50,9 @@ const events = [
 ];
 
 const langMessage = {
-	en:  {
-	
+	en: {
 		previous: '<',
 		next: '>',
-
 	},
 	vi: {
 		week: 'Tuần',
@@ -82,11 +81,59 @@ export const CalendarAdmin = () => {
 	const { t } = useTranslation();
 	const localizer = momentLocalizer(moment);
 
+	React.useEffect(() => {
+		fetchEvent();
+	}, []);
+	console.log(allEvents);
+	const fetchEvent = async () => {
+		try {
+			const res = await axios.get(
+				`http://localhost:3001/api/grooming/room/638f979055276f9e46d5c056`,
+			);
+
+			const list = [];
+			res.data.unavailableDates.map((data) => {
+				return list.push({
+					start: new Date(data.startDate),
+					end: new Date(data.endDate),
+					id: data.id,
+					title: data.title,
+				});
+			});
+
+			setAllEvents((prev) => [...prev, ...list]);
+
+			console.log({ list });
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const AddEvent = async (value) => {
+		try {
+			const res = await axios.put(
+				`http://localhost:3001/api/grooming/availability/638f979055276f9e46d5c056`,
+				{
+					dates: {
+						startDate: value.start,
+						endDate: value.start,
+						id: uid(),
+						title: value.title,
+					},
+				},
+			);
+
+			// setAllEvents((prev) => [...prev, ...list]);
+
+			console.log({ res });
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	const onPanelChange = (value, mode) => {
 		console.log(value.format('YYYY-MM-DD'), mode);
 	};
-	console.log(event)
 
 	const onSubCalendarSelected = (newValue) => {
 		setDefaultDate(newValue.toDate());
@@ -99,7 +146,6 @@ export const CalendarAdmin = () => {
 		[],
 	);
 
-
 	const { messages } = useMemo(
 		() => ({
 			messages: langMessage[lang],
@@ -111,8 +157,19 @@ export const CalendarAdmin = () => {
 		({ start, end }) => {
 			const title = window.prompt('New Event name');
 			if (title) {
+				AddEvent({
+					id: uid(),
+					start: start.getTime(),
+					end: end.getTime(),
+					title,
+				});
 
-				setEvent({ id: uid(), start: start.getTime(), end: end.getTime(), title })
+				setEvent({
+					id: uid(),
+					start: start.getTime(),
+					end: end.getTime(),
+					title,
+				});
 				setAllEvents((prev) => [
 					...prev,
 					{ id: uid(), start, end, title },
@@ -159,8 +216,10 @@ export const CalendarAdmin = () => {
 		[setAllEvents],
 	);
 
-	const onNavigate = useCallback((newDate) => setDefaultDate(newDate), [setDefaultDate])
-
+	const onNavigate = useCallback(
+		(newDate) => setDefaultDate(newDate),
+		[setDefaultDate],
+	);
 
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
@@ -212,7 +271,7 @@ export const CalendarAdmin = () => {
 									</Menu.Item>
 									<Menu.Item>
 										<Button
-											block	
+											block
 											size='middle'
 											onClick={() => {
 												const newValue = moment(

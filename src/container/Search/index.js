@@ -67,22 +67,22 @@ export default function Search() {
 		return dates;
 	};
 
-	const alldates =
-		search.datesHotels || search.datesHotels?.length > 0
-			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
-			: [];
-
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const fetchHotelData = async (value) => {
+		const city = value?.city;
+		const alldates =
+			value.datesHotels || value.datesHotels?.length > 0
+				? getDatesInRange(value.datesHotels[0], value.datesHotels[1])
+				: [];
 		if (type === 'hotel') {
 			try {
 				const res = await axios.post(
 					`http://localhost:3001/api/hotel/find-hotel-able`,
 					{
-						city: value.city,
+						city,
 						dates: alldates,
-						services: value.services,
+						services: type,
 					},
 				);
 
@@ -90,15 +90,13 @@ export default function Search() {
 			} catch (error) {
 				console.error(error);
 			}
-		}
-
-		if (type === 'grooming') {
+		} else if (type === 'grooming') {
 			try {
 				const res = await axios.post(
 					`http://localhost:3001/api/hotel/find-grooming-able`,
 					{
-						city: value.city,
-						services: value.services,
+						city,
+						services: type,
 					},
 				);
 

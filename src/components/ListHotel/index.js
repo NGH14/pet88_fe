@@ -16,11 +16,6 @@ export default function ListHotel() {
 			const res = await axios.get(
 				`http://localhost:3001/api/hotel/`,
 				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
 			);
 			setListHotels(res.data);
 			setLoadingHotel(false);

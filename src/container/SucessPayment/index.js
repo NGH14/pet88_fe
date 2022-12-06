@@ -48,7 +48,7 @@ export default function PaymentSuccess() {
 
 	console.log(dataList);
 	const handleClick = () => {
-		navigate(-3, { replace: true });
+		navigate('/', { replace: true });
 	};
 	const fetchSuccess = async () => {
 		try {
