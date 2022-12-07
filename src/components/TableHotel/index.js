@@ -571,13 +571,14 @@ export default function TableHotel() {
 							</Dragger>
 						</Form.Item>
 						<Form.Item
-							wrapperCol={{
-								offset: 4,
-								span: 16,
+							style={{
+								display: 'flex',
+								justifyContent: 'flex-end',
+								marginInline: '0px auto',
 							}}>
 							<Button
 								style={{
-									marginInline: 15,
+									marginInline: '0px 15px',
 									height: 'fit-content',
 									fontSize: 16,
 									lineHeight: 1.8,
