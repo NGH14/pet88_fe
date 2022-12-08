@@ -548,7 +548,6 @@ export default function TableHotel() {
 						</Form.Item>
 						<Form.Item label='File' name='file'>
 							<Dragger
-								accept='.png,.jpeg'
 								maxCount={3}
 								multiple={true}
 								onClick={() => setShowFile(true)}
