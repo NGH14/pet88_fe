@@ -36,6 +36,8 @@ import {
 	message,
 	Modal,
 	InputNumber,
+	Checkbox,
+	Radio,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
@@ -55,12 +57,12 @@ const getBase64 = (file) =>
 
 const { Dragger } = Upload;
 
-export default function TableRooms() {
+export default function TableOrder() {
 	const [tableLoading, setTableLoading] = React.useState(true);
-	const [roomRecord, setRoomRecord] = React.useState({});
+	const [orderRecord, setorderRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const [listRoomCategorys, setListRoomCategorys] = React.useState();
+	const [listorders, setListorders] = React.useState();
 	const [size, setSize] = useState('large');
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openCreate, setOpenCreate] = useState(false);
@@ -68,22 +70,16 @@ export default function TableRooms() {
 
 	const [form] = Form.useForm();
 	const { token } = UserAuth();
-	const [searchDataSource, setSearchDataSource] =
-		React.useState(listRoomCategorys);
+	const [searchDataSource, setSearchDataSource] = React.useState(listorders);
 	const { t } = useTranslation();
 	const [page, setPage] = React.useState(1);
-
+	const { user, GetAllUser } = UserAuth();
 	const { lang } = UserLanguage();
 
-	const [previewOpen, setPreviewOpen] = React.useState(false);
-	const [previewImage, setPreviewImage] = React.useState('');
-	const [previewTitle, setPreviewTitle] = React.useState('');
-	const [fileList, setFileList] = React.useState([]);
-	const [hotelData, setHotelData] = React.useState([]);
+	const [userData, setUserData] = React.useState([]);
+	const [userDataOption, setUserDataOpion] = React.useState([]);
+	const [accountType, setAccountType] = React.useState(true);
 
-	const [resetUpload, setResetUpload] = React.useState(true);
-	const [showFile, setShowFile] = React.useState(true);
-	const [uploading, setUploading] = React.useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = React.useState([]);
 
 	const [openModal, setOpenModal] = useState(false);
@@ -91,23 +87,23 @@ export default function TableRooms() {
 
 	const fullWidth = global.window.innerWidth;
 
-	const GetAllRoomCategory = async () => {
+	const GetAllorder = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/hotel-room`);
+			const res = await axios.get(`http://localhost:3001/api/order`);
 			return res.data;
 		} catch (error) {
 			return console.error(error);
 		}
 	};
 
-	const GetAllHotel = async () => {
-		try {
-			const res = await axios.get(`http://localhost:3001/api/hotel`);
-			return res.data;
-		} catch (error) {
-			return console.error(error);
-		}
-	};
+	// const GetAllHotel = async () => {
+	// 	try {
+	// 		const res = await axios.get(`http://localhost:3001/api/hotel`);
+	// 		return res.data;
+	// 	} catch (error) {
+	// 		return console.error(error);
+	// 	}
+	// };
 
 	const showModal = () => {
 		setOpenModal(true);
@@ -115,7 +111,7 @@ export default function TableRooms() {
 	const handleOkModal = async () => {
 		setConfirmLoadingModal(true);
 		setSelectedRowKeys([]);
-		await handleDeleteMultipleRoomCategory();
+		await handleDeleteMultipleorder();
 
 		setOpenModal(false);
 	};
@@ -123,15 +119,13 @@ export default function TableRooms() {
 		setOpenModal(false);
 	};
 
-	const handleCancel = () => setPreviewOpen(false);
-
 	useEffect(() => {
-		getAllRoomCategoryData();
-		getAllHotelData();
+		getAllorderData();
+		getAllUserData();
 	}, []);
 
 	const handleOpenUpdateCategory = (record) => {
-		setRoomRecord(record);
+		setorderRecord(record);
 		setOpenUpdate(true);
 	};
 
@@ -152,23 +146,23 @@ export default function TableRooms() {
 			};
 
 			await axios.put(
-				`http://localhost:3001/api/hotel-room/${roomRecord._id}`,
+				`http://localhost:3001/api/order/${orderRecord._id}`,
 				data,
 			);
 
 			setLoading(false);
-			toast.success(t('Update Room Success'));
+			toast.success(t('Update order Success'));
 			setOpenUpdate(false);
-			getAllRoomCategoryData();
+			getAllorderData();
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
 			setLoading(false);
 		}
 	};
-	useEffect(() => form.resetFields(), [roomRecord, openCreate]);
+	useEffect(() => form.resetFields(), [orderRecord, openCreate]);
 
 	const onCloseUpdateRoom = () => {
-		setRoomRecord({});
+		setorderRecord({});
 		setOpenUpdate(false);
 	};
 
@@ -176,16 +170,14 @@ export default function TableRooms() {
 		setOpenCreate(false);
 	};
 
-	const handleDeleteRoomCategory = async (id) => {
+	const handleDeleteOrder = async (id) => {
 		try {
 			const res = await axios.delete(
-				`http://localhost:3001/api/hotel-room/${id}`,
+				`http://localhost:3001/api/order/${id}`,
 				{},
 			);
 
-			setListRoomCategorys(
-				listRoomCategorys.filter((item) => item._id !== id),
-			);
+			setListorders(listorders.filter((item) => item._id !== id));
 			setSearchDataSource(
 				searchDataSource.filter((item) => item._id !== id),
 			);
@@ -196,34 +188,32 @@ export default function TableRooms() {
 			return console.error(error);
 		}
 	};
-
-	const onFinishCreateRoomCategory = async (value) => {
+	const onFinishCreateOrder = async (value) => {
 		setLoadingCreate(true);
 		try {
-			const departmentID = value.department;
+			const userEmail = value.user;
 
-			delete value.department;
-			const roomNumbers = value.roomNumbers.map((room) => ({
-				number: room,
-			}));
+			// const roomNumbers = value.roomNumbers.map((room) => ({
+			// 	number: room,
+			// }));
 
-			const data = {
-				...value,
-				hotelID: departmentID,
-				roomNumbers,
-			};
+			// const data = {
+			// 	...value,
+			// 	hotelId: departmentID,
+			// 	roomNumbers,
+			// };
 
-			await axios.post(
-				`http://localhost:3001/api/hotel-room/${departmentID}`,
-				data,
-			);
+			// await axios.post(
+			// 	`http://localhost:3001/api/order/${departmentID}`,
+			// 	data,
+			// );
 
-			console.log({ data, departmentID });
+			console.log({ value, userEmail });
 
 			setLoadingCreate(false);
-			setOpenCreate(false);
-			getAllRoomCategoryData();
-			toast.success(t('Created Room'));
+			// setOpenCreate(false);
+			getAllorderData();
+			toast.success(t('Created order'));
 		} catch (e) {
 			console.log(e.message);
 			setLoadingCreate(false);
@@ -241,47 +231,89 @@ export default function TableRooms() {
 		selectedRowKeys,
 		onChange: onSelectChange,
 	};
+	const getAllUserData = async () => {
+		setTableLoading(true);
 
+		try {
+			const list = [];
+			const option = [];
+
+			const users = await GetAllUser();
+			users.forEach((doc) => {
+				list.push({ id: doc.id, ...doc.data(), key: doc.id });
+			});
+			list.forEach((doc) => {
+				option.push({ value: doc.email, label: doc.email });
+			});
+			setUserDataOpion(option);
+			setUserData(list);
+			setTableLoading(false);
+		} catch (error) {
+			toast.error(t('Fail to load user data'));
+			setTableLoading(false);
+			console.log(error);
+		}
+	};
 	const columns = [
 		{
-			title: t('Name'),
-			dataIndex: 'title',
-			key: 'title',
+			title: 'Order ID',
+			dataIndex: '_id',
+			key: 'email',
+			render: (text) => <span>{text}</span>,
+		},
+		{
+			title: 'Service',
+			dataIndex: 'service',
+			key: 'service',
+			render: (text) => <span>{text}</span>,
 		},
 
 		{
-			title: t('Type'),
-			dataIndex: 'type',
-			key: 'type',
-			render: (text) => <span>{t(text)}</span>,
+			title: t('Drop off'),
+			dataIndex: 'start',
+			key: 'start',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
 		},
 		{
-			title: t('Price'),
+			title: t('Pick up'),
+			dataIndex: 'end',
+			key: 'end',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
+		},
+		{
+			title: 'Date (Nights)',
+			dataIndex: 'days',
+			key: 'days',
+			render: (text) => <span>{text}</span>,
+		},
+		{
+			title: 'Price',
 			dataIndex: 'price',
 			key: 'price',
 			render: (text) => (
 				<span>
-					{' '}
 					{new Intl.NumberFormat('vi-VI', {
 						style: 'currency',
 						currency: 'VND',
 					}).format(text)}
 				</span>
 			),
+		},
 
-			sorter: (a, b) => a.price - b.price,
+		{
+			title: 'Status',
+			dataIndex: 'paid',
+			key: 'paid',
+			render: (text) => (
+				<Tag color={text === 'success' ? 'green' : 'red'}>{text}</Tag>
+			),
 		},
 		{
-			title: t('In Hotel'),
-			dataIndex: 'Hotel',
-			key: 'hotelID',
-			render: (_, record) => (
-				<span>
-					{
-						hotelData.find((hotel) => hotel._id === record.hotelID)
-							?.name
-					}
-				</span>
+			title: 'Confirm',
+			dataIndex: 'confirm',
+			key: 'confirm',
+			render: (text) => (
+				<Tag color={text === 'confimred' ? 'green' : 'red'}>{text}</Tag>
 			),
 		},
 
@@ -295,7 +327,7 @@ export default function TableRooms() {
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteRoomCategory(record._id)}>
+						onConfirm={() => handleDeleteOrder(record._id)}>
 						<Button
 							danger
 							type='text'
@@ -313,14 +345,14 @@ export default function TableRooms() {
 		},
 	];
 
-	const handleDeleteMultipleRoomCategory = async () => {
+	const handleDeleteMultipleorder = async () => {
 		try {
 			await axios.patch(
-				`http://localhost:3001/api/hotel-room/multiple-delete`,
+				`http://localhost:3001/api/order/multiple-delete`,
 				selectedRowKeys,
 			);
-			setListRoomCategorys(
-				listRoomCategorys.filter(
+			setListorders(
+				listorders.filter(
 					(item) => !selectedRowKeys.includes(item._id),
 				),
 			);
@@ -335,15 +367,15 @@ export default function TableRooms() {
 			console.log(error);
 		}
 	};
-	const getAllRoomCategoryData = async () => {
+	const getAllorderData = async () => {
 		setTableLoading(true);
 		try {
-			const res = await GetAllRoomCategory();
+			const res = await GetAllorder();
 			const list = [];
 			res.forEach((doc) => {
 				list.push({ ...doc, key: doc._id });
 			});
-			setListRoomCategorys(list);
+			setListorders(list);
 			setSearchDataSource(list);
 
 			setTableLoading(false);
@@ -353,37 +385,50 @@ export default function TableRooms() {
 		}
 	};
 
-	const getAllHotelData = async () => {
-		try {
-			const res = await GetAllHotel();
-			const list = [];
-			res.forEach((doc) => {
-				list.push({ ...doc, key: doc._id });
-			});
-			setHotelData(list);
-		} catch (error) {
-			console.error(error);
-		}
-	};
+	// const getAllHotelData = async () => {
+	// 	try {
+	// 		const res = await GetAllHotel();
+	// 		const list = [];
+	// 		res.forEach((doc) => {
+	// 			list.push({ ...doc, key: doc._id });
+	// 		});
+	// 		setUserData(list);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
 
 	const expandedRowRender = (record) => {
 		const subColumns = [
 			{
-				title: 'ID',
-				dataIndex: '_id',
-				key: '_id',
+				title: 'Room ID',
+				dataIndex: 'roomId',
+				key: 'roomId',
 			},
 			{
 				title: t('Room Number'),
-				dataIndex: 'number',
-				key: 'number',
+				dataIndex: 'roomNumber',
+				key: 'roomNumber',
+			},
+			{
+				title: t('Price'),
+				dataIndex: 'price',
+				key: 'price',
+				render: (text) => (
+					<span>
+						{new Intl.NumberFormat('vi-VI', {
+							style: 'currency',
+							currency: 'VND',
+						}).format(text)}
+					</span>
+				),
 			},
 		];
 		return (
 			<>
 				<Table
 					columns={subColumns}
-					dataSource={record.roomNumbers}
+					dataSource={record.products}
 					pagination={false}
 				/>
 				<p
@@ -408,20 +453,20 @@ export default function TableRooms() {
 
 	return (
 		<>
-			<div className='tableroom-header'>
-				<div className='tableroom_leftheader'>
-					<h2 className='tableroom-header-title'>
-						{t('management room categories')}
+			<div className='tableorder-header'>
+				<div className='tableorder_leftheader'>
+					<h2 className='tableorder-header-title'>
+						{t('management order')}
 					</h2>
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
 						onClick={() => setTableToolTip(!tableToolTip)}
 						type='text'></Button>
 				</div>
-				<div className='tableroom_rightheader'>
+				<div className='tableorder_rightheader'>
 					<SearchTableInput
 						columns={columns}
-						dataSource={listRoomCategorys}
+						dataSource={listorders}
 						setDataSource={setSearchDataSource}
 						inputProps={{
 							placeholder: t('Search'),
@@ -429,7 +474,7 @@ export default function TableRooms() {
 						}}
 					/>
 					<Button
-						className='tableroom_createbutton'
+						className='tableorder_createbutton'
 						loading={loadingCreate}
 						type='primary'
 						onClick={handleOpenCreateRoom}>
@@ -442,7 +487,7 @@ export default function TableRooms() {
 								style={{ fontSize: 14 }}
 							/>
 						}
-						onClick={() => getAllRoomCategoryData()}
+						onClick={() => getAllorderData()}
 						type='text'></Button>
 				</div>
 			</div>
@@ -463,12 +508,12 @@ export default function TableRooms() {
 						name='update room'
 						size={'large'}
 						initialValues={{
-							type: roomRecord?.type,
-							price: roomRecord?.price,
-							title: roomRecord?.title,
-							maxPet: roomRecord.maxPet,
-							desc: roomRecord?.desc,
-							roomNumbers: roomRecord?.roomNumbers?.map(
+							type: orderRecord?.type,
+							price: orderRecord?.price,
+							title: orderRecord?.title,
+							maxPet: orderRecord.maxPet,
+							desc: orderRecord?.desc,
+							roomNumbers: orderRecord?.roomNumbers?.map(
 								(object) => object['number'],
 							),
 						}}
@@ -504,9 +549,7 @@ export default function TableRooms() {
 						<Form.Item label={t('Describe')} name='desc'>
 							<Input />
 						</Form.Item>
-						<Form.Item label={t('Max Pet')} name='maxPet'>
-							<InputNumber style={{ width: '100%' }} />
-						</Form.Item>
+
 						<Form.Item name='roomNumbers' label={t('Room Number')}>
 							<Select mode='tags' />
 						</Form.Item>
@@ -548,7 +591,7 @@ export default function TableRooms() {
 			</Drawer>
 
 			<Drawer
-				title={t('Create Room Category')}
+				title={t('Create Order')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}
@@ -560,21 +603,34 @@ export default function TableRooms() {
 						form={form}
 						validateTrigger='onBlur'
 						labelCol={{ span: 4 }}
-						name='Create RoomCategory'
+						name='Create order'
 						size={'medium'}
 						initialValues={{}}
-						onFinish={onFinishCreateRoomCategory}
+						onFinish={onFinishCreateOrder}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item name='department' label={t('Department')}>
-							<Select>
-								{hotelData.map((data) => (
-									<Select.Option value={data?._id}>
-										{data?.name}
-									</Select.Option>
-								))}
-							</Select>
+						<Form.Item label={t('Account')} name='guest'>
+							<Radio.Group
+								onChange={(e) => setAccountType(e.target.value)}
+								value={accountType}>
+								<Radio value={false}>{t('Guest')}</Radio>
+								<Radio value={true}>{t('Has Account')}</Radio>
+							</Radio.Group>
+						</Form.Item>
+						<Form.Item name='user' label={t('User Email')}>
+							{accountType ? (
+								<Select
+									showSearch
+									options={userDataOption}
+									filterOption={(input, option) =>
+										(option?.label ?? '')
+											.toLowerCase()
+											.includes(input.toLowerCase())
+									}></Select>
+							) : (
+								<Input />
+							)}
 						</Form.Item>
 						<Form.Item label={t('Title')} name='title'>
 							<Input />
@@ -646,19 +702,7 @@ export default function TableRooms() {
 					</Form>
 				) : null}
 			</Drawer>
-			<Modal
-				open={previewOpen}
-				title={previewTitle}
-				footer={null}
-				onCancel={handleCancel}>
-				<img
-					alt='example'
-					style={{
-						width: '100%',
-					}}
-					src={previewImage}
-				/>
-			</Modal>
+
 			{tableToolTip ? (
 				<div className='table_tooltip'>
 					<Select
@@ -674,7 +718,7 @@ export default function TableRooms() {
 					</Select>
 
 					<ExportTableButton
-						dataSource={listRoomCategorys}
+						dataSource={listorders}
 						columns={columns}
 						btnProps={{
 							type: 'primary',
@@ -779,7 +823,7 @@ export default function TableRooms() {
 					pageSizeOptions: ['5', '10', '20', '30'],
 				}}
 				columns={columns}
-				dataSource={searchDataSource || listRoomCategorys}
+				dataSource={searchDataSource || listorders}
 				loading={tableLoading}
 			/>
 		</>

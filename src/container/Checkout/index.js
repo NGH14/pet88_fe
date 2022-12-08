@@ -7,6 +7,7 @@ import {
 	Form,
 	Input,
 	Layout,
+	Radio,
 	Skeleton,
 	Steps,
 } from 'antd';
@@ -18,7 +19,7 @@ import 'moment/locale/en-gb';
 import 'moment/locale/vi';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import FooterWave from '../../components/Footer';
 import AppHeader from '../../components/Navbar';
 import SubNavBar from '../../components/SubNavBar';
@@ -34,9 +35,9 @@ export default function Checkout() {
 	const location = useLocation();
 	const priceWithoutVAT = location.state.price;
 	const VAT = (location.state.price * 8) / 100;
-	const totalPrice = Number((priceWithoutVAT + VAT).toFixed(0));
+	const totalPrice = Number(priceWithoutVAT + VAT);
 	const sumPriceMap = location.state.priceList;
-
+	const [loading, setLoading] = React.useState(false);
 	const depart = location.state.depart;
 	const { user } = UserAuth();
 	const photo =
@@ -47,16 +48,43 @@ export default function Checkout() {
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const { search } = SearchData();
+	const navigate = useNavigate();
 
 	const onFinishUpdate = async (value) => {
+		// console.log(value);
 		handleCheckout(value);
 	};
 
 	const handleCheckout = async (value) => {
-		await axios
-			.post(
-				`http://localhost:3001/api/checkout/create-checkout-session`,
-				{
+		setLoading(true);
+		if (value?.paymentMethod === 'e-payment') {
+			await axios
+				.post(
+					`http://localhost:3001/api/checkout/create-checkout-session`,
+					{
+						email: user?.email,
+						userID: user?.id || 'guest',
+						roomList: sumPriceMap,
+						photo: photo,
+						days: search.days,
+						price: totalPrice,
+						start: search.datesHotels[0],
+						end: search.datesHotels[1],
+						paymentMethod: value?.paymentMethod?.paymentMethod,
+						service: search.services,
+						...value,
+					},
+				)
+				.then((response) => {
+					setLoading(false);
+					window.location.href = response.data.url;
+				})
+				.catch((err) => console.log(err.message));
+		}
+
+		if (value?.paymentMethod === 'cash') {
+			await axios
+				.post(`http://localhost:3001/api/order/cash`, {
 					email: user?.email,
 					userID: user?.id || 'guest',
 					roomList: sumPriceMap,
@@ -65,15 +93,17 @@ export default function Checkout() {
 					price: totalPrice,
 					start: search.datesHotels[0],
 					end: search.datesHotels[1],
+					paymentMethod: value?.paymentMethod,
+					service: search.services,
 
 					...value,
-				},
-			)
-			.then((response) => {
-				console.log(response.data);
-				window.location.href = response.data.url;
-			})
-			.catch((err) => console.log(err.message));
+				})
+				.then((response) => {
+					setLoading(false);
+					navigate('/booking/success');
+				})
+				.catch((err) => console.log(err.message));
+		}
 	};
 
 	moment.locale(lang);
@@ -195,7 +225,7 @@ export default function Checkout() {
 										</div>
 										<Divider></Divider>
 										<div className='checkout_counting'>
-											<checkout_total>
+											<div className='checkout_total'>
 												<h3 className='checkout_subtitle'>
 													{t('Price')}
 													{':'}
@@ -205,7 +235,7 @@ export default function Checkout() {
 														search.days
 													} ${t('nights')})`}
 												</span>
-											</checkout_total>
+											</div>
 											<p className='checkout-dates_text'>
 												{new Intl.NumberFormat(
 													'vi-VI',
@@ -287,7 +317,7 @@ export default function Checkout() {
 											initialValues={{
 												name: user?.name,
 												phone: user?.phone,
-
+												paymentMethod: 'e-payment',
 												email: user?.email,
 											}}
 											onFinish={onFinishUpdate}
@@ -323,12 +353,26 @@ export default function Checkout() {
 												<Input />
 											</Form.Item>
 											<Form.Item
+												name='paymentMethod'
+												label={t('Payment')}>
+												<Radio.Group>
+													<Radio value='cash'>
+														{' '}
+														{t('Cash')}
+													</Radio>
+													<Radio value='e-payment'>
+														{' '}
+														{t('E-payment')}
+													</Radio>
+												</Radio.Group>
+											</Form.Item>
+											<Form.Item
 												style={{
 													display: 'flex',
 													justifyContent: 'flex-end',
 												}}>
 												<Button
-													// loading={loading}
+													loading={loading}
 													style={{
 														marginBlock: '0px auto',
 														height: 'fit-content',

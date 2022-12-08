@@ -1,0 +1,50 @@
+.tablegrooming-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+    gap: 15px;
+
+}
+
+
+.tablegrooming_rightheader{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+
+}
+
+
+
+.tablegrooming_rightheader .ant-input-affix-wrapper{
+    max-width: unset;
+    width: 200px;
+    border-radius: 5px;
+}
+
+.tablegrooming_rightheader .tablegrooming_createbutton{
+    border-radius: 5px;
+
+}
+
+.tablegrooming-header-title {
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 24px;
+    display: inline;
+}
+
+.table_tooltip {
+display: flex;
+justify-content: flex-end;
+margin-bottom: 10px;
+
+}
+
+.table_tooltip .ant-btn {
+    border-radius: 5px;
+}
+

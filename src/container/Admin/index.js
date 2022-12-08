@@ -34,6 +34,8 @@ import { MdOutlinePayments } from 'react-icons/md';
 import { CgUserList } from 'react-icons/cg';
 import { CalendarAdmin } from './../../components/Calendar';
 import TableRooms from '../../components/TableRooms';
+import TableGrooming from './../../components/TableGrooming/index';
+import TableOrder from '../../components/TableOrder';
 
 const { Header, Content, Sider } = Layout;
 
@@ -62,6 +64,7 @@ export default function Admin() {
 		getItem(t('Business'), 'depart', <ReconciliationOutlined />, [
 			getItem(t('Departments'), '/admin/management-hotel'),
 			getItem(t('Room Categories'), '/admin/management-room-category'),
+			getItem(t('Grooming Service'), '/admin/management-grooming'),
 		]),
 		getItem(t('User'), '/admin/management-user', <CgUserList />),
 		getItem(
@@ -167,6 +170,10 @@ export default function Admin() {
 											return <TableHotel />;
 										case '/admin/management-room-category':
 											return <TableRooms />;
+										case '/admin/management-grooming':
+											return <TableGrooming />;
+										case '/admin/management-order':
+											return <TableOrder />;
 										default:
 											return null;
 									}

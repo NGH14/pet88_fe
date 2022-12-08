@@ -12,8 +12,6 @@ import img from '../../assets/images/undraw_bug_fixing_oc7a (1).png';
 import './style.css';
 
 export default function UnderDev() {
-	const navigate = useNavigate();
-
 	return (
 		<>
 			<div className='underpage'>

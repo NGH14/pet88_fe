@@ -69,6 +69,27 @@ export const routes = [
 		element: React.lazy(() => import('../container/Admin')),
 		private: true,
 	},
+	{
+		path: '/admin/management-grooming',
+		element: React.lazy(() => import('../container/Admin')),
+		private: true,
+	},
+	{
+		path: '/admin/management-order',
+		element: React.lazy(() => import('../container/Admin')),
+		private: true,
+	},
+
+	{
+		path: '/confirm/:id',
+		element: React.lazy(() => import('../container/BookingConfirm')),
+		private: false,
+	},
+	{
+		path: '/booking/success',
+		element: React.lazy(() => import('../container/SucessBooking')),
+		private: false,
+	},
 
 	{
 		path: '/search',

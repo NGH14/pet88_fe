@@ -45,8 +45,9 @@ export default function PaymentSuccess() {
 	useEffect(() => {
 		fetchSuccess();
 	}, []);
+	const location = useLocation();
+	const id = location.pathname.split('/')[3];
 
-	console.log(dataList);
 	const handleClick = () => {
 		navigate('/', { replace: true });
 	};
@@ -56,8 +57,8 @@ export default function PaymentSuccess() {
 				`http://localhost:3001/api/order/success/${id}`,
 			);
 
-			await handleUpdateDate(res.data);
 			setDataList(res.data);
+			handleUpdateDate(res.data);
 		} catch (error) {
 			console.error(error);
 		}
@@ -78,13 +79,10 @@ export default function PaymentSuccess() {
 		return dates;
 	};
 
-	const alldates =
-		search.datesHotels || search.datesHotels?.length > 0
-			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
-			: [];
-
 	const handleUpdateDate = async (data) => {
 		try {
+			const alldates = getDatesInRange(data.start, data.end);
+
 			await Promise.all(
 				data.products.map((room) => {
 					const res = axios.put(
@@ -99,8 +97,6 @@ export default function PaymentSuccess() {
 		} catch (err) {}
 	};
 
-	const location = useLocation();
-	const id = location.pathname.split('/')[3];
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
 			<Layout className='departhtLayout'>

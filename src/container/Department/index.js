@@ -150,9 +150,25 @@ export default function Department() {
 			sorter: (a, b) => a.title.length - b.title.length,
 		},
 		{
+			title: t('Type'),
+			dataIndex: 'type',
+		},
+		{
 			title: `${t('Price for')} ${search.days} nights`,
 			dataIndex: 'price',
-			render: (price) => search.days * price,
+			render: (price) => (
+				<span>
+					{new Intl.NumberFormat('vi-VI', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(search.days * price)}
+					{` (${new Intl.NumberFormat('vi-VI', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(price)} ${t('per night')})`}
+				</span>
+			),
+			sorter: (a, b) => a.price - b.price,
 		},
 		{
 			title: t('Room'),

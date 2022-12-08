@@ -68,6 +68,18 @@ const Account = () => {
 			render: (products) => products.map((_) => <p>{_.roomNumber}</p>),
 		},
 		{
+			title: t('Drop off'),
+			dataIndex: 'start',
+			key: 'start',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
+		},
+		{
+			title: t('Pick up'),
+			dataIndex: 'end',
+			key: 'end',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
+		},
+		{
 			title: 'Date (Nights)',
 			dataIndex: 'days',
 			key: 'days',
@@ -87,7 +99,7 @@ const Account = () => {
 			),
 		},
 		{
-			title: 'Booking Date',
+			title: 'Created at',
 			dataIndex: 'createdAt',
 			key: 'createdAt',
 			render: (text) => <span>{text?.slice(0, 10)}</span>,
@@ -98,6 +110,14 @@ const Account = () => {
 			key: 'paid',
 			render: (text) => (
 				<Tag color={text === 'success' ? 'green' : 'red'}>{text}</Tag>
+			),
+		},
+		{
+			title: 'Confirm',
+			dataIndex: 'confirm',
+			key: 'confirm',
+			render: (text) => (
+				<Tag color={text === 'confimred' ? 'green' : 'red'}>{text}</Tag>
 			),
 		},
 	];

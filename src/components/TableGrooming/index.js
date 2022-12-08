@@ -55,12 +55,12 @@ const getBase64 = (file) =>
 
 const { Dragger } = Upload;
 
-export default function TableRooms() {
+export default function TableGrooming() {
 	const [tableLoading, setTableLoading] = React.useState(true);
-	const [roomRecord, setRoomRecord] = React.useState({});
+	const [groomingRecord, setGroomingRecord] = React.useState({});
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const [listRoomCategorys, setListRoomCategorys] = React.useState();
+	const [listGroomings, setListGroomings] = React.useState();
 	const [size, setSize] = useState('large');
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openCreate, setOpenCreate] = useState(false);
@@ -69,21 +69,14 @@ export default function TableRooms() {
 	const [form] = Form.useForm();
 	const { token } = UserAuth();
 	const [searchDataSource, setSearchDataSource] =
-		React.useState(listRoomCategorys);
+		React.useState(listGroomings);
 	const { t } = useTranslation();
 	const [page, setPage] = React.useState(1);
 
 	const { lang } = UserLanguage();
 
-	const [previewOpen, setPreviewOpen] = React.useState(false);
-	const [previewImage, setPreviewImage] = React.useState('');
-	const [previewTitle, setPreviewTitle] = React.useState('');
-	const [fileList, setFileList] = React.useState([]);
 	const [hotelData, setHotelData] = React.useState([]);
 
-	const [resetUpload, setResetUpload] = React.useState(true);
-	const [showFile, setShowFile] = React.useState(true);
-	const [uploading, setUploading] = React.useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = React.useState([]);
 
 	const [openModal, setOpenModal] = useState(false);
@@ -91,9 +84,9 @@ export default function TableRooms() {
 
 	const fullWidth = global.window.innerWidth;
 
-	const GetAllRoomCategory = async () => {
+	const GetAllGrooming = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/hotel-room`);
+			const res = await axios.get(`http://localhost:3001/api/grooming`);
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -115,7 +108,7 @@ export default function TableRooms() {
 	const handleOkModal = async () => {
 		setConfirmLoadingModal(true);
 		setSelectedRowKeys([]);
-		await handleDeleteMultipleRoomCategory();
+		await handleDeleteMultipleGrooming();
 
 		setOpenModal(false);
 	};
@@ -123,15 +116,13 @@ export default function TableRooms() {
 		setOpenModal(false);
 	};
 
-	const handleCancel = () => setPreviewOpen(false);
-
 	useEffect(() => {
-		getAllRoomCategoryData();
+		getAllGroomingData();
 		getAllHotelData();
 	}, []);
 
 	const handleOpenUpdateCategory = (record) => {
-		setRoomRecord(record);
+		setGroomingRecord(record);
 		setOpenUpdate(true);
 	};
 
@@ -152,23 +143,23 @@ export default function TableRooms() {
 			};
 
 			await axios.put(
-				`http://localhost:3001/api/hotel-room/${roomRecord._id}`,
+				`http://localhost:3001/api/grooming/${groomingRecord._id}`,
 				data,
 			);
 
 			setLoading(false);
-			toast.success(t('Update Room Success'));
+			toast.success(t('Update Grooming Success'));
 			setOpenUpdate(false);
-			getAllRoomCategoryData();
+			getAllGroomingData();
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
 			setLoading(false);
 		}
 	};
-	useEffect(() => form.resetFields(), [roomRecord, openCreate]);
+	useEffect(() => form.resetFields(), [groomingRecord, openCreate]);
 
 	const onCloseUpdateRoom = () => {
-		setRoomRecord({});
+		setGroomingRecord({});
 		setOpenUpdate(false);
 	};
 
@@ -176,16 +167,14 @@ export default function TableRooms() {
 		setOpenCreate(false);
 	};
 
-	const handleDeleteRoomCategory = async (id) => {
+	const handleDeleteGrooming = async (id) => {
 		try {
 			const res = await axios.delete(
-				`http://localhost:3001/api/hotel-room/${id}`,
+				`http://localhost:3001/api/grooming/${id}`,
 				{},
 			);
 
-			setListRoomCategorys(
-				listRoomCategorys.filter((item) => item._id !== id),
-			);
+			setListGroomings(listGroomings.filter((item) => item._id !== id));
 			setSearchDataSource(
 				searchDataSource.filter((item) => item._id !== id),
 			);
@@ -197,7 +186,7 @@ export default function TableRooms() {
 		}
 	};
 
-	const onFinishCreateRoomCategory = async (value) => {
+	const onFinishCreateGrooming = async (value) => {
 		setLoadingCreate(true);
 		try {
 			const departmentID = value.department;
@@ -209,12 +198,12 @@ export default function TableRooms() {
 
 			const data = {
 				...value,
-				hotelID: departmentID,
+				hotelId: departmentID,
 				roomNumbers,
 			};
 
 			await axios.post(
-				`http://localhost:3001/api/hotel-room/${departmentID}`,
+				`http://localhost:3001/api/grooming/${departmentID}`,
 				data,
 			);
 
@@ -222,8 +211,8 @@ export default function TableRooms() {
 
 			setLoadingCreate(false);
 			setOpenCreate(false);
-			getAllRoomCategoryData();
-			toast.success(t('Created Room'));
+			getAllGroomingData();
+			toast.success(t('Created Grooming'));
 		} catch (e) {
 			console.log(e.message);
 			setLoadingCreate(false);
@@ -278,7 +267,7 @@ export default function TableRooms() {
 			render: (_, record) => (
 				<span>
 					{
-						hotelData.find((hotel) => hotel._id === record.hotelID)
+						hotelData.find((hotel) => hotel._id === record.hotelId)
 							?.name
 					}
 				</span>
@@ -295,7 +284,7 @@ export default function TableRooms() {
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteRoomCategory(record._id)}>
+						onConfirm={() => handleDeleteGrooming(record._id)}>
 						<Button
 							danger
 							type='text'
@@ -313,14 +302,14 @@ export default function TableRooms() {
 		},
 	];
 
-	const handleDeleteMultipleRoomCategory = async () => {
+	const handleDeleteMultipleGrooming = async () => {
 		try {
 			await axios.patch(
-				`http://localhost:3001/api/hotel-room/multiple-delete`,
+				`http://localhost:3001/api/grooming/multiple-delete`,
 				selectedRowKeys,
 			);
-			setListRoomCategorys(
-				listRoomCategorys.filter(
+			setListGroomings(
+				listGroomings.filter(
 					(item) => !selectedRowKeys.includes(item._id),
 				),
 			);
@@ -335,15 +324,15 @@ export default function TableRooms() {
 			console.log(error);
 		}
 	};
-	const getAllRoomCategoryData = async () => {
+	const getAllGroomingData = async () => {
 		setTableLoading(true);
 		try {
-			const res = await GetAllRoomCategory();
+			const res = await GetAllGrooming();
 			const list = [];
 			res.forEach((doc) => {
 				list.push({ ...doc, key: doc._id });
 			});
-			setListRoomCategorys(list);
+			setListGroomings(list);
 			setSearchDataSource(list);
 
 			setTableLoading(false);
@@ -408,20 +397,20 @@ export default function TableRooms() {
 
 	return (
 		<>
-			<div className='tableroom-header'>
-				<div className='tableroom_leftheader'>
-					<h2 className='tableroom-header-title'>
-						{t('management room categories')}
+			<div className='tablegrooming-header'>
+				<div className='tablegrooming_leftheader'>
+					<h2 className='tablegrooming-header-title'>
+						{t('management grooming service')}
 					</h2>
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
 						onClick={() => setTableToolTip(!tableToolTip)}
 						type='text'></Button>
 				</div>
-				<div className='tableroom_rightheader'>
+				<div className='tablegrooming_rightheader'>
 					<SearchTableInput
 						columns={columns}
-						dataSource={listRoomCategorys}
+						dataSource={listGroomings}
 						setDataSource={setSearchDataSource}
 						inputProps={{
 							placeholder: t('Search'),
@@ -429,7 +418,7 @@ export default function TableRooms() {
 						}}
 					/>
 					<Button
-						className='tableroom_createbutton'
+						className='tablegrooming_createbutton'
 						loading={loadingCreate}
 						type='primary'
 						onClick={handleOpenCreateRoom}>
@@ -442,7 +431,7 @@ export default function TableRooms() {
 								style={{ fontSize: 14 }}
 							/>
 						}
-						onClick={() => getAllRoomCategoryData()}
+						onClick={() => getAllGroomingData()}
 						type='text'></Button>
 				</div>
 			</div>
@@ -463,12 +452,12 @@ export default function TableRooms() {
 						name='update room'
 						size={'large'}
 						initialValues={{
-							type: roomRecord?.type,
-							price: roomRecord?.price,
-							title: roomRecord?.title,
-							maxPet: roomRecord.maxPet,
-							desc: roomRecord?.desc,
-							roomNumbers: roomRecord?.roomNumbers?.map(
+							type: groomingRecord?.type,
+							price: groomingRecord?.price,
+							title: groomingRecord?.title,
+							maxPet: groomingRecord.maxPet,
+							desc: groomingRecord?.desc,
+							roomNumbers: groomingRecord?.roomNumbers?.map(
 								(object) => object['number'],
 							),
 						}}
@@ -504,9 +493,7 @@ export default function TableRooms() {
 						<Form.Item label={t('Describe')} name='desc'>
 							<Input />
 						</Form.Item>
-						<Form.Item label={t('Max Pet')} name='maxPet'>
-							<InputNumber style={{ width: '100%' }} />
-						</Form.Item>
+
 						<Form.Item name='roomNumbers' label={t('Room Number')}>
 							<Select mode='tags' />
 						</Form.Item>
@@ -548,7 +535,7 @@ export default function TableRooms() {
 			</Drawer>
 
 			<Drawer
-				title={t('Create Room Category')}
+				title={t('Create Grooming Service')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}
@@ -560,10 +547,10 @@ export default function TableRooms() {
 						form={form}
 						validateTrigger='onBlur'
 						labelCol={{ span: 4 }}
-						name='Create RoomCategory'
+						name='Create Grooming'
 						size={'medium'}
 						initialValues={{}}
-						onFinish={onFinishCreateRoomCategory}
+						onFinish={onFinishCreateGrooming}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
@@ -646,19 +633,7 @@ export default function TableRooms() {
 					</Form>
 				) : null}
 			</Drawer>
-			<Modal
-				open={previewOpen}
-				title={previewTitle}
-				footer={null}
-				onCancel={handleCancel}>
-				<img
-					alt='example'
-					style={{
-						width: '100%',
-					}}
-					src={previewImage}
-				/>
-			</Modal>
+
 			{tableToolTip ? (
 				<div className='table_tooltip'>
 					<Select
@@ -674,7 +649,7 @@ export default function TableRooms() {
 					</Select>
 
 					<ExportTableButton
-						dataSource={listRoomCategorys}
+						dataSource={listGroomings}
 						columns={columns}
 						btnProps={{
 							type: 'primary',
@@ -779,7 +754,7 @@ export default function TableRooms() {
 					pageSizeOptions: ['5', '10', '20', '30'],
 				}}
 				columns={columns}
-				dataSource={searchDataSource || listRoomCategorys}
+				dataSource={searchDataSource || listGroomings}
 				loading={tableLoading}
 			/>
 		</>
