@@ -65,7 +65,10 @@ const Account = () => {
 			title: 'Room Booking',
 			dataIndex: 'products',
 			key: 'products',
-			render: (products) => products.map((_) => <p>{_.roomNumber}</p>),
+			render: (products) =>
+				products?.length > 0 && Array.isArray(products)
+					? products?.map((_) => <p>{_.roomNumber}</p>)
+					: null,
 		},
 		{
 			title: t('Drop off'),

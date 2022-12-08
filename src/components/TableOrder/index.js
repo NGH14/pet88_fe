@@ -67,7 +67,8 @@ export default function TableOrder() {
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openCreate, setOpenCreate] = useState(false);
 	const [tableToolTip, setTableToolTip] = useState(false);
-
+	const photo =
+		'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
 	const [form] = Form.useForm();
 	const { token } = UserAuth();
 	const [searchDataSource, setSearchDataSource] = React.useState(listorders);
@@ -120,7 +121,7 @@ export default function TableOrder() {
 	};
 
 	useEffect(() => {
-		getAllorderData();
+		getAllOrderData();
 		getAllUserData();
 	}, []);
 
@@ -153,7 +154,7 @@ export default function TableOrder() {
 			setLoading(false);
 			toast.success(t('Update order Success'));
 			setOpenUpdate(false);
-			getAllorderData();
+			getAllOrderData();
 		} catch (e) {
 			toast.error(t('Something went wrong! please try again'));
 			setLoading(false);
@@ -191,8 +192,30 @@ export default function TableOrder() {
 	const onFinishCreateOrder = async (value) => {
 		setLoadingCreate(true);
 		try {
-			const userEmail = value.user;
+			const bookingUser = value.account
+				? userData.find((u) => u.email === value.user)
+				: { id: 'guest', email: value.user, phone: -1 };
 
+			// await axios
+			// 	.post(`http://localhost:3001/api/order/cash`, {
+			// 		email: user?.email,
+			// 		userID: user?.id || 'guest',
+			// 		roomList: sumPriceMap,
+			// 		photo: photo,
+			// 		days: search.days,
+			// 		price: totalPrice,
+			// 		start: search.datesHotels[0],
+			// 		end: search.datesHotels[1],
+			// 		paymentMethod: value?.paymentMethod,
+			// 		service: search.services,
+
+			// 		...value,
+			// 	})
+			// 	.then((response) => {
+			// 		setLoading(false);
+			// 		navigate('/booking/success');
+			// 	})
+			// 	.catch((err) => console.log(err.message));
 			// const roomNumbers = value.roomNumbers.map((room) => ({
 			// 	number: room,
 			// }));
@@ -208,11 +231,11 @@ export default function TableOrder() {
 			// 	data,
 			// );
 
-			console.log({ value, userEmail });
+			console.log({ value, bookingUser });
 
 			setLoadingCreate(false);
 			// setOpenCreate(false);
-			getAllorderData();
+			getAllOrderData();
 			toast.success(t('Created order'));
 		} catch (e) {
 			console.log(e.message);
@@ -367,7 +390,7 @@ export default function TableOrder() {
 			console.log(error);
 		}
 	};
-	const getAllorderData = async () => {
+	const getAllOrderData = async () => {
 		setTableLoading(true);
 		try {
 			const res = await GetAllorder();
@@ -487,7 +510,7 @@ export default function TableOrder() {
 								style={{ fontSize: 14 }}
 							/>
 						}
-						onClick={() => getAllorderData()}
+						onClick={() => getAllOrderData()}
 						type='text'></Button>
 				</div>
 			</div>
@@ -610,10 +633,15 @@ export default function TableOrder() {
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item label={t('Account')} name='guest'>
+						<Form.Item
+							label={t('Account')}
+							name='account'
+							initialValue={true}>
 							<Radio.Group
-								onChange={(e) => setAccountType(e.target.value)}
-								value={accountType}>
+								value={accountType}
+								onChange={(e) =>
+									setAccountType(e.target.value)
+								}>
 								<Radio value={false}>{t('Guest')}</Radio>
 								<Radio value={true}>{t('Has Account')}</Radio>
 							</Radio.Group>
@@ -631,9 +659,6 @@ export default function TableOrder() {
 							) : (
 								<Input />
 							)}
-						</Form.Item>
-						<Form.Item label={t('Title')} name='title'>
-							<Input />
 						</Form.Item>
 						<Form.Item name='type' label={t('Type')}>
 							<Select>

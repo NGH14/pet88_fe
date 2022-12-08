@@ -54,6 +54,7 @@ import {
 	RiEditLine,
 	RiFileTextLine,
 } from 'react-icons/ri';
+import { UserAuth } from '../../context/AuthContext';
 
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
@@ -95,6 +96,8 @@ export const CalendarAdmin = () => {
 	const [allEvents, setAllEvents] = useState(events);
 	const [event, setEvent] = useState({});
 	const [selectedGroomingRoomId, setSelectedGroomingRoomId] = useState('');
+	const [selectedGroomingRoomData, setSelectedGroomingRoomData] = useState({});
+
 	const [groomingListOption, setGroomingListOption] = useState({});
 	const [defaultDate, setDefaultDate] = useState(new Date());
 	const [defaulGroomingOpion, setDefaulGroomingOpion] = useState([]);
@@ -102,7 +105,9 @@ export const CalendarAdmin = () => {
 	const [selectedDate, setSelectedDate] = useState({ start: 0, end: 0 });
 	const [selecteDetaildDate, setSelectedDetailDate] = useState({});
 	const [selecteDetailType, setSelecteDetailType] = useState(false);
-
+	const { user, GetAllUser } = UserAuth();
+	const photo =
+	'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
 	const [disabled, setDisabled] = useState(false);
 
 	const { t } = useTranslation();
@@ -122,6 +127,7 @@ export const CalendarAdmin = () => {
 	const onChange = (value, selectedOptions) => {
 		console.log({ value, selectedOptions });
 		setSelectedGroomingRoomId(selectedOptions[1].value);
+		setSelectedGroomingRoomData(selectedOptions[0])
 		fetchEvent(selectedOptions[1].value);
 	};
 	const filter = (inputValue, path) =>
@@ -165,20 +171,22 @@ export const CalendarAdmin = () => {
 					};
 				});
 				return list.push({
-					value: data.title,
+					...data,
+					value: data._id,
+					
 					label: data.title,
 					children,
 				});
 			});
-
 			setGroomingListOption(list);
 			setDefaulGroomingOpion([list[0].value, list[0].children[0].value]);
 			fetchEvent(list[0].children[0].value);
+			setSelectedGroomingRoomId(list[0].children[0].value)
+			setSelectedGroomingRoomData(list[0])
 		} catch (error) {
 			console.error(error);
 		}
 	};
-
 	const fetchEvent = async (id) => {
 		const roomId = id || selectedGroomingRoomId;
 		try {
@@ -327,11 +335,14 @@ export const CalendarAdmin = () => {
 		(newDate) => setDefaultDate(newDate),
 		[setDefaultDate],
 	);
-
+		console.log(selectedDate)
 	const onFinishCreateEvent = (values) => {
 		const start = selectedDate.start;
 		const end = selectedDate.end;
 		const title = values?.title;
+		// const price = selectedGroomingRoomData.price * ( new Date(end).getHour() - new Date(start).getHour()) 
+		const price = 15000
+
 
 		if (values?.title) {
 			FetchAddEvent({
@@ -341,13 +352,36 @@ export const CalendarAdmin = () => {
 				title,
 			});
 
+				 axios.post(`http://localhost:3001/api/order/admin/grooming`, {
+					email: "vuhuunghia2001@gmail.com",
+					userID: 'guest',
+					roomList: selectedGroomingRoomId,
+					photo: photo,
+					days: 0,
+					price,
+					start,
+					end,
+					paymentMethod: "cash",
+					service: "grooming",
+				})
+				.then((response) => {
+					console.log(response)
+					// setLoading(false);
+					// navigate('/booking/success');
+				})
+				.catch((err) => console.log(err.message));
+
+
+
+
 			setEvent({
 				id: uid(),
 				start: start.getTime(),
 				end: end.getTime(),
 				title,
+				price
 			});
-			setAllEvents((prev) => [...prev, { id: uid(), start, end, title }]);
+			setAllEvents((prev) => [...prev, { id: uid(), start, end, title, price }]);
 
 			setOpenCreateModal(false);
 		}
@@ -479,6 +513,30 @@ export const CalendarAdmin = () => {
 									</span>
 								</Form.Item>
 							</Form.Item>
+							<Form.Item
+									label={
+										<RiCalendarEventFill
+											style={{
+												fontSize: 14,
+												textTransform: 'capitalize',
+											}}></RiCalendarEventFill>
+									}
+									name='start'
+									style={{
+										display: 'flex',
+										alignContent: 'center',
+									}}>
+									<span>
+										{
+										(	new Date(
+												selectedDate?.end,
+											).getHours() - 	new Date(
+												selectedDate?.start,
+											).getHours()) * 2 * selectedGroomingRoomData.price
+											}
+									
+									</span>
+								</Form.Item>
 							<Form.Item
 								style={{
 									display: 'flex',
@@ -838,7 +896,7 @@ export const CalendarAdmin = () => {
 					onNavigate={onNavigate}
 					onEventResize={resizeEvent}
 					onEventDrop={moveEvent}
-					step={15}
+					step={30}
 					popup
 				/>
 			</div>
