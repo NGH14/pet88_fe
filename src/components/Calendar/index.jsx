@@ -50,11 +50,17 @@ import {
 	RiCalendarEventFill,
 	RiCloseFill,
 	RiCloseLine,
+	RiCoinLine,
 	RiDeleteBinLine,
 	RiEditLine,
 	RiFileTextLine,
+	RiMailLine,
+	RiPhoneLine,
+	RiUser3Line,
+	RiUserSettingsLine,
 } from 'react-icons/ri';
 import { UserAuth } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
@@ -96,7 +102,9 @@ export const CalendarAdmin = () => {
 	const [allEvents, setAllEvents] = useState(events);
 	const [event, setEvent] = useState({});
 	const [selectedGroomingRoomId, setSelectedGroomingRoomId] = useState('');
-	const [selectedGroomingRoomData, setSelectedGroomingRoomData] = useState({});
+	const [selectedGroomingRoomData, setSelectedGroomingRoomData] = useState(
+		{},
+	);
 
 	const [groomingListOption, setGroomingListOption] = useState({});
 	const [defaultDate, setDefaultDate] = useState(new Date());
@@ -107,13 +115,15 @@ export const CalendarAdmin = () => {
 	const [selecteDetailType, setSelecteDetailType] = useState(false);
 	const { user, GetAllUser } = UserAuth();
 	const photo =
-	'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
+		'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
 	const [disabled, setDisabled] = useState(false);
-
+	const [userData, setUserData] = React.useState([]);
+	const [userDataOption, setUserDataOpion] = React.useState([]);
 	const { t } = useTranslation();
 	const localizer = momentLocalizer(moment);
 	const [openCreateModal, setOpenCreateModal] = useState(false);
 	const [openDetailModal, setOpenDetailModal] = useState(false);
+	const [accountType, setAccountType] = React.useState(true);
 
 	const [form] = Form.useForm();
 
@@ -127,7 +137,7 @@ export const CalendarAdmin = () => {
 	const onChange = (value, selectedOptions) => {
 		console.log({ value, selectedOptions });
 		setSelectedGroomingRoomId(selectedOptions[1].value);
-		setSelectedGroomingRoomData(selectedOptions[0])
+		setSelectedGroomingRoomData(selectedOptions[0]);
 		fetchEvent(selectedOptions[1].value);
 	};
 	const filter = (inputValue, path) =>
@@ -155,6 +165,7 @@ export const CalendarAdmin = () => {
 
 	React.useEffect(() => {
 		fetchGroomingData();
+		getAllUserData();
 	}, []);
 
 	React.useEffect(() => form.resetFields(), [openCreateModal]);
@@ -173,7 +184,7 @@ export const CalendarAdmin = () => {
 				return list.push({
 					...data,
 					value: data._id,
-					
+
 					label: data.title,
 					children,
 				});
@@ -181,8 +192,8 @@ export const CalendarAdmin = () => {
 			setGroomingListOption(list);
 			setDefaulGroomingOpion([list[0].value, list[0].children[0].value]);
 			fetchEvent(list[0].children[0].value);
-			setSelectedGroomingRoomId(list[0].children[0].value)
-			setSelectedGroomingRoomData(list[0])
+			setSelectedGroomingRoomId(list[0].children[0].value);
+			setSelectedGroomingRoomData(list[0]);
 		} catch (error) {
 			console.error(error);
 		}
@@ -220,6 +231,7 @@ export const CalendarAdmin = () => {
 						endDate: value.end,
 						id: uid(),
 						title: value.title,
+						order: value.order,
 					},
 				},
 			);
@@ -233,6 +245,7 @@ export const CalendarAdmin = () => {
 		const endDate = value?.end || selecteDetaildDate.end.getTime();
 		const title = value?.title || selecteDetaildDate.title;
 		const id = value?.id || selecteDetaildDate.id;
+		const order = value?.order || selecteDetaildDate.order;
 
 		try {
 			await axios.put(
@@ -241,6 +254,7 @@ export const CalendarAdmin = () => {
 					startDate,
 					endDate,
 					title,
+					order
 				},
 			);
 		} catch (error) {
@@ -249,8 +263,7 @@ export const CalendarAdmin = () => {
 	};
 
 	const FetchDeleteEvent = async (value) => {
-		const id = value?.id || selecteDetaildDate.id;
-
+		const id = value.id || selecteDetaildDate.id;
 		try {
 			await axios.put(
 				`http://localhost:3001/api/grooming/room/event/delete/${id}`,
@@ -304,14 +317,14 @@ export const CalendarAdmin = () => {
 			if (!allDay && droppedOnAllDaySlot) {
 				event.allDay = true;
 			}
-			FetchUpdateEvent({ start, end, title: event.title, id: event.id });
+			FetchUpdateEvent({ start, end, title: event.title, id: event.id, order: event.order });
 
 			setAllEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
 				return [
 					...filtered,
-					{ ...existing, start, end, resourceId, allDay },
+					{ ...existing, start, end, resourceId, allDay, order: event.order },
 				];
 			});
 		},
@@ -320,70 +333,102 @@ export const CalendarAdmin = () => {
 
 	const resizeEvent = useCallback(
 		({ event, start, end }) => {
-			FetchUpdateEvent({ start, end, title: event.title, id: event.id });
+			FetchUpdateEvent({ start, end, title: event.title, id: event.id,order: event.order });
 
 			setAllEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [...filtered, { ...existing, start, end }];
+				return [...filtered, { ...existing, start, end, order: event.order }];
 			});
 		},
 		[setAllEvents],
 	);
 
+	console.log(allEvents)
 	const onNavigate = useCallback(
 		(newDate) => setDefaultDate(newDate),
 		[setDefaultDate],
 	);
-		console.log(selectedDate)
-	const onFinishCreateEvent = (values) => {
+	const getAllUserData = async () => {
+		try {
+			const list = [];
+			const option = [];
+
+			const users = await GetAllUser();
+			users.forEach((doc) => {
+				list.push({ id: doc.id, ...doc.data(), key: doc.id });
+			});
+			list.forEach((doc) => {
+				option.push({ value: doc.email, label: doc.email });
+			});
+			setUserDataOpion(option);
+			setUserData(list);
+		} catch (error) {
+			toast.error(t('Fail to load user data'));
+			console.log(error);
+		}
+	};
+
+	const onFinishCreateEvent = async (values) => {
 		const start = selectedDate.start;
 		const end = selectedDate.end;
 		const title = values?.title;
-		// const price = selectedGroomingRoomData.price * ( new Date(end).getHour() - new Date(start).getHour()) 
-		const price = 15000
+		const price =
+			(new Date(selectedDate?.end).getHours() -
+				new Date(selectedDate?.start).getHours()) *
+			2 *
+			selectedGroomingRoomData.price;
 
+		const bookingUser = values.account
+			? userData.find((u) => u.email === values.user)
+			: {
+					id: 'guest',
+					email: values.user || 'guest',
+					phone: values.phone,
+					name: values.name,
+			  };
 
 		if (values?.title) {
-			FetchAddEvent({
-				id: uid(),
-				start: start.getTime(),
-				end: end.getTime(),
-				title,
-			});
-
-				 axios.post(`http://localhost:3001/api/order/admin/grooming`, {
-					email: "vuhuunghia2001@gmail.com",
-					userID: 'guest',
-					roomList: selectedGroomingRoomId,
-					photo: photo,
-					days: 0,
-					price,
-					start,
-					end,
-					paymentMethod: "cash",
-					service: "grooming",
-				})
-				.then((response) => {
-					console.log(response)
-					// setLoading(false);
-					// navigate('/booking/success');
-				})
-				.catch((err) => console.log(err.message));
-
-
-
-
-			setEvent({
-				id: uid(),
-				start: start.getTime(),
-				end: end.getTime(),
-				title,
-				price
-			});
-			setAllEvents((prev) => [...prev, { id: uid(), start, end, title, price }]);
-
-			setOpenCreateModal(false);
+			try {
+				const order = await axios.post(
+					`http://localhost:3001/api/order/admin/grooming`,
+					{
+						email: bookingUser.email || 'guest',
+						userID: bookingUser.id || 'guest',
+						phone: bookingUser.phone || '0',
+						roomList: selectedGroomingRoomId,
+						photo: photo,
+						days: 0,
+						price,
+						start,
+						end,
+						paymentMethod: 'cash',
+						service: 'grooming',
+					},
+				);
+				FetchAddEvent({
+					id: uid(),
+					start: start.getTime(),
+					end: end.getTime(),
+					title,
+					order: order.data,
+				});
+				setEvent({
+					id: uid(),
+					start: start.getTime(),
+					end: end.getTime(),
+					title,
+					order: order.data,
+				});
+				setAllEvents((prev) => [
+					...prev,
+					{ id: uid(), start, end, title, order: order.data },
+				]);
+				setOpenCreateModal(false);
+			} catch (error) {
+				console.error(error);
+				setOpenCreateModal(false);
+			}
 		}
 	};
 
@@ -405,12 +450,13 @@ export const CalendarAdmin = () => {
 		setOpenDetailModal(false);
 	};
 
-	const handleDeleteEvent = () => {
+	const handleDeleteEvent =  () => {
 		FetchDeleteEvent(selecteDetaildDate.id);
 		setAllEvents(
 			allEvents.filter((item) => item.id !== selecteDetaildDate.id),
-		);
+			);
 		setOpenDetailModal(false);
+	
 	};
 
 	return (
@@ -479,6 +525,52 @@ export const CalendarAdmin = () => {
 								<Input placeholder={t('Enter event title')} />
 							</Form.Item>
 
+							{accountType ? (
+								<Form.Item name='user' label={<RiMailLine />}>
+									<Select
+										showSearch
+										options={userDataOption}
+										filterOption={(input, option) =>
+											(option?.label ?? '')
+												.toLowerCase()
+												.includes(input.toLowerCase())
+										}></Select>
+								</Form.Item>
+							) : (
+								<>
+									<Form.Item
+										name='name'
+										label={<RiUser3Line />}>
+										<Input />
+									</Form.Item>
+									<Form.Item
+										name='user'
+										label={<RiMailLine />}>
+										<Input />
+									</Form.Item>
+
+									<Form.Item
+										name='phone'
+										label={<RiPhoneLine />}>
+										<Input />
+									</Form.Item>
+								</>
+							)}
+							<Form.Item
+								label={<RiUserSettingsLine />}
+								name='account'
+								initialValue={true}>
+								<Radio.Group
+									value={accountType}
+									onChange={(e) =>
+										setAccountType(e.target.value)
+									}>
+									<Radio value={false}>{t('Guest')}</Radio>
+									<Radio value={true}>
+										{t('Has Account')}
+									</Radio>
+								</Radio.Group>
+							</Form.Item>
 							<Form.Item
 								style={{
 									marginBottom: 0,
@@ -514,29 +606,34 @@ export const CalendarAdmin = () => {
 								</Form.Item>
 							</Form.Item>
 							<Form.Item
-									label={
-										<RiCalendarEventFill
-											style={{
-												fontSize: 14,
-												textTransform: 'capitalize',
-											}}></RiCalendarEventFill>
-									}
-									name='start'
-									style={{
-										display: 'flex',
-										alignContent: 'center',
-									}}>
-									<span>
-										{
-										(	new Date(
-												selectedDate?.end,
-											).getHours() - 	new Date(
+								label={
+									<RiCoinLine
+										style={{
+											fontSize: 14,
+											textTransform: 'capitalize',
+										}}></RiCoinLine>
+								}
+								name='start'
+								style={{
+									display: 'flex',
+									alignContent: 'center',
+								}}>
+								<span>
+									{new Intl.NumberFormat('vi-VI', {
+										style: 'currency',
+										currency: 'VND',
+									}).format(
+										(new Date(
+											selectedDate?.end,
+										).getHours() -
+											new Date(
 												selectedDate?.start,
-											).getHours()) * 2 * selectedGroomingRoomData.price
-											}
-									
-									</span>
-								</Form.Item>
+											).getHours()) *
+											2 *
+											selectedGroomingRoomData.price,
+									)}
+								</span>
+							</Form.Item>
 							<Form.Item
 								style={{
 									display: 'flex',
@@ -606,10 +703,11 @@ export const CalendarAdmin = () => {
 								</Button>
 								<Button
 									type='text'
-									onClick={() =>
-										setOpenDetailModal(false)
-									}>
-									<RiCloseFill style={{ fontSize: 18}}></RiCloseFill>{' '}
+									onClick={() => setOpenDetailModal(false)}>
+									<RiCloseFill
+										style={{
+											fontSize: 18,
+										}}></RiCloseFill>{' '}
 								</Button>
 							</div>
 						}
@@ -620,11 +718,7 @@ export const CalendarAdmin = () => {
 								onStart={(event, uiData) =>
 									onStart(event, uiData)
 								}>
-								<div
-									ref={draggleRef}
-									style={{
-									
-									}}>
+								<div ref={draggleRef} style={{}}>
 									{modal}
 								</div>
 							</Draggable>
@@ -888,6 +982,7 @@ export const CalendarAdmin = () => {
 					onSelectSlot={handleSelectSlot}
 					selectable={true}
 					messages={messages}
+					
 					localizer={localizer}
 					date={defaultDate}
 					culture={lang}

@@ -137,18 +137,9 @@ export default function TableOrder() {
 	const onFinishUpdate = async (value) => {
 		setLoading(true);
 		try {
-			const roomNumbers = value.roomNumbers.map((room) => ({
-				number: room,
-			}));
-
-			const data = {
-				...value,
-				roomNumbers,
-			};
-
 			await axios.put(
-				`http://localhost:3001/api/order/${orderRecord._id}`,
-				data,
+				`http://localhost:3001/api/order/status/${orderRecord._id}`,
+				value,
 			);
 
 			setLoading(false);
@@ -449,11 +440,13 @@ export default function TableOrder() {
 		];
 		return (
 			<>
-				<Table
-					columns={subColumns}
-					dataSource={record.products}
-					pagination={false}
-				/>
+				{record.service === 'hotel' ? (
+					<Table
+						columns={subColumns}
+						dataSource={record.products}
+						pagination={false}
+					/>
+				) : null}
 				<p
 					style={{
 						margin: 15,
@@ -496,13 +489,13 @@ export default function TableOrder() {
 							prefix: <SearchOutlined />,
 						}}
 					/>
-					<Button
+					{/* <Button
 						className='tableorder_createbutton'
 						loading={loadingCreate}
 						type='primary'
 						onClick={handleOpenCreateRoom}>
 						{t('Create new')}
-					</Button>
+					</Button> */}
 					<Button
 						icon={
 							<ReloadOutlined
@@ -531,50 +524,29 @@ export default function TableOrder() {
 						name='update room'
 						size={'large'}
 						initialValues={{
-							type: orderRecord?.type,
-							price: orderRecord?.price,
-							title: orderRecord?.title,
-							maxPet: orderRecord.maxPet,
-							desc: orderRecord?.desc,
-							roomNumbers: orderRecord?.roomNumbers?.map(
-								(object) => object['number'],
-							),
+							confirm: orderRecord?.confirm,
+							paid: orderRecord?.paid,
 						}}
 						onFinish={onFinishUpdate}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
 						requiredMark={false}>
-						<Form.Item label={t('Title')} name='title'>
-							<Input />
-						</Form.Item>
-						<Form.Item name='type' label={t('Type')}>
+						<Form.Item name='confirm' label={t('Confirm')}>
 							<Select>
-								<Option value='dogandcat'>
-									{t('Dog and Cat')}
+								<Option value='unconfimred'>
+									{t('Unconfimred')}
 								</Option>
-								<Option value='reptile '>
-									{t('Reptile ')}
+								<Option value='confimred'>
+									{t('Confimred')}
 								</Option>
 							</Select>
 						</Form.Item>
-						<Form.Item label={t('Price')} name='price'>
-							<InputNumber
-								formatter={(value) =>
-									`${value}`.replace(
-										/\B(?=(\d{3})+(?!\d))/g,
-										',',
-									)
-								}
-								prefix={'₫'}
-								style={{ width: '100%' }}
-							/>
-						</Form.Item>
-						<Form.Item label={t('Describe')} name='desc'>
-							<Input />
-						</Form.Item>
-
-						<Form.Item name='roomNumbers' label={t('Room Number')}>
-							<Select mode='tags' />
+						<Form.Item name='paid' label={t('Status')}>
+							<Select>
+								<Option value='success'>{t('Success')}</Option>
+								<Option value='unpaid'>{t('Unpaid')}</Option>
+								<Option value='cancel'>{t('Cancel')}</Option>
+							</Select>
 						</Form.Item>
 						<Form.Item
 							wrapperCol={{
