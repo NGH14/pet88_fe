@@ -102,6 +102,11 @@ export const routes = [
 		private: false,
 	},
 	{
+		path: '/grooming/:id',
+		element: React.lazy(() => import('../container/Grooming')),
+		private: false,
+	},
+	{
 		path: '/checkout',
 		element: React.lazy(() => import('../container/Checkout')),
 		private: false,

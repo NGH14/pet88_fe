@@ -411,7 +411,7 @@ export default function TableRooms() {
 			<div className='tableroom-header'>
 				<div className='tableroom_leftheader'>
 					<h2 className='tableroom-header-title'>
-						{t('management room categories')}
+						{t('management hotel service')}
 					</h2>
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
@@ -525,7 +525,7 @@ export default function TableRooms() {
 									boxShadow:
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
-								onClick={onCloseCreateUser}>
+								onClick={onCloseUpdateRoom}>
 								{t('Close')}
 							</Button>
 							<Button

@@ -58,7 +58,13 @@ const Account = () => {
 		{
 			title: 'Order ID',
 			dataIndex: '_id',
-			key: 'email',
+			key: '_id',
+			render: (text) => <span>{text}</span>,
+		},
+		{
+			title: t('Type'),
+			dataIndex: 'service',
+			key: 'service',
 			render: (text) => <span>{text}</span>,
 		},
 		{

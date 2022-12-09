@@ -6,7 +6,9 @@ import {
 	ConfigProvider,
 	DatePicker,
 	Form,
+	Input,
 	Layout,
+	Modal,
 	Select,
 	Table,
 } from 'antd';
@@ -26,6 +28,9 @@ import './style.css';
 import moment from 'moment';
 import { UserAuth } from '../../context/AuthContext';
 import { SearchData } from '../../context/SearchContext';
+import { display } from '@mui/system';
+import { styled } from 'styled-components';
+import { RiFileUserLine, RiMailSendLine, RiPhoneLine } from 'react-icons/ri';
 
 const { Option } = Select;
 const { Header, Content, Footer } = Layout;
@@ -41,6 +46,8 @@ export default function Department() {
 	const [loading, setLoading] = useState(true);
 	const [loadingTable, setLoadingTable] = useState(true);
 	const [form] = Form.useForm();
+	const [form3] = Form.useForm();
+
 	const [dataList, setDataList] = useState([]);
 	const { user } = UserAuth();
 	const navigate = useNavigate();
@@ -56,55 +63,48 @@ export default function Department() {
 	const futureWeek = moment(currentDate).add(1, 'W');
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
+	const [openDetailModal, setOpenDetailModal] = useState(false);
 
 	useEffect(() => {
 		handleLoadData();
 	}, [search]);
-
-	useEffect(() => {
-		const sum = selectedRooms.reduce((sum, n) => sum + Number(n.price), 0);
-
-		setSumPrice(sum);
-		Object.entries(selectedRooms).forEach(([k, v]) => {
-			if (v === 0) delete selectedRooms[k];
-		});
-	}, [selectedRooms, loadingTable]);
 
 	const onFinish = async (values) => {
 		setLoadingTable(true);
 		await handleLoadData();
 		setSearchList({
 			...search,
-			datesHotels: values.datesHotels || null,
+			datesGrooming: values.datesGrooming || null,
 		});
 	};
 
-	const getDatesInRange = (startDate, endDate) => {
-		const start = new Date(startDate);
-		const end = new Date(endDate);
-		const date = new Date(start.getTime());
+	const onFinishConfirm = async (value) => {
+		console.log(value);
 
-		const dates = [];
+		const startDate = new Date(search?.datesGrooming).getTime();
+		const endDate = new Date(
+			moment(search?.datesGrooming).add(2, 'hours'),
+		).getTime();
 
-		while (date <= end) {
-			dates.push(new Date(date).getTime());
-			date.setDate(date.getDate() + 1);
-		}
-
-		return dates;
-	};
-
-	const alldates =
-		search.datesHotels || search.datesHotels?.length > 0
-			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
-			: [];
-
-	const isAvailable = (roomNumber) => {
-		const isFound = roomNumber.unavailableDates.some((date) =>
-			alldates.includes(new Date(date).getTime()),
-		);
-
-		return !isFound;
+		axios
+			.post(`http://localhost:3001/api/order/grooming/booking`, {
+				email: value?.email,
+				userID: user?.id || 'guest',
+				name: value?.name || 'guest',
+				roomList: selectedRooms,
+				photo: photo,
+				days: search.days,
+				price: 0,
+				start: startDate,
+				end: endDate,
+				paymentMethod: 'cash',
+				service: search.services,
+			})
+			.then((response) => {
+				setLoading(false);
+				navigate('/booking/success');
+			})
+			.catch((err) => console.log(err.message));
 	};
 
 	const handleSelect = (e) => {
@@ -128,10 +128,19 @@ export default function Department() {
 
 	const handleLoadData = async () => {
 		setDataList([]);
+		const startDate = new Date(search?.datesGrooming).getTime();
+		const endDate = new Date(
+			moment(search?.datesGrooming).add(2, 'hours'),
+		).getTime();
+
 		await axios
-			.post(`http://localhost:3001/api/hotel/availability/${id}`, {
-				dates: alldates,
-			})
+			.post(
+				`http://localhost:3001/api/hotel/availability/grooming/${id}`,
+				{
+					startDate,
+					endDate,
+				},
+			)
 			.then((response) => {
 				setSumPrice(0);
 				setSelectedRooms([]);
@@ -153,18 +162,14 @@ export default function Department() {
 			dataIndex: 'type',
 		},
 		{
-			title: `${t('Price for')} ${search.days} nights`,
+			title: `${t('Service Price')}`,
 			dataIndex: 'price',
 			render: (price) => (
 				<span>
-					{new Intl.NumberFormat('vi-VI', {
+					{` ${new Intl.NumberFormat('vi-VI', {
 						style: 'currency',
 						currency: 'VND',
-					}).format(search.days * price)}
-					{` (${new Intl.NumberFormat('vi-VI', {
-						style: 'currency',
-						currency: 'VND',
-					}).format(price)} ${t('per night')})`}
+					}).format(price)} ${t('/ hour')}`}
 				</span>
 			),
 			sorter: (a, b) => a.price - b.price,
@@ -179,21 +184,12 @@ export default function Department() {
 							value={`${roomNumber._id}_${
 								record.price * search?.days
 							}_${roomNumber.number}`}
-							onChange={handleSelect}
-							disabled={!isAvailable(roomNumber)}>
+							onChange={handleSelect}>
 							{' '}
 							{roomNumber.number}
 						</Checkbox>
 					</div>
 				)),
-		},
-	];
-
-	const columnsWithOutDate = [
-		{
-			title: t('Name'),
-			dataIndex: 'title',
-			sorter: (a, b) => a.title.length - b.title.length,
 		},
 	];
 
@@ -206,10 +202,10 @@ export default function Department() {
 						<AppHeader></AppHeader>
 					</Header>
 					<Content>
-						<div className='department-page'>
-							<div className='department-page_containner'>
-								<div className='department-listroom'>
-									<div className='department-breadcum'>
+						<div className='grooming-page'>
+							<div className='grooming-page_containner'>
+								<div className='grooming-listroom'>
+									<div className='grooming-breadcum'>
 										<Breadcrumb separator='>'>
 											<Breadcrumb.Item>
 												<NavLink to='/'>
@@ -248,96 +244,138 @@ export default function Department() {
 												alignItems: 'center',
 												fontWeight: 700,
 											}}>
-											{sumPrice !== 0 ? (
-												<span
-													style={{
-														fontWeight: 700,
-														fontSize: 23,
-													}}>
-													{'Total'}:{' '}
-													{new Intl.NumberFormat(
-														'vi-VI',
-														{
-															style: 'currency',
-															currency: 'VND',
-														},
-													).format(sumPrice)}
-												</span>
-											) : null}
 											<Button
+												style={{ marginInline: 15 }}
 												type='primary'
 												disabled={
-													sumPrice <= 0 ? true : false
+													!search.datesGrooming ||
+													selectedRooms.length <= 0
+												}
+												onClick={() =>
+													setOpenDetailModal(true)
 												}>
-												<NavLink
-													to={{
-														pathname: '/checkout',
-													}}
-													state={{
-														price: sumPrice,
-														priceList:
-															selectedRooms,
-														depart: location.state,
-													}}>
-													{t('Reversion')}
-												</NavLink>
+												{t('Make an appointment')}
 											</Button>
 										</div>
 									</div>
+									<Modal
+										title={t('Confirm Booking')}
+										centered
+										open={openDetailModal}
+										// onOk={onFinishConfirm}
+										// footer={null}
+										onCancel={() =>
+											setOpenDetailModal(false)
+										}>
+										<Form
+											colon={false}
+											form={form3}
+											name='horizontal_appointment'
+											layout='horizontal'
+											initialValues={{
+												name: user?.name,
+												email: user?.email,
+												phone: user?.phone,
+											}}
+											onFinish={onFinishConfirm}
+											requiredMark={false}>
+											<Form.Item
+												name='name'
+												label={<RiFileUserLine />}>
+												<Input
+													placeholder={t('Name')}
+												/>
+											</Form.Item>
+											<Form.Item
+												name='email'
+												label={<RiMailSendLine />}>
+												<Input
+													placeholder={t('Email')}
+												/>
+											</Form.Item>
 
-									<div className='department-page_roomcontent'>
+											<Form.Item
+												name='phone'
+												label={<RiPhoneLine />}>
+												<Input
+													placeholder={t(
+														'Phone Number',
+													)}
+												/>
+											</Form.Item>
+
+											<Form.Item
+												style={{
+													display: 'flex',
+													justifyContent: 'flex-end',
+
+													marginBlock: '5px -5px',
+												}}>
+												<Button
+													style={{
+														marginInline:
+															'0px 15px',
+														height: 'fit-content',
+														fontSize: 16,
+														lineHeight: 1.8,
+														borderRadius: 5,
+													}}
+													type='text'
+													onClick={() =>
+														setOpenDetailModal(
+															false,
+														)
+													}>
+													{t('Close')}
+												</Button>
+												<Button
+													style={{
+														height: 'fit-content',
+														fontSize: 16,
+														lineHeight: 1.8,
+														borderRadius: 5,
+														boxShadow:
+															'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
+													}}
+													type='primary'
+													htmlType='submit'>
+													{t('Confirm')}
+												</Button>
+											</Form.Item>
+										</Form>
+									</Modal>
+									<div className='grooming-page_roomcontent'>
 										<Form
 											form={form}
 											requiredMark={false}
 											name='form_bookingdepartpage'
 											layout='horizontal'
 											initialValues={{
-												datesHotels:
-													search.datesHotels && [
-														moment(
-															search
-																?.datesHotels[0],
-														),
-														moment(
-															search
-																?.datesHotels[1],
-														),
-													],
+												datesGrooming:
+													search?.datesGrooming &&
+													moment(
+														search?.datesGrooming,
+													),
 											}}
 											onValuesChange={onFinish}>
 											<Form.Item
-												name='datesHotels'
-												style={{
-													width: '100% !important',
-												}}>
-												<RangePicker
-													style={{
-														width: '100% !important',
+												name='datesGrooming'
+												label={t('Booking time')}>
+												<DatePicker
+													defaultValue={
+														search?.datesGrooming &&
+														moment(
+															search?.datesGrooming,
+														)
+													}
+													showTime={{
+														format: 'HH:mm',
 													}}
-													ranges={{
-														[t('Today')]: [
-															moment(),
-															moment(),
-														],
-														[t('One Week')]: [
-															currentDate,
-															futureWeek,
-														],
-														[t('One Month')]: [
-															currentDate,
-															futureMonth,
-														],
-													}}
-													placeholder={[
-														t('Drop off'),
-														t('Pick up'),
-													]}
 													placement='bottomLeft'
-													className='form-item_bookingdepartpage'
 													format={
 														lang === 'vi'
-															? 'DD-MM-YYYY'
-															: null
+															? `HH:mm, DD-MM-YYYY`
+															: 'HH:mm, YYYY-MM-DD '
 													}
 												/>
 											</Form.Item>
@@ -355,11 +393,7 @@ export default function Department() {
 												x: 800,
 											}}
 											pagination={false}
-											columns={
-												search.days > 0
-													? columnsWithDate
-													: columnsWithOutDate
-											}
+											columns={columnsWithDate}
 											dataSource={dataList}
 											loading={loadingTable}
 										/>

@@ -328,7 +328,12 @@ export default function Search() {
 													return (
 														<NavLink
 															key={depart._id}
-															to={`/department/${depart._id}`}
+															to={
+																search.services ===
+																'hotel'
+																	? `/department/${depart._id}`
+																	: `/grooming/${depart._id}`
+															}
 															state={{
 																...depart,
 															}}>

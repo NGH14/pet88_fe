@@ -56,6 +56,7 @@ import {
 	RiFileTextLine,
 	RiMailLine,
 	RiPhoneLine,
+	RiShoppingCartLine,
 	RiUser3Line,
 	RiUserSettingsLine,
 } from 'react-icons/ri';
@@ -113,7 +114,7 @@ export const CalendarAdmin = () => {
 	const [selectedDate, setSelectedDate] = useState({ start: 0, end: 0 });
 	const [selecteDetaildDate, setSelectedDetailDate] = useState({});
 	const [selecteDetailType, setSelecteDetailType] = useState(false);
-	const { user, GetAllUser } = UserAuth();
+	const { email, GetAllUser } = UserAuth();
 	const photo =
 		'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
 	const [disabled, setDisabled] = useState(false);
@@ -135,7 +136,6 @@ export const CalendarAdmin = () => {
 	});
 
 	const onChange = (value, selectedOptions) => {
-		console.log({ value, selectedOptions });
 		setSelectedGroomingRoomId(selectedOptions[1].value);
 		setSelectedGroomingRoomData(selectedOptions[0]);
 		fetchEvent(selectedOptions[1].value);
@@ -198,6 +198,7 @@ export const CalendarAdmin = () => {
 			console.error(error);
 		}
 	};
+
 	const fetchEvent = async (id) => {
 		const roomId = id || selectedGroomingRoomId;
 		try {
@@ -212,6 +213,7 @@ export const CalendarAdmin = () => {
 					end: new Date(data.endDate),
 					id: data.id,
 					title: data.title,
+					order: data.order,
 				});
 			});
 
@@ -227,6 +229,7 @@ export const CalendarAdmin = () => {
 				`http://localhost:3001/api/grooming/availability/${selectedGroomingRoomId}`,
 				{
 					dates: {
+						name: value.name,
 						startDate: value.start,
 						endDate: value.end,
 						id: uid(),
@@ -245,7 +248,12 @@ export const CalendarAdmin = () => {
 		const endDate = value?.end || selecteDetaildDate.end.getTime();
 		const title = value?.title || selecteDetaildDate.title;
 		const id = value?.id || selecteDetaildDate.id;
-		const order = value?.order || selecteDetaildDate.order;
+		const order =
+			{
+				name: value.name,
+				email: value.email,
+				phone: value.phone,
+			} || selecteDetaildDate.order;
 
 		try {
 			await axios.put(
@@ -254,7 +262,7 @@ export const CalendarAdmin = () => {
 					startDate,
 					endDate,
 					title,
-					order
+					order,
 				},
 			);
 		} catch (error) {
@@ -317,14 +325,27 @@ export const CalendarAdmin = () => {
 			if (!allDay && droppedOnAllDaySlot) {
 				event.allDay = true;
 			}
-			FetchUpdateEvent({ start, end, title: event.title, id: event.id, order: event.order });
+			FetchUpdateEvent({
+				start,
+				end,
+				title: event.title,
+				id: event.id,
+				order: event.order,
+			});
 
 			setAllEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
 				return [
 					...filtered,
-					{ ...existing, start, end, resourceId, allDay, order: event.order },
+					{
+						...existing,
+						start,
+						end,
+						resourceId,
+						allDay,
+						order: event.order,
+					},
 				];
 			});
 		},
@@ -333,18 +354,26 @@ export const CalendarAdmin = () => {
 
 	const resizeEvent = useCallback(
 		({ event, start, end }) => {
-			FetchUpdateEvent({ start, end, title: event.title, id: event.id,order: event.order });
+			FetchUpdateEvent({
+				start,
+				end,
+				title: event.title,
+				id: event.id,
+				order: event.order,
+			});
 
 			setAllEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [...filtered, { ...existing, start, end, order: event.order }];
+				return [
+					...filtered,
+					{ ...existing, start, end, order: event.order },
+				];
 			});
 		},
 		[setAllEvents],
 	);
 
-	console.log(allEvents)
 	const onNavigate = useCallback(
 		(newDate) => setDefaultDate(newDate),
 		[setDefaultDate],
@@ -364,7 +393,7 @@ export const CalendarAdmin = () => {
 			setUserDataOpion(option);
 			setUserData(list);
 		} catch (error) {
-			toast.error(t('Fail to load user data'));
+			toast.error(t('Fail to load email data'));
 			console.log(error);
 		}
 	};
@@ -380,10 +409,10 @@ export const CalendarAdmin = () => {
 			selectedGroomingRoomData.price;
 
 		const bookingUser = values.account
-			? userData.find((u) => u.email === values.user)
+			? userData.find((u) => u.email === values.email)
 			: {
 					id: 'guest',
-					email: values.user || 'guest',
+					email: values.email || 'guest',
 					phone: values.phone,
 					name: values.name,
 			  };
@@ -401,6 +430,7 @@ export const CalendarAdmin = () => {
 						days: 0,
 						price,
 						start,
+						name: bookingUser.name || 'guest',
 						end,
 						paymentMethod: 'cash',
 						service: 'grooming',
@@ -434,13 +464,20 @@ export const CalendarAdmin = () => {
 
 	const onFinishUpdateEvent = (values) => {
 		const title = values?.title;
-
 		if (values?.title) {
 			FetchUpdateEvent(values);
 			setAllEvents(
 				allEvents.map((obj) => {
 					if (obj.id === selecteDetaildDate.id) {
-						return { ...obj, title };
+						return {
+							...obj,
+							title,
+							order: {
+								name: values.name,
+								email: values.email,
+								phone: values.phone,
+							},
+						};
 					}
 					return obj;
 				}),
@@ -450,13 +487,12 @@ export const CalendarAdmin = () => {
 		setOpenDetailModal(false);
 	};
 
-	const handleDeleteEvent =  () => {
+	const handleDeleteEvent = () => {
 		FetchDeleteEvent(selecteDetaildDate.id);
 		setAllEvents(
 			allEvents.filter((item) => item.id !== selecteDetaildDate.id),
-			);
+		);
 		setOpenDetailModal(false);
-	
 	};
 
 	return (
@@ -526,7 +562,7 @@ export const CalendarAdmin = () => {
 							</Form.Item>
 
 							{accountType ? (
-								<Form.Item name='user' label={<RiMailLine />}>
+								<Form.Item name='email' label={<RiMailLine />}>
 									<Select
 										showSearch
 										options={userDataOption}
@@ -544,7 +580,7 @@ export const CalendarAdmin = () => {
 										<Input />
 									</Form.Item>
 									<Form.Item
-										name='user'
+										name='email'
 										label={<RiMailLine />}>
 										<Input />
 									</Form.Item>
@@ -733,6 +769,13 @@ export const CalendarAdmin = () => {
 							form={form}
 							name='horizontal_login'
 							layout='horizontal'
+							initialValues={{
+								title: selecteDetaildDate?.title,
+								name: selecteDetaildDate?.order?.name,
+								email: selecteDetaildDate?.order?.email,
+								phone: selecteDetaildDate?.order?.phone,
+
+							}}
 							onFinish={onFinishUpdateEvent}
 							requiredMark={false}>
 							<Form.Item
@@ -753,11 +796,44 @@ export const CalendarAdmin = () => {
 								]}>
 								{selecteDetailType ? (
 									<Input
-										defaultValue={selecteDetaildDate?.title}
 										placeholder={t('Enter event title')}
 									/>
 								) : (
 									<span>{selecteDetaildDate?.title}</span>
+								)}
+							</Form.Item>
+							<Form.Item name='name' label={<RiUser3Line />}>
+								{selecteDetailType ? (
+									<Input
+										placeholder={t('Enter event title')}
+									/>
+								) : (
+									<span>
+										{selecteDetaildDate?.order?.name}
+									</span>
+								)}
+							</Form.Item>
+							<Form.Item name='email' label={<RiMailLine />}>
+								{selecteDetailType ? (
+									<Input
+										placeholder={t('Enter event title')}
+									/>
+								) : (
+									<span>
+										{selecteDetaildDate?.order?.email}
+									</span>
+								)}
+							</Form.Item>
+
+							<Form.Item name='phone' label={<RiPhoneLine />}>
+								{selecteDetailType ? (
+									<Input
+										placeholder={t('Enter event title')}
+									/>
+								) : (
+									<span>
+										{selecteDetaildDate?.order?.phone}
+									</span>
 								)}
 							</Form.Item>
 							<Form.Item
@@ -791,6 +867,40 @@ export const CalendarAdmin = () => {
 									</span>
 								</Form.Item>
 							</Form.Item>
+							<Form.Item
+								label={
+									<RiCoinLine
+										style={{
+											fontSize: 14,
+											textTransform: 'capitalize',
+										}}></RiCoinLine>
+								}
+								name='start'
+								style={{
+									display: 'flex',
+									alignContent: 'center',
+								}}>
+								<span>
+									{new Intl.NumberFormat('vi-VI', {
+										style: 'currency',
+										currency: 'VND',
+									}).format(
+										(new Date(
+											selecteDetaildDate?.end,
+										).getHours() -
+											new Date(
+												selecteDetaildDate?.start,
+											).getHours()) *
+											2 *
+											selectedGroomingRoomData.price,
+									)}
+								</span>
+							</Form.Item>
+							<Form.Item label={<RiShoppingCartLine />}>
+									<span>
+										{selecteDetaildDate?.order?._id}
+									</span>
+							</Form.Item>
 
 							<Form.Item
 								style={{
@@ -811,19 +921,21 @@ export const CalendarAdmin = () => {
 									onClick={() => setOpenDetailModal(false)}>
 									{t('Close')}
 								</Button>
-								<Button
-									style={{
-										height: 'fit-content',
-										fontSize: 16,
-										lineHeight: 1.8,
-										borderRadius: 5,
-										boxShadow:
-											'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
-									}}
-									type='primary'
-									htmlType='submit'>
-									{t('Confirm')}
-								</Button>
+								{selecteDetailType ? (
+									<Button
+										style={{
+											height: 'fit-content',
+											fontSize: 16,
+											lineHeight: 1.8,
+											borderRadius: 5,
+											boxShadow:
+												'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
+										}}
+										type='primary'
+										htmlType='submit'>
+										{t('Confirm')}
+									</Button>
+								) : null}
 							</Form.Item>
 						</Form>
 					</Modal>
@@ -869,7 +981,7 @@ export const CalendarAdmin = () => {
 												).add(3, 'W');
 												onChange(newValue);
 											}}>
-											3 {t('week')}
+											3 {t('weeks')}
 										</Button>
 									</Menu.Item>
 									<Menu.Item>
@@ -982,7 +1094,6 @@ export const CalendarAdmin = () => {
 					onSelectSlot={handleSelectSlot}
 					selectable={true}
 					messages={messages}
-					
 					localizer={localizer}
 					date={defaultDate}
 					culture={lang}

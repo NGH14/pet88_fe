@@ -512,7 +512,7 @@ export default function TableGrooming() {
 									boxShadow:
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
-								onClick={onCloseCreateUser}>
+								onClick={onCloseUpdateRoom}>
 								{t('Close')}
 							</Button>
 							<Button
