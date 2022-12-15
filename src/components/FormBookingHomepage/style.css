@@ -57,8 +57,11 @@
 
     
 @media only screen and (max-width: 767px) {
+    .form-item_datepicker{
+        width: 100%;
+    }
     .form_bookingservice {
-        width: 300px;
+        width: 350px;
     }
     .form-item_bookinghomepage, .ant-select-selector{
         width: 100% !important;

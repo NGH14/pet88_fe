@@ -273,9 +273,17 @@ export const CalendarAdmin = () => {
 	const FetchDeleteEvent = async (value) => {
 		const id = value.id || selecteDetaildDate.id;
 		try {
-			await axios.put(
-				`http://localhost:3001/api/grooming/room/event/delete/${id}`,
-			);
+			await Promise.all([
+				axios.put(
+					`http://localhost:3001/api/grooming/room/event/delete/${id}`,
+				),
+				axios.put(
+					`http://localhost:3001/api/order/update-status/${selecteDetaildDate.order._id}`, {
+						paid: "cancel",
+						confirm: "cancel",
+					}
+				),
+			]);
 		} catch (error) {
 			console.error(error);
 		}
@@ -774,7 +782,6 @@ export const CalendarAdmin = () => {
 								name: selecteDetaildDate?.order?.name,
 								email: selecteDetaildDate?.order?.email,
 								phone: selecteDetaildDate?.order?.phone,
-
 							}}
 							onFinish={onFinishUpdateEvent}
 							requiredMark={false}>
@@ -897,9 +904,7 @@ export const CalendarAdmin = () => {
 								</span>
 							</Form.Item>
 							<Form.Item label={<RiShoppingCartLine />}>
-									<span>
-										{selecteDetaildDate?.order?._id}
-									</span>
+								<span>{selecteDetaildDate?.order?._id}</span>
 							</Form.Item>
 
 							<Form.Item

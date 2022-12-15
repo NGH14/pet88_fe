@@ -52,10 +52,13 @@ function AppHeader() {
 	});
 
 	const showDrawer = () => {
+		document.body.style.overflow = 'hidden !important';
+
 		setVisible(true);
 	};
 
 	const onClose = () => {
+		document.body.style.overflow = 'unset';
 		setVisible(false);
 	};
 

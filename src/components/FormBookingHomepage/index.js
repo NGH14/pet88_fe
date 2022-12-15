@@ -93,6 +93,7 @@ const FormBookingHomepage = () => {
 					padding: 20,
 					borderRadius: 15,
 					marginBlock: '10px 20px',
+					flexWrap: 'wrap',
 				}}>
 				<span>{t("I'm looking for service")}:</span>
 				<Radio.Group
@@ -145,7 +146,7 @@ const FormBookingHomepage = () => {
 				</Form.Item>
 				{type === 'hotel' ? (
 					<Form.Item
-						className='form-item_bookinghomepage_others'
+						className='form-item_bookinghomepage_others form-item_datepicker'
 						name='datesHotels'
 						label={t('For these days')}>
 						<RangePicker
@@ -164,7 +165,8 @@ const FormBookingHomepage = () => {
 
 				{type === 'grooming' ? (
 					<Form.Item
-						className='form-item_bookinghomepage_others'
+						style={{ width: '100%' }}
+						className='form-item_bookinghomepage_others form-item_datepicker'
 						name='datesGrooming'
 						label={t('Booking time')}>
 						<DatePicker
