@@ -58,6 +58,9 @@ import serviceImg1 from '../../assets/images/Illustration-Bond.png';
 import serviceImg2 from '../../assets/images/Illustration-Schedule.png';
 
 import 'react-before-after-slider-component/dist/build.css';
+import 'antd/es/date-picker/style/index.css';
+import 'antd/es/input/style/index.css';
+
 const { Header, Content, Footer } = Layout;
 const style = {
 	background: '#0092ff',
@@ -113,7 +116,7 @@ function Homepage() {
 				</Header>
 				<Content>
 					<HeroImage />
-					<div className='white'>
+					<div className='homepage_whitebackground'>
 						<div className='wrap-content'>
 							<p>{t('leading partner')}</p>
 							<Swiper

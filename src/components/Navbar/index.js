@@ -446,8 +446,7 @@ function AppHeader() {
 												})}
 											</div>
 										</div>
-
-										<div className=''>
+										<div className='mobileHidden'>
 											<Button
 												style={{ fontWeight: '700' }}
 												type='text'
@@ -461,8 +460,24 @@ function AppHeader() {
 														}}
 													/>
 												}>
-												{!visible && t('Logout')}
+												{t('Logout')}
 											</Button>
+										</div>
+
+										<div className='mobileVisible'>
+											<Button
+												style={{ fontWeight: '700' }}
+												type='text'
+												onClick={(e) =>
+													handleSignOut(e)
+												}
+												icon={
+													<LogoutOutlined
+														style={{
+															fontWeight: '700',
+														}}
+													/>
+												}></Button>
 										</div>
 									</div>
 								</div>

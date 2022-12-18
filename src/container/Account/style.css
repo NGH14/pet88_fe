@@ -4,10 +4,11 @@ general
 */
 
 .ant-input {
-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .account-page {
+	overflow-y: hidden;
 	border-radius: 45px;
 	padding: 50px;
 	display: flex;
@@ -50,7 +51,6 @@ border-radius: 5px;
 .form_user-account {
 	text-transform: capitalize;
 }
-
 
 .account-tabpane {
 	min-height: 400px;
@@ -123,7 +123,6 @@ border-radius: 5px;
 	align-items: center;
 	padding: 20px 0px 10px;
 }
-
 
 .header .logo {
 	font-size: 22px;
@@ -234,6 +233,14 @@ border-radius: 5px;
 }
 
 @media only screen and (max-width: 767px) {
+	.account-page {
+		padding: 20px;
+	}
+
+
+	.fullwidth-button, .form-account .ant-picker {
+		width: 100% !important;
+	}
 	.accountLayout {
 		font-size: 12px;
 	}

@@ -156,7 +156,7 @@ const FormBookingHomepage = () => {
 								[t('One Month')]: [currentDate, futureMonth],
 							}}
 							placeholder={[t('Drop off'), t('Pick up')]}
-							placement='bottomLeft'
+							placement='bottomRight'
 							className='form-item_bookinghomepage'
 							format={lang === 'vi' ? 'DD-MM-YYYY' : null}
 						/>

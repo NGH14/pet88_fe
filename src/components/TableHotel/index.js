@@ -663,7 +663,6 @@ export default function TableHotel() {
 					<div
 						style={{
 							marginTop: 20,
-
 							display: 'flex',
 							gap: 5,
 							justifyContent: 'flex-end',

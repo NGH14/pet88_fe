@@ -224,7 +224,7 @@ const Account = () => {
 								)}
 							</p>
 						</div>
-						<div className='form-account '>
+						<div className='form-account'>
 							<Tabs tabPosition='top'>
 								<TabPane tab={t('Profile')} key='1'>
 									<div className='account-tab_formcontain '>
@@ -332,11 +332,12 @@ const Account = () => {
 												<Input disabled />
 											</Form.Item>
 											<Form.Item
-												wrapperCol={{
-													offset: 4,
-													span: 16,
+												style={{
+													display: 'flex',
+													justifyContent: 'flex-end',
 												}}>
 												<Button
+													className='fullwidth-button'
 													loading={loading}
 													style={{
 														height: 'fit-content',
@@ -484,6 +485,9 @@ const Account = () => {
 							<Tabs tabPosition='top'>
 								<TabPane tab={t('History')} key='3'>
 									<Table
+										scroll={{
+											x: 800,
+										}}
 										loading={loadingOrder}
 										columns={columns}
 										dataSource={orderList}
