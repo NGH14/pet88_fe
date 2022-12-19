@@ -1,81 +1,126 @@
-.site-calendar-customize-header-wrapper{
-    width: 200px;
+.site-calendar-customize-header-wrapper {
+	width: 250px;
 }
 
 .ant-picker-calendar {
-    font-size: 11px;
-    font-weight: 500;
+	font-size: 11px;
+	font-weight: 500;
 }
 
 .ant-picker-date-panel .ant-picker-content th {
-    width: 20px;
-    
+	width: 20px;
 }
 
-
-
-.calendar-container{
-    display: flex;
-    flex-wrap: wrap;
-    background-color: white;
-    width: 100%;
-    padding: 15px;
-    border-radius: 5px;
-    height: 100%;
-gap: 20px;}
+.calendar-container {
+	display: flex;
+	flex-wrap: wrap;
+	background-color: white;
+	width: 100%;
+	padding: 15px;
+	border-radius: 5px;
+	height: 100%;
+	gap: 15px;
+}
 
 .calendar-container .ant-dropdown-menu-title-content {
-    display: flex !important;
-    justify-content: space-around !important;
+	display: flex !important;
+	justify-content: space-around !important;
 }
 
-
-.calendar-container .rbc-btn-group  {
-    border: unset;
-    background-color: #f8f9fe;
-    color: #101928;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px 0 hsl(0deg 0% 88% / 50%);
+.subcalendar_eventpicker {
 }
 
-.rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
-    border: unset;
-    background-color: #101928;
-    color: #f8f9fe;
-    border-radius: 8px;   
+.calendar-container .rbc-btn-group {
+	border: unset;
+	background-color: #f8f9fe;
+	color: #101928;
+	padding: 10px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px 0 hsl(0deg 0% 88% / 50%);
 }
 
-.rbc-toolbar button:active:hover, .rbc-toolbar button:active:focus, .rbc-toolbar button.rbc-active:hover, .rbc-toolbar button.rbc-active:focus {
-    color: #f8f9fe;
-    background-color: #101928;
-    border-color: #101928;
+.rbc-toolbar button:active,
+.rbc-toolbar button.rbc-active {
+	border: unset;
+	background-color: #101928;
+	color: #f8f9fe;
+	border-radius: 8px;
 }
 
+.rbc-toolbar button:active:hover,
+.rbc-toolbar button:active:focus,
+.rbc-toolbar button.rbc-active:hover,
+.rbc-toolbar button.rbc-active:focus {
+	color: #f8f9fe;
+	background-color: #101928;
+	border-color: #101928;
+}
 
 .calendar-container .rbc-btn-group button {
-    border: unset;
-    border-radius: 8px;   
-    padding-inline: 15px;
+	border: unset;
+	border-radius: 8px;
+	padding-inline: 15px;
 }
 
 .rbc-btn-group > button:not(:first-child):not(:last-child) {
-    border-radius: 8px;
+	border-radius: 8px;
 }
 .rbc-calendar {
-    height: 580px; 
-    flex: 1 1;
+	height: 580px;
+	flex: 1 1;
 }
 
 .rbc-toolbar {
-    font-size: 14px;
-    text-transform: capitalize;
+	font-size: 14px;
+	text-transform: capitalize;
 }
 
-.rbc-date-cell.rbc-current >.rbc-button-link {
-    color: rgb(24, 144, 255);
-    font-weight: bold;
-    text-decoration: underline;
-    
+.rbc-date-cell.rbc-current > .rbc-button-link {
+	color: rgb(24, 144, 255);
+	font-weight: bold;
+	text-decoration: underline;
 }
 
+.divider {
+ position: relative; margin-right: 30px;
+}
+
+.divider-vertical {
+	position: absolute;
+	display: table;
+	text-align: center;
+	height: 100%;
+}
+.center-element {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+}
+.divider-vertical .center-element:before, .divider-vertical .center-element:after {
+    position: absolute;
+    content: "";
+    width: 0.5px;
+    left: 50%;
+    border-left: 1px solid rgba(153, 153, 153, 0.33);
+}
+.divider-vertical .center-element:before {
+    bottom: 50%;
+    top: 0;
+    margin-bottom: 20px;
+}
+.divider-vertical .center-element:after {
+    top: 50%;
+    bottom: 0;
+    margin-top: 20px;
+}
+
+
+@media (max-width: 767px) {
+	.site-calendar-customize-header-wrapper {
+		flex-grow: 10;
+	}
+    .divider {
+        display: none;
+    }
+
+}

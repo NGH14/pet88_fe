@@ -58,6 +58,12 @@ export default function Admin() {
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const { lang, SetLanguage } = UserLanguage();
 
+	const siteBarStyle = {
+		'@media (max-width: 767px)': {
+			display: 'none',
+		},
+	};
+
 	const items = [
 		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
 
@@ -91,7 +97,9 @@ export default function Admin() {
 					style={{
 						minHeight: '100vh',
 					}}>
-					<Sider collapsed={collapsed}>
+					<Sider
+						collapsed={collapsed}
+						className={collapsed && 'admin-sitebar'}>
 						<NavLink to='/admin'>
 							<div className='logo_admin-container'>
 								{collapsed ? (
@@ -148,7 +156,6 @@ export default function Admin() {
 						</Header>
 						<Content
 							style={{
-								padding: '0 16px',
 								backgroundColor: '#F7F8FA',
 							}}>
 							<div

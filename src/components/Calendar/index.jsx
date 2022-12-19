@@ -14,6 +14,7 @@ import {
 	Col,
 	ConfigProvider,
 	DatePicker,
+	Divider,
 	Dropdown,
 	Form,
 	Input,
@@ -106,7 +107,7 @@ export const CalendarAdmin = () => {
 	const [selectedGroomingRoomData, setSelectedGroomingRoomData] = useState(
 		{},
 	);
-
+	const [subCalendarCollapse, setSubCalendarCollapse] = useState(false);
 	const [groomingListOption, setGroomingListOption] = useState({});
 	const [defaultDate, setDefaultDate] = useState(new Date());
 	const [defaulGroomingOpion, setDefaulGroomingOpion] = useState([]);
@@ -278,10 +279,11 @@ export const CalendarAdmin = () => {
 					`http://localhost:3001/api/grooming/room/event/delete/${id}`,
 				),
 				axios.put(
-					`http://localhost:3001/api/order/update-status/${selecteDetaildDate.order._id}`, {
-						paid: "cancel",
-						confirm: "cancel",
-					}
+					`http://localhost:3001/api/order/update-status/${selecteDetaildDate.order._id}`,
+					{
+						paid: 'cancel',
+						confirm: 'cancel',
+					},
 				),
 			]);
 		} catch (error) {
@@ -506,156 +508,118 @@ export const CalendarAdmin = () => {
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
 			<div className='calendar-container'>
-				<div className='site-calendar-customize-header-wrapper'>
-					<Modal
-						title={
-							<div
-								style={{
-									width: '100%',
-									cursor: 'move',
-								}}
-								onMouseOver={() => {
-									if (disabled) {
-										setDisabled(false);
-									}
-								}}
-								onMouseOut={() => {
-									setDisabled(true);
-								}}
-								onFocus={() => {}}
-								onBlur={() => {}}
-								// end
-							>
-								{t('Add new event')}
-							</div>
-						}
-						modalRender={(modal) => (
-							<Draggable
-								disabled={disabled}
-								bounds={bounds}
-								onStart={(event, uiData) =>
-									onStart(event, uiData)
-								}>
-								<div ref={draggleRef}>{modal}</div>
-							</Draggable>
-						)}
-						centered
-						open={openCreateModal}
-						onOk={() => setOpenCreateModal(false)}
-						footer={null}
-						onCancel={() => setOpenCreateModal(false)}>
-						<Form
-							colon={false}
-							form={form}
-							name='horizontal_login'
-							layout='horizontal'
-							onFinish={onFinishCreateEvent}
-							requiredMark={false}>
-							<Form.Item
-								label={
-									<RiFileTextLine
-										style={{
-											fontSize: 14,
-											textTransform: 'capitalize',
-										}}></RiFileTextLine>
+				<Modal
+					title={
+						<div
+							className='createEvent_btn'
+							style={{
+								width: '100%',
+								cursor: 'move',
+							}}
+							onMouseOver={() => {
+								if (disabled) {
+									setDisabled(false);
 								}
-								name='title'
-								rules={[
-									{
-										required: true,
-										message: t('Please enter the title'),
-									},
-								]}>
-								<Input placeholder={t('Enter event title')} />
-							</Form.Item>
-
-							{accountType ? (
-								<Form.Item name='email' label={<RiMailLine />}>
-									<Select
-										showSearch
-										options={userDataOption}
-										filterOption={(input, option) =>
-											(option?.label ?? '')
-												.toLowerCase()
-												.includes(input.toLowerCase())
-										}></Select>
-								</Form.Item>
-							) : (
-								<>
-									<Form.Item
-										name='name'
-										label={<RiUser3Line />}>
-										<Input />
-									</Form.Item>
-									<Form.Item
-										name='email'
-										label={<RiMailLine />}>
-										<Input />
-									</Form.Item>
-
-									<Form.Item
-										name='phone'
-										label={<RiPhoneLine />}>
-										<Input />
-									</Form.Item>
-								</>
-							)}
-							<Form.Item
-								label={<RiUserSettingsLine />}
-								name='account'
-								initialValue={true}>
-								<Radio.Group
-									value={accountType}
-									onChange={(e) =>
-										setAccountType(e.target.value)
-									}>
-									<Radio value={false}>{t('Guest')}</Radio>
-									<Radio value={true}>
-										{t('Has Account')}
-									</Radio>
-								</Radio.Group>
-							</Form.Item>
-							<Form.Item
-								style={{
-									marginBottom: 0,
-								}}>
-								<Form.Item
-									label={
-										<RiCalendarEventFill
-											style={{
-												fontSize: 14,
-												textTransform: 'capitalize',
-											}}></RiCalendarEventFill>
-									}
-									name='start'
+							}}
+							onMouseOut={() => {
+								setDisabled(true);
+							}}
+							onFocus={() => {}}
+							onBlur={() => {}}
+							// end
+						>
+							{t('Add new event')}
+						</div>
+					}
+					modalRender={(modal) => (
+						<Draggable
+							cancel='.drag-button_modal .createEvent_form .createEvent_btn'
+							disabled={disabled}
+							bounds={bounds}
+							onStart={(event, uiData) => onStart(event, uiData)}>
+							<div ref={draggleRef}>{modal}</div>
+						</Draggable>
+					)}
+					centered
+					open={openCreateModal}
+					onOk={() => setOpenCreateModal(false)}
+					footer={null}
+					onCancel={() => setOpenCreateModal(false)}>
+					<Form
+						className='createEvent_form'
+						colon={false}
+						form={form}
+						name='horizontal_login'
+						layout='horizontal'
+						onFinish={onFinishCreateEvent}
+						requiredMark={false}>
+						<Form.Item
+							label={
+								<RiFileTextLine
 									style={{
-										display: 'flex',
-										alignContent: 'center',
-									}}>
-									<span>
-										{moment(
-											new Date(
-												selectedDate?.start,
-											).getTime(),
-										).format(
-											'dddd, DD MMM YYYY _ hh:mm A',
-										)}{' '}
-										-{' '}
-										{moment(
-											new Date(
-												selectedDate?.end,
-											).getTime(),
-										).format('hh:mm A')}{' '}
-									</span>
-								</Form.Item>
+										fontSize: 14,
+										textTransform: 'capitalize',
+									}}></RiFileTextLine>
+							}
+							name='title'
+							rules={[
+								{
+									required: true,
+									message: t('Please enter the title'),
+								},
+							]}>
+							<Input placeholder={t('Enter event title')} />
+						</Form.Item>
+
+						{accountType ? (
+							<Form.Item name='email' label={<RiMailLine />}>
+								<Select
+									showSearch
+									options={userDataOption}
+									filterOption={(input, option) =>
+										(option?.label ?? '')
+											.toLowerCase()
+											.includes(input.toLowerCase())
+									}></Select>
 							</Form.Item>
+						) : (
+							<>
+								<Form.Item name='name' label={<RiUser3Line />}>
+									<Input />
+								</Form.Item>
+								<Form.Item name='email' label={<RiMailLine />}>
+									<Input />
+								</Form.Item>
+
+								<Form.Item name='phone' label={<RiPhoneLine />}>
+									<Input />
+								</Form.Item>
+							</>
+						)}
+						<Form.Item
+							label={<RiUserSettingsLine />}
+							name='account'
+							initialValue={true}>
+							<Radio.Group
+								value={accountType}
+								onChange={(e) =>
+									setAccountType(e.target.value)
+								}>
+								<Radio value={false}>{t('Guest')}</Radio>
+								<Radio value={true}>{t('Has Account')}</Radio>
+							</Radio.Group>
+						</Form.Item>
+						<Form.Item
+							style={{
+								marginBottom: 0,
+							}}>
 							<Form.Item
 								label={
-									<RiCoinLine
+									<RiCalendarEventFill
 										style={{
 											fontSize: 14,
 											textTransform: 'capitalize',
-										}}></RiCoinLine>
+										}}></RiCalendarEventFill>
 								}
 								name='start'
 								style={{
@@ -663,40 +627,288 @@ export const CalendarAdmin = () => {
 									alignContent: 'center',
 								}}>
 								<span>
-									{new Intl.NumberFormat('vi-VI', {
-										style: 'currency',
-										currency: 'VND',
-									}).format(
-										(new Date(
-											selectedDate?.end,
-										).getHours() -
-											new Date(
-												selectedDate?.start,
-											).getHours()) *
-											2 *
-											selectedGroomingRoomData.price,
-									)}
+									{moment(
+										new Date(selectedDate?.start).getTime(),
+									).format(
+										'dddd, DD MMM YYYY _ hh:mm A',
+									)}{' '}
+									-{' '}
+									{moment(
+										new Date(selectedDate?.end).getTime(),
+									).format('hh:mm A')}{' '}
 								</span>
 							</Form.Item>
+						</Form.Item>
+						<Form.Item
+							label={
+								<RiCoinLine
+									style={{
+										fontSize: 14,
+										textTransform: 'capitalize',
+									}}></RiCoinLine>
+							}
+							name='start'
+							style={{
+								display: 'flex',
+								alignContent: 'center',
+							}}>
+							<span>
+								{new Intl.NumberFormat('vi-VI', {
+									style: 'currency',
+									currency: 'VND',
+								}).format(
+									(new Date(selectedDate?.end).getHours() -
+										new Date(
+											selectedDate?.start,
+										).getHours()) *
+										2 *
+										selectedGroomingRoomData.price,
+								)}
+							</span>
+						</Form.Item>
+						<Form.Item
+							className='drag-button_modal'
+							style={{
+								display: 'flex',
+								justifyContent: 'flex-end',
+								marginBlock: '5px -5px',
+							}}>
+							<Button
+								className='drag-button_modal'
+								style={{
+									marginInline: '0px 15px',
+									height: 'fit-content',
+									fontSize: 16,
+									lineHeight: 1.8,
+									borderRadius: 5,
+								}}
+								type='text'
+								onClick={() => setOpenCreateModal(false)}>
+								{t('Close')}
+							</Button>
+							<Button
+								className='drag-button_modal'
+								style={{
+									height: 'fit-content',
+									fontSize: 16,
+									lineHeight: 1.8,
+									borderRadius: 5,
+									boxShadow:
+										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
+								}}
+								type='primary'
+								htmlType='submit'>
+								{t('Confirm')}
+							</Button>
+						</Form.Item>
+					</Form>
+				</Modal>
+
+				<Modal
+					closable={false}
+					title={
+						<div
+							style={{
+								width: '100%',
+								cursor: 'move',
+								display: 'flex',
+								justifyContent: 'flex-end',
+							}}
+							onMouseOver={() => {
+								if (disabled) {
+									setDisabled(false);
+								}
+							}}
+							onMouseOut={() => {
+								setDisabled(true);
+							}}
+							onFocus={() => {}}
+							onBlur={() => {}}>
+							<Button
+								className='drag-button_modal'
+								type='text'
+								onClick={() => handleDeleteEvent()}>
+								<RiDeleteBinLine></RiDeleteBinLine>{' '}
+							</Button>
+							<Button
+								className='drag-button_modal'
+								type='text'
+								onClick={() =>
+									setSelecteDetailType(!selecteDetailType)
+								}>
+								<RiEditLine></RiEditLine>{' '}
+							</Button>
+							<Button
+								className='drag-button_modal'
+								type='text'
+								onClick={() => setOpenDetailModal(false)}>
+								<RiCloseFill
+									style={{
+										fontSize: 18,
+									}}></RiCloseFill>{' '}
+							</Button>
+						</div>
+					}
+					modalRender={(modal) => (
+						<Draggable
+							cancel='.drag-button_modal .updateEvent_form'
+							disabled={disabled}
+							bounds={bounds}
+							onStart={(event, uiData) => onStart(event, uiData)}>
+							<div ref={draggleRef} style={{}}>
+								{modal}
+							</div>
+						</Draggable>
+					)}
+					centered
+					open={openDetailModal}
+					onOk={() => setOpenDetailModal(false)}
+					footer={null}
+					onCancel={() => setOpenDetailModal(false)}>
+					<Form
+						className='updateEvent_form'
+						colon={false}
+						form={form}
+						name='horizontal_login'
+						layout='horizontal'
+						initialValues={{
+							title: selecteDetaildDate?.title,
+							name: selecteDetaildDate?.order?.name,
+							email: selecteDetaildDate?.order?.email,
+							phone: selecteDetaildDate?.order?.phone,
+						}}
+						onFinish={onFinishUpdateEvent}
+						requiredMark={false}>
+						<Form.Item
+							label={
+								<RiFileTextLine
+									style={{
+										fontSize: 14,
+
+										textTransform: 'capitalize',
+									}}></RiFileTextLine>
+							}
+							name='title'
+							rules={[
+								{
+									required: true,
+									message: t('Please enter the title'),
+								},
+							]}>
+							{selecteDetailType ? (
+								<Input placeholder={t('Enter event title')} />
+							) : (
+								<span>{selecteDetaildDate?.title}</span>
+							)}
+						</Form.Item>
+						<Form.Item name='name' label={<RiUser3Line />}>
+							{selecteDetailType ? (
+								<Input placeholder={t('Enter event title')} />
+							) : (
+								<span>{selecteDetaildDate?.order?.name}</span>
+							)}
+						</Form.Item>
+						<Form.Item name='email' label={<RiMailLine />}>
+							{selecteDetailType ? (
+								<Input placeholder={t('Enter event title')} />
+							) : (
+								<span>{selecteDetaildDate?.order?.email}</span>
+							)}
+						</Form.Item>
+
+						<Form.Item name='phone' label={<RiPhoneLine />}>
+							{selecteDetailType ? (
+								<Input placeholder={t('Enter event title')} />
+							) : (
+								<span>{selecteDetaildDate?.order?.phone}</span>
+							)}
+						</Form.Item>
+						<Form.Item
+							style={{
+								marginBottom: 0,
+							}}>
 							<Form.Item
+								label={
+									<RiCalendarEventFill
+										style={{
+											fontSize: 14,
+											textTransform: 'capitalize',
+										}}></RiCalendarEventFill>
+								}
 								style={{
 									display: 'flex',
-									justifyContent: 'flex-end',
-									marginBlock: '5px -5px',
+									alignContent: 'center',
 								}}>
-								<Button
+								<span>
+									{moment(
+										new Date(
+											selecteDetaildDate?.start,
+										).getTime(),
+									).format('hh:mm A')}{' '}
+									-{' '}
+									{moment(
+										new Date(
+											selecteDetaildDate?.end,
+										).getTime(),
+									).format('hh:mm A')}
+								</span>
+							</Form.Item>
+						</Form.Item>
+						<Form.Item
+							label={
+								<RiCoinLine
 									style={{
-										marginInline: '0px 15px',
-										height: 'fit-content',
-										fontSize: 16,
-										lineHeight: 1.8,
-										borderRadius: 5,
-									}}
-									type='text'
-									onClick={() => setOpenCreateModal(false)}>
-									{t('Close')}
-								</Button>
+										fontSize: 14,
+										textTransform: 'capitalize',
+									}}></RiCoinLine>
+							}
+							name='start'
+							style={{
+								display: 'flex',
+								alignContent: 'center',
+							}}>
+							<span>
+								{new Intl.NumberFormat('vi-VI', {
+									style: 'currency',
+									currency: 'VND',
+								}).format(
+									(new Date(
+										selecteDetaildDate?.end,
+									).getHours() -
+										new Date(
+											selecteDetaildDate?.start,
+										).getHours()) *
+										2 *
+										selectedGroomingRoomData.price,
+								)}
+							</span>
+						</Form.Item>
+						<Form.Item label={<RiShoppingCartLine />}>
+							<span>{selecteDetaildDate?.order?._id}</span>
+						</Form.Item>
+						<Form.Item
+							style={{
+								display: 'flex',
+								justifyContent: 'flex-end',
+
+								marginBlock: '5px -5px',
+							}}>
+							<Button
+								className='drag-button_modal'
+								style={{
+									marginInline: '0px 15px',
+									height: 'fit-content',
+									fontSize: 16,
+									lineHeight: 1.8,
+									borderRadius: 5,
+								}}
+								type='text'
+								onClick={() => setOpenDetailModal(false)}>
+								{t('Close')}
+							</Button>
+							{selecteDetailType ? (
 								<Button
+									className='drag-button_modal'
 									style={{
 										height: 'fit-content',
 										fontSize: 16,
@@ -709,242 +921,13 @@ export const CalendarAdmin = () => {
 									htmlType='submit'>
 									{t('Confirm')}
 								</Button>
-							</Form.Item>
-						</Form>
-					</Modal>
-
-					<Modal
-						closable={false}
-						title={
-							<div
-								style={{
-									width: '100%',
-									cursor: 'move',
-									display: 'flex',
-									justifyContent: 'flex-end',
-								}}
-								onMouseOver={() => {
-									if (disabled) {
-										setDisabled(false);
-									}
-								}}
-								onMouseOut={() => {
-									setDisabled(true);
-								}}
-								onFocus={() => {}}
-								onBlur={() => {}}>
-								<Button
-									type='text'
-									onClick={() => handleDeleteEvent()}>
-									<RiDeleteBinLine></RiDeleteBinLine>{' '}
-								</Button>
-								<Button
-									type='text'
-									onClick={() =>
-										setSelecteDetailType(!selecteDetailType)
-									}>
-									<RiEditLine></RiEditLine>{' '}
-								</Button>
-								<Button
-									type='text'
-									onClick={() => setOpenDetailModal(false)}>
-									<RiCloseFill
-										style={{
-											fontSize: 18,
-										}}></RiCloseFill>{' '}
-								</Button>
-							</div>
-						}
-						modalRender={(modal) => (
-							<Draggable
-								disabled={disabled}
-								bounds={bounds}
-								onStart={(event, uiData) =>
-									onStart(event, uiData)
-								}>
-								<div ref={draggleRef} style={{}}>
-									{modal}
-								</div>
-							</Draggable>
-						)}
-						centered
-						open={openDetailModal}
-						onOk={() => setOpenDetailModal(false)}
-						footer={null}
-						onCancel={() => setOpenDetailModal(false)}>
-						<Form
-							colon={false}
-							form={form}
-							name='horizontal_login'
-							layout='horizontal'
-							initialValues={{
-								title: selecteDetaildDate?.title,
-								name: selecteDetaildDate?.order?.name,
-								email: selecteDetaildDate?.order?.email,
-								phone: selecteDetaildDate?.order?.phone,
-							}}
-							onFinish={onFinishUpdateEvent}
-							requiredMark={false}>
-							<Form.Item
-								label={
-									<RiFileTextLine
-										style={{
-											fontSize: 14,
-
-											textTransform: 'capitalize',
-										}}></RiFileTextLine>
-								}
-								name='title'
-								rules={[
-									{
-										required: true,
-										message: t('Please enter the title'),
-									},
-								]}>
-								{selecteDetailType ? (
-									<Input
-										placeholder={t('Enter event title')}
-									/>
-								) : (
-									<span>{selecteDetaildDate?.title}</span>
-								)}
-							</Form.Item>
-							<Form.Item name='name' label={<RiUser3Line />}>
-								{selecteDetailType ? (
-									<Input
-										placeholder={t('Enter event title')}
-									/>
-								) : (
-									<span>
-										{selecteDetaildDate?.order?.name}
-									</span>
-								)}
-							</Form.Item>
-							<Form.Item name='email' label={<RiMailLine />}>
-								{selecteDetailType ? (
-									<Input
-										placeholder={t('Enter event title')}
-									/>
-								) : (
-									<span>
-										{selecteDetaildDate?.order?.email}
-									</span>
-								)}
-							</Form.Item>
-
-							<Form.Item name='phone' label={<RiPhoneLine />}>
-								{selecteDetailType ? (
-									<Input
-										placeholder={t('Enter event title')}
-									/>
-								) : (
-									<span>
-										{selecteDetaildDate?.order?.phone}
-									</span>
-								)}
-							</Form.Item>
-							<Form.Item
-								style={{
-									marginBottom: 0,
-								}}>
-								<Form.Item
-									label={
-										<RiCalendarEventFill
-											style={{
-												fontSize: 14,
-												textTransform: 'capitalize',
-											}}></RiCalendarEventFill>
-									}
-									style={{
-										display: 'flex',
-										alignContent: 'center',
-									}}>
-									<span>
-										{moment(
-											new Date(
-												selecteDetaildDate?.start,
-											).getTime(),
-										).format('hh:mm A')}{' '}
-										-{' '}
-										{moment(
-											new Date(
-												selecteDetaildDate?.end,
-											).getTime(),
-										).format('hh:mm A')}
-									</span>
-								</Form.Item>
-							</Form.Item>
-							<Form.Item
-								label={
-									<RiCoinLine
-										style={{
-											fontSize: 14,
-											textTransform: 'capitalize',
-										}}></RiCoinLine>
-								}
-								name='start'
-								style={{
-									display: 'flex',
-									alignContent: 'center',
-								}}>
-								<span>
-									{new Intl.NumberFormat('vi-VI', {
-										style: 'currency',
-										currency: 'VND',
-									}).format(
-										(new Date(
-											selecteDetaildDate?.end,
-										).getHours() -
-											new Date(
-												selecteDetaildDate?.start,
-											).getHours()) *
-											2 *
-											selectedGroomingRoomData.price,
-									)}
-								</span>
-							</Form.Item>
-							<Form.Item label={<RiShoppingCartLine />}>
-								<span>{selecteDetaildDate?.order?._id}</span>
-							</Form.Item>
-
-							<Form.Item
-								style={{
-									display: 'flex',
-									justifyContent: 'flex-end',
-
-									marginBlock: '5px -5px',
-								}}>
-								<Button
-									style={{
-										marginInline: '0px 15px',
-										height: 'fit-content',
-										fontSize: 16,
-										lineHeight: 1.8,
-										borderRadius: 5,
-									}}
-									type='text'
-									onClick={() => setOpenDetailModal(false)}>
-									{t('Close')}
-								</Button>
-								{selecteDetailType ? (
-									<Button
-										style={{
-											height: 'fit-content',
-											fontSize: 16,
-											lineHeight: 1.8,
-											borderRadius: 5,
-											boxShadow:
-												'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
-										}}
-										type='primary'
-										htmlType='submit'>
-										{t('Confirm')}
-									</Button>
-								) : null}
-							</Form.Item>
-						</Form>
-					</Modal>
-
+							) : null}
+						</Form.Item>
+					</Form>
+				</Modal>
+				<div
+					className='site-calendar-customize-header-wrapper'
+					style={subCalendarCollapse ? { display: 'none' } : null}>
 					<Calendar
 						headerRender={({ value, onChange }) => {
 							const date = value.format('MMMM, YYYY');
@@ -1082,7 +1065,31 @@ export const CalendarAdmin = () => {
 						/>
 					) : null}
 				</div>
-
+				<div className='divider'>
+					<div className='divider-vertical'>
+						<div className='center-element'>
+							<Button
+								style={{}}
+								// type='text'
+								shape='circle'
+								icon={
+									subCalendarCollapse ? (
+										<IoIosArrowBack
+											style={{ fontSize: 12 }}
+										/>
+									) : (
+										<IoIosArrowForward
+											style={{ fontSize: 12 }}
+										/>
+									)
+								}
+								onClick={() =>
+									setSubCalendarCollapse(!subCalendarCollapse)
+								}
+							/>
+						</div>
+					</div>
+				</div>
 				<DnDCalendar
 					views={['day', 'week', 'month', 'agenda']}
 					resizable
@@ -1094,7 +1101,7 @@ export const CalendarAdmin = () => {
 
 					// 	return { style: { backgroundColor,border } }
 					//   }}
-
+					longPressThreshold={10}
 					onSelectEvent={handleSelectEvent}
 					onSelectSlot={handleSelectSlot}
 					selectable={true}

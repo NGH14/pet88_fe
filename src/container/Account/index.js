@@ -456,9 +456,9 @@ const Account = () => {
 												<Input.Password />
 											</Form.Item>
 											<Form.Item
-												wrapperCol={{
-													offset: 4,
-													span: 16,
+												style={{
+													display: 'flex',
+													justifyContent: 'flex-end',
 												}}>
 												<Button
 													style={{
