@@ -44,7 +44,6 @@ import { UserLanguage } from '../../context/LanguageContext';
 import viVN from 'antd/es/locale/vi_VN';
 import './style.css';
 import { useTranslation } from 'react-i18next';
-import { display, borderRadius } from '@mui/system';
 import axios from 'axios';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import {
@@ -63,6 +62,8 @@ import {
 } from 'react-icons/ri';
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+
+import useWindowDimensions from "../../utils/Dimension"
 
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
@@ -126,6 +127,7 @@ export const CalendarAdmin = () => {
 	const [openCreateModal, setOpenCreateModal] = useState(false);
 	const [openDetailModal, setOpenDetailModal] = useState(false);
 	const [accountType, setAccountType] = React.useState(true);
+	const { height, width } = useWindowDimensions();
 
 	const [form] = Form.useForm();
 

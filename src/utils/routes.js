@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { PrivateRoute } from '../utils/PrivateRoute';
+import { checkPrivateRoute } from '../utils/PrivateRoute';
+
 export const listRoute = (list) => {
 	return list.map((route, index) => {
 		return (
@@ -11,9 +12,9 @@ export const listRoute = (list) => {
 				element={
 					<React.Suspense fallback={<LoadingSpinner />}>
 						{route.private ? (
-							<PrivateRoute>
+							<checkPrivateRoute>
 								<route.element />
-							</PrivateRoute>
+							</checkPrivateRoute>
 						) : (
 							<route.element />
 						)}
