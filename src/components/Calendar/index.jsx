@@ -63,7 +63,7 @@ import {
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
-import useWindowDimensions from "../../utils/Dimension"
+import useWindowDimensions from '../../utils/Dimension';
 
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
@@ -171,7 +171,17 @@ export const CalendarAdmin = () => {
 		getAllUserData();
 	}, []);
 
+	
+	React.useEffect(() => {
+		if (width < 720 ) {
+			setDisabled(true)
+		}
+	}, [useWindowDimensions]);
+
 	React.useEffect(() => form.resetFields(), [openCreateModal]);
+
+
+
 	const fetchGroomingData = async () => {
 		try {
 			const res = await axios.get(`http://localhost:3001/api/grooming`);
