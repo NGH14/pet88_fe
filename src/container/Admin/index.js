@@ -32,7 +32,7 @@ import TableHotel from '../../components/TableHotel';
 import { RiCalendarEventLine, RiCoupon3Line } from 'react-icons/ri';
 import { MdOutlinePayments } from 'react-icons/md';
 import { CgUserList } from 'react-icons/cg';
-import { CalendarAdmin } from './../../components/Calendar';
+import { CalendarAdmin } from './../../components/Calendar/CalendarAdmin';
 import TableRooms from '../../components/TableRooms';
 import TableGrooming from './../../components/TableGrooming/index';
 import TableOrder from '../../components/TableOrder';
