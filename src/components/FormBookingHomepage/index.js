@@ -78,6 +78,10 @@ const FormBookingHomepage = () => {
 
 		navigate('/search');
 	};
+	const disabledDate = (current) => {
+		// Can not select days before today and today
+		return current && current < moment().endOf('day');
+	};
 
 	return (
 		<div className='form_bookingservice'>
@@ -169,6 +173,7 @@ const FormBookingHomepage = () => {
 						name='datesGrooming'
 						label={t('Booking time')}>
 						<DatePicker
+							disabledDate={disabledDate}
 							style={{ width: '100%' }}
 							showTime={{
 								format: 'HH:mm A',

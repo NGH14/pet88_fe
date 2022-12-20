@@ -28,9 +28,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import departImg from '../../assets/images/e10adb13acb1f3da8724a9149a58bd00.jpg';
 import './style.css';
-import Column from 'antd/lib/table/Column';
 import { SearchData } from '../../context/SearchContext';
-import useTimeout from './../../hooks/useTimeout';
 
 const { Option } = Select;
 const { Header, Content, Footer } = Layout;

@@ -67,7 +67,7 @@
 
 
 @media(max-width: 576px) { 
-	.ant-picker-panels { 
+	.ant-picker-panels, .ant-picker-datetime-panel { 
 	  flex-direction: column;
 	} 
 	.form_bookingservice {
