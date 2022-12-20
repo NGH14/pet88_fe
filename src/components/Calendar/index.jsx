@@ -63,7 +63,7 @@ import {
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
-import useWindowDimensions from '../../utils/Dimension';
+import useWindowDimensions from '../../hook/useWindowDimensions';
 
 const DnDCalendar = withDragAndDrop(RB);
 const events = [
@@ -171,16 +171,21 @@ export const CalendarAdmin = () => {
 		getAllUserData();
 	}, []);
 
-	
 	React.useEffect(() => {
-		if (width < 720 ) {
-			setDisabled(true)
+		if (width < 720) {
+			setDisabled(true);
+			setBounds({
+				left: 0,
+				top: 0,
+				bottom: 0,
+				right: 0,
+			});
+		} else {
+			setDisabled(false);
 		}
-	}, [useWindowDimensions]);
+	}, [width]);
 
 	React.useEffect(() => form.resetFields(), [openCreateModal]);
-
-
 
 	const fetchGroomingData = async () => {
 		try {

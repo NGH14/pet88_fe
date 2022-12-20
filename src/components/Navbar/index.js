@@ -8,15 +8,24 @@ import { CloseOutlined, MenuOutlined, LogoutOutlined } from '@ant-design/icons';
 import AuthButton from './../GoogleAuthButton/';
 import { useEffect } from 'react';
 import ChangeLanguage from './../ChangeLanguage/';
+import useScrollPosition from './../../hook/useScrollPosition';
 
 import './style.css';
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { UserAuth } from '../../context/AuthContext';
 
+const pages = [
+	{ title: 'home', url: '/' },
+	{ title: 'about', url: '/sign-in' },
+	{ title: 'service', url: '/dsads' },
+];
+
 function AppHeader() {
 	const locate = useLocation();
 	const navigate = useNavigate();
+	const scrollPosition = useScrollPosition();
+	const [navBg, setNavBg] = useState(false);
 
 	const { user, SignOut } = UserAuth();
 	const [visible, setVisible] = useState(false);
@@ -32,28 +41,12 @@ function AppHeader() {
 		}
 	};
 
-	const [navBg, setNavBg] = useState(false);
-
-	const changeNavBg = () => {
-		window.scrollY >= 50 ? setNavBg(true) : setNavBg(false);
-	};
-
-	const pages = [
-		{ title: 'home', url: '/' },
-		{ title: 'about', url: '/sign-in' },
-		{ title: 'service', url: '/dsads' },
-	];
-
 	useEffect(() => {
-		window.addEventListener('scroll', changeNavBg);
-		return () => {
-			window.removeEventListener('scroll', changeNavBg);
-		};
-	});
+		!scrollPosition > 0 ? setNavBg(false) : setNavBg(true);
+	}, [scrollPosition]);
 
 	const showDrawer = () => {
 		document.body.style.overflow = 'hidden !important';
-
 		setVisible(true);
 	};
 

@@ -20,9 +20,7 @@
 	width: 50%;
 }
 
-.form-item_bookinghomepage_others .ant-picker {
-	width: 100% !important;
-}
+
 
 .form-item_bookinghomepage,
 .ant-select-selector {
@@ -53,6 +51,7 @@
 		0 41.8px 33.4px rgba(0, 0, 0, 0.09), 0 100px 50px rgba(0, 0, 0, 0.1);
 }
 
+
 @media only screen and (max-width: 767px) {
 	.form-item_datepicker {
 		width: 100%;
@@ -77,7 +76,9 @@
 
 @media only screen and (max-width: 350px) {
     
-
+.form-item_bookinghomepage_others .ant-picker {
+	width: 100% !important;
+}
     
 	.form_bookingservice {
 		width: 300px;

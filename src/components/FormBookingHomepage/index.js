@@ -165,11 +165,11 @@ const FormBookingHomepage = () => {
 
 				{type === 'grooming' ? (
 					<Form.Item
-						style={{ width: '100%' }}
 						className='form-item_bookinghomepage_others form-item_datepicker'
 						name='datesGrooming'
 						label={t('Booking time')}>
 						<DatePicker
+							style={{ width: '100%' }}
 							showTime={{
 								format: 'HH:mm A',
 							}}

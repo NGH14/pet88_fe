@@ -6,9 +6,12 @@ html {
 	height: 100%;
 }
 body {
+    overflow: auto;
+
 	height: 100vh;
 	width: 100vw;
 }
+
 
 textarea {
 	padding: 12px;
