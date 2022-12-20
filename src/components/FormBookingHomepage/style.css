@@ -57,7 +57,7 @@
 		width: 100%;
 	}
 	.form_bookingservice {
-		width: 350px;
+		width: 400px;
 	}
 	.form-item_bookinghomepage,
 	.ant-select-selector {
@@ -70,6 +70,9 @@
 	.ant-picker-panels { 
 	  flex-direction: column;
 	} 
+	.form_bookingservice {
+		width: 350px;
+	}
   }
 
 

@@ -68,6 +68,7 @@
 .rbc-calendar {
 	height: 580px;
 	flex: 1 1;
+	max-width: 95%;
 }
 
 .rbc-toolbar {
@@ -124,3 +125,15 @@
     }
 
 }
+
+@media (max-width: 350px) {
+	.site-calendar-customize-header-wrapper {
+		flex-grow: 10;
+	}
+    .divider {
+        display: none;
+    }
+
+
+}
+

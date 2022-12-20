@@ -8,7 +8,7 @@ import { CloseOutlined, MenuOutlined, LogoutOutlined } from '@ant-design/icons';
 import AuthButton from './../GoogleAuthButton/';
 import { useEffect } from 'react';
 import ChangeLanguage from './../ChangeLanguage/';
-import useScrollPosition from './../../hook/useScrollPosition';
+import useScrollPosition from './../../hooks/useScrollPosition';
 
 import './style.css';
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -185,6 +185,32 @@ function AppHeader() {
 														{t('account')}
 													</NavLink>
 												)}
+
+												{user?.role === 'admin' && (
+													<NavLink
+														to='/admin'
+														style={{
+															transition:
+																'color 0.3s ease-in-out',
+
+															color:
+																visible || navBg
+																	? 'black'
+																	: 'white',
+															fontFamily:
+																'Nunito Sans',
+															textTransform:
+																'uppercase',
+															fontWeight: 700,
+															fontSize: 16,
+															padding: 15,
+															borderBottom:
+																'1px solid black',
+														}}>
+														{t('Admin Centre')}
+													</NavLink>
+												)}
+
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={
@@ -383,6 +409,32 @@ function AppHeader() {
 														{t('account')}
 													</NavLink>
 												)}
+
+												{user?.role === 'admin' && (
+													<NavLink
+														to='/admin'
+														style={{
+															transition:
+																'color 0.3s ease-in-out',
+
+															color:
+																visible || navBg
+																	? 'black'
+																	: 'white',
+															fontFamily:
+																'Nunito Sans',
+															textTransform:
+																'uppercase',
+															fontWeight: 700,
+															fontSize: 16,
+															padding: 15,
+															borderBottom:
+																'1px solid black',
+														}}>
+														{t('Admin Centre')}
+													</NavLink>
+												)}
+
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={
@@ -597,6 +649,7 @@ function AppHeader() {
 														{t('account')}
 													</NavLink>
 												)}
+
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={

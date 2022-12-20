@@ -28,22 +28,14 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './style.css';
 
-import { Calendar } from '../../components/Calendar';
-import GoogleAuthButton from '../../components/GoogleAuthButton/';
 import { UserLanguage } from '../../context/LanguageContext';
-import { momentLocalizer } from 'react-big-calendar';
-import { Link } from 'react-router-dom';
-import HeroImage from '../../components/HeroImageHomepage/index';
-// translation catalog
-import { Col, Divider, Row } from 'antd';
 
+import HeroImage from '../../components/HeroImageHomepage/index';
 import { Layout } from 'antd';
 import AppHeader from './../../components/Navbar/';
 import SubNavBar from './../../components/SubNavBar/index';
 import ScrollTrigger from 'react-scroll-trigger';
 import FooterWave from './../../components/Footer/index';
-import ListOfUser from '../../components/ListUser';
-import { UserAuth } from '../../context/AuthContext';
 import SwiperCore, { Autoplay, Pagination as swiperPagination } from 'swiper';
 import 'swiper/css/autoplay';
 import ReactBeforeSliderComponent from 'react-before-after-slider-component';
@@ -55,18 +47,13 @@ import img4 from '../../assets/images/customer-logo-2.webp';
 import FIRST from '../../assets/images/dog-grooming-photography-2.jpg';
 import SECOND from '../../assets/images/dog-grooming-photography-1.jpg';
 import serviceImg1 from '../../assets/images/Illustration-Bond.png';
-import serviceImg2 from '../../assets/images/Illustration-Schedule.png';
 
 import 'react-before-after-slider-component/dist/build.css';
 import 'antd/es/date-picker/style/index.css';
 import 'antd/es/input/style/index.css';
 
 const { Header, Content, Footer } = Layout;
-const style = {
-	background: '#0092ff',
-	padding: '8px 0',
-};
-// initialize i18next with catalog and language to use
+
 SwiperCore.use([Autoplay]);
 
 const FIRST_IMAGE = {
@@ -92,20 +79,12 @@ const cardVariants = {
 
 function Homepage() {
 	const [countUp, setCountUp] = React.useState(false);
-	const { token } = UserAuth();
-	const [t, i18n] = useTranslation();
-	const { lang, SetLanguage } = UserLanguage();
+	const [t] = useTranslation();
+	const { lang } = UserLanguage();
 
 	React.useEffect(() => {
 		document.title = `Pet88 - ${t('Pet Care Services')} `;
 	});
-
-	const changeLanguage = (lng) => {
-		i18n.changeLanguage(lng);
-		SetLanguage(lng);
-	};
-
-	/* ... */
 
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>

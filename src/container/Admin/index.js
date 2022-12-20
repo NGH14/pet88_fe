@@ -58,12 +58,6 @@ export default function Admin() {
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const { lang, SetLanguage } = UserLanguage();
 
-	const siteBarStyle = {
-		'@media (max-width: 767px)': {
-			display: 'none',
-		},
-	};
-
 	const items = [
 		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
 

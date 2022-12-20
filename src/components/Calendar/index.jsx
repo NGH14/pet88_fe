@@ -1,7 +1,3 @@
-import format from 'date-fns/format';
-import getDay from 'date-fns/getDay';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Draggable from 'react-draggable';
@@ -26,11 +22,7 @@ import {
 	Typography,
 } from 'antd';
 
-import {
-	Calendar as RB,
-	dateFnsLocalizer,
-	momentLocalizer,
-} from 'react-big-calendar';
+import { Calendar as RB, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -45,7 +37,6 @@ import viVN from 'antd/es/locale/vi_VN';
 import './style.css';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import { AiOutlineClockCircle } from 'react-icons/ai';
 import {
 	RiCalendarEventFill,
 	RiCloseFill,
@@ -63,9 +54,10 @@ import {
 import { UserAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
-import useWindowDimensions from '../../hook/useWindowDimensions';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const DnDCalendar = withDragAndDrop(RB);
+
 const events = [
 	{
 		id: uid(),
@@ -116,7 +108,7 @@ export const CalendarAdmin = () => {
 	const [selectedDate, setSelectedDate] = useState({ start: 0, end: 0 });
 	const [selecteDetaildDate, setSelectedDetailDate] = useState({});
 	const [selecteDetailType, setSelecteDetailType] = useState(false);
-	const { email, GetAllUser } = UserAuth();
+	const { GetAllUser } = UserAuth();
 	const photo =
 		'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
 	const [disabled, setDisabled] = useState(false);
@@ -1090,7 +1082,7 @@ export const CalendarAdmin = () => {
 								// type='text'
 								shape='circle'
 								icon={
-									subCalendarCollapse ? (
+									!subCalendarCollapse ? (
 										<IoIosArrowBack
 											style={{ fontSize: 12 }}
 										/>
@@ -1112,12 +1104,14 @@ export const CalendarAdmin = () => {
 					resizable
 					startAccessor='start'
 					endAccessor='end'
-					// eventPropGetter={(event) => {
-					// 	const backgroundColor = event.allday ? 'yellow' : '#9999';
-					// 	const border = event.allday ? 'yellow' : '#9999';
+					eventPropGetter={(event) => {
+						const backgroundColor = event.allday
+							? 'yellow'
+							: '#9999';
+						const border = event.allday ? 'yellow' : '#9999';
 
-					// 	return { style: { backgroundColor,border } }
-					//   }}
+						return { style: { backgroundColor, border } };
+					}}
 					longPressThreshold={10}
 					onSelectEvent={handleSelectEvent}
 					onSelectSlot={handleSelectSlot}
