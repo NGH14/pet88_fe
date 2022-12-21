@@ -9,7 +9,13 @@ import {
 } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
+import events from '../../data/events';
+import { useState } from 'react';
+import { useCallback } from 'react';
+
+// const DnDCalendar = withDragAndDrop(Calendar);
 const mLocalizer = momentLocalizer(moment);
 
 const ColoredDateCellWrapper = ({ children }) =>
@@ -19,98 +25,7 @@ const ColoredDateCellWrapper = ({ children }) =>
 		},
 	});
 
-const events = [
-	{
-		title: 'All Day Event very long title',
-		allDay: true,
-		start: new Date(2015, 3, 0),
-		end: new Date(2015, 3, 1),
-	},
-	{
-		title: 'Long Event',
-		start: new Date(2015, 3, 7),
-		end: new Date(2015, 3, 10),
-	},
-
-	{
-		title: 'DTS STARTS',
-		start: new Date(2016, 2, 13, 0, 0, 0),
-		end: new Date(2016, 2, 20, 0, 0, 0),
-	},
-
-	{
-		title: 'DTS ENDS',
-		start: new Date(2016, 10, 6, 0, 0, 0),
-		end: new Date(2016, 10, 13, 0, 0, 0),
-	},
-
-	{
-		title: 'Some Event',
-		start: new Date(2015, 3, 9, 0, 0, 0),
-		end: new Date(2015, 3, 9, 0, 0, 0),
-	},
-	{
-		title: 'Conference',
-		start: new Date(2015, 3, 11),
-		end: new Date(2015, 3, 13),
-		desc: 'Big conference for important people',
-	},
-	{
-		title: 'Meeting',
-		start: new Date(2015, 3, 12, 10, 30, 0, 0),
-		end: new Date(2015, 3, 12, 12, 30, 0, 0),
-		desc: 'Pre-meeting meeting, to prepare for the meeting',
-	},
-	{
-		title: 'Lunch',
-		start: new Date(2015, 3, 12, 12, 0, 0, 0),
-		end: new Date(2015, 3, 12, 13, 0, 0, 0),
-		desc: 'Power lunch',
-	},
-	{
-		title: 'Meeting',
-		start: new Date(2015, 3, 12, 14, 0, 0, 0),
-		end: new Date(2015, 3, 12, 15, 0, 0, 0),
-	},
-	{
-		title: 'Happy Hour',
-		start: new Date(2015, 3, 12, 17, 0, 0, 0),
-		end: new Date(2015, 3, 12, 17, 30, 0, 0),
-		desc: 'Most important meal of the day',
-	},
-	{
-		title: 'Dinner',
-		start: new Date(2015, 3, 12, 20, 0, 0, 0),
-		end: new Date(2015, 3, 12, 21, 0, 0, 0),
-	},
-	{
-		title: 'Birthday Party',
-		start: new Date(2015, 3, 13, 7, 0, 0),
-		end: new Date(2015, 3, 13, 10, 30, 0),
-	},
-	{
-		title: 'Birthday Party 2',
-		start: new Date(2015, 3, 13, 7, 0, 0),
-		end: new Date(2015, 3, 13, 10, 30, 0),
-	},
-	{
-		title: 'Birthday Party 3',
-		start: new Date(2015, 3, 13, 7, 0, 0),
-		end: new Date(2015, 3, 13, 10, 30, 0),
-	},
-	{
-		title: 'Late Night Event',
-		start: new Date(2015, 3, 17, 19, 30, 0),
-		end: new Date(2015, 3, 18, 2, 0, 0),
-	},
-	{
-		title: 'Multi-day Event',
-		start: new Date(2015, 3, 20, 19, 30, 0),
-		end: new Date(2015, 3, 22, 2, 0, 0),
-	},
-];
-
-export default function Basic({
+export function Basic({
 	localizer = mLocalizer,
 	showDemoLink = true,
 	...props
@@ -147,4 +62,107 @@ export default function Basic({
 Basic.propTypes = {
 	localizer: PropTypes.instanceOf(DateLocalizer),
 	showDemoLink: PropTypes.bool,
+};
+
+export function Selectable({ localizer }) {
+	const [myEvents, setEvents] = useState(events);
+
+	const handleSelectSlot = useCallback(
+		({ start, end }) => {
+			const title = window.prompt('New Event name');
+			if (title) {
+				setEvents((prev) => [...prev, { start, end, title }]);
+			}
+		},
+		[setEvents],
+	);
+
+	const handleSelectEvent = useCallback(
+		(event) => window.alert(event.title),
+		[],
+	);
+
+	const { defaultDate, scrollToTime } = useMemo(
+		() => ({
+			defaultDate: new Date(2015, 3, 12),
+			scrollToTime: new Date(1970, 1, 1, 6),
+		}),
+		[],
+	);
+
+	return (
+		<Fragment>
+			<div style={{ height: 600 }}>
+				<Calendar
+					defaultDate={defaultDate}
+					defaultView={Views.WEEK}
+					events={myEvents}
+					localizer={localizer}
+					onSelectEvent={handleSelectEvent}
+					onSelectSlot={handleSelectSlot}
+					selectable
+					scrollToTime={scrollToTime}
+				/>
+			</div>
+		</Fragment>
+	);
+}
+
+Selectable.propTypes = {
+	localizer: PropTypes.instanceOf(DateLocalizer),
+};
+
+const DragAndDropCalendar = withDragAndDrop(Calendar);
+
+export function DragAndDrop({ localizer }) {
+	const [myEvents, setMyEvents] = useState(events);
+
+	const moveEvent = useCallback(
+		({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
+			const { allDay } = event;
+			if (!allDay && droppedOnAllDaySlot) {
+				event.allDay = true;
+			}
+
+			setMyEvents((prev) => {
+				const existing = prev.find((ev) => ev.id === event.id) ?? {};
+				const filtered = prev.filter((ev) => ev.id !== event.id);
+				return [...filtered, { ...existing, start, end, allDay }];
+			});
+		},
+		[setMyEvents],
+	);
+
+	const resizeEvent = useCallback(
+		({ event, start, end }) => {
+			setMyEvents((prev) => {
+				const existing = prev.find((ev) => ev.id === event.id) ?? {};
+				const filtered = prev.filter((ev) => ev.id !== event.id);
+				return [...filtered, { ...existing, start, end }];
+			});
+		},
+		[setMyEvents],
+	);
+
+	const defaultDate = useMemo(() => new Date(2015, 3, 12), []);
+
+	return (
+		<Fragment>
+			<div style={{ height: 600 }}>
+				<DragAndDropCalendar
+					defaultDate={defaultDate}
+					defaultView={Views.MONTH}
+					events={myEvents}
+					localizer={localizer}
+					onEventDrop={moveEvent}
+					onEventResize={resizeEvent}
+					popup
+					resizable
+				/>
+			</div>
+		</Fragment>
+	);
+}
+DragAndDrop.propTypes = {
+	localizer: PropTypes.instanceOf(DateLocalizer),
 };

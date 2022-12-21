@@ -1,4 +1,4 @@
-import Basic from './../components/Calendar/index';
+import { Basic, Selectable, DragAndDrop } from './../components/Calendar/index';
 import moment from 'moment';
 import {
 	Calendar,
@@ -8,7 +8,7 @@ import {
 } from 'react-big-calendar';
 
 export default {
-	title: 'Examples',
+	title: 'COMPONENTS/Calendar',
 	component: Calendar,
 	parameters: {
 		docs: {
@@ -19,7 +19,20 @@ export default {
 
 const localizer = momentLocalizer(moment);
 
-export function Example1() {
+export function BasicCalendar() {
 	return <Basic localizer={localizer} />;
 }
-Example1.storyName = 'Basic Demo';
+
+BasicCalendar.storyName = 'Basic';
+
+export function SelectableCalendar() {
+	return <Selectable localizer={localizer} />;
+}
+
+SelectableCalendar.storyName = 'Selectable';
+
+export function DnDCalendar() {
+	return <DragAndDrop localizer={localizer} />;
+}
+
+DnDCalendar.storyName = 'Drag and Drop';
