@@ -36,6 +36,7 @@ import { CalendarAdmin } from './../../components/Calendar/CalendarAdmin';
 import TableRooms from '../../components/TableRooms';
 import TableGrooming from './../../components/TableGrooming/index';
 import TableOrder from '../../components/TableOrder';
+import ChangeLanguage from './../../components/ChangeLanguage/index';
 
 const { Header, Content, Sider } = Layout;
 
@@ -74,7 +75,13 @@ export default function Admin() {
 		),
 
 		getItem(t('Order'), '/admin/management-order', <MdOutlinePayments />),
+		// getItem(<ChangeLanguage fullWidth></ChangeLanguage>, '', null),
 	];
+
+	const handleClickMenu = (path) => {
+		navigate(path);
+		setCollapsed(true);
+	};
 
 	useEffect(() => {
 		if (!user?.role || user?.role !== 'admin') {
@@ -82,6 +89,7 @@ export default function Admin() {
 		}
 		setLoading(false);
 	}, [user]);
+
 	return loading ? (
 		<LoadingSpinner />
 	) : (
@@ -118,7 +126,7 @@ export default function Admin() {
 							</div>
 						</NavLink>
 						<Menu
-							onClick={({ key }) => navigate(key)}
+							onClick={({ key }) => handleClickMenu(key)}
 							theme='light'
 							defaultSelectedKeys={['/admin']}
 							mode='inline'
@@ -132,7 +140,7 @@ export default function Admin() {
 								display: 'flex',
 								justifyContent: 'space-between',
 								padding: 0,
-								margin: 'auto	',
+								margin: 'auto',
 							}}>
 							<Button
 								style={{ backgroundColor: 'white' }}

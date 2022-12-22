@@ -35,16 +35,6 @@ margin-bottom: 0;
 
 `;
 
-const handleButtonClick = (e) => {
-	message.info('Click on left button.');
-	console.log('click left button', e);
-};
-const handleMenuClick = (e) => {
-	console.log(e);
-
-	e.action();
-};
-
 function AuthButton({ TextColor, FullWitdh }) {
 	const [collapsed, setCollapsed] = useState(false);
 

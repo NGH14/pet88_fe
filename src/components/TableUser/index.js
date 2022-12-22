@@ -33,6 +33,8 @@ import {
 	DatePicker,
 	Popconfirm,
 	Modal,
+	Dropdown,
+	Menu,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
@@ -40,7 +42,11 @@ import moment from 'moment';
 import axios from 'axios';
 import './style.css';
 import { GrFormClose } from 'react-icons/gr';
+import { MdContentCopy } from 'react-icons/md';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
+
 import { AiOutlineClose } from 'react-icons/ai';
+import useCopyToClipboard from './../../hooks/useCopyToClipboard';
 const { Option } = Select;
 
 export default function TableUser() {
@@ -58,11 +64,14 @@ export default function TableUser() {
 		[],
 	);
 
+	const [copyToClipboard, { success }] = useCopyToClipboard();
+
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listUsers, setListUsers] = React.useState();
 	const [additionInfo, setAdditionInfo] = React.useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+	const [selectedUser, setSelectedUser] = useState({});
 
 	const [size, setSize] = useState('large');
 
@@ -75,30 +84,41 @@ export default function TableUser() {
 	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
 	const { t } = useTranslation();
 
-	const [openModal, setOpenModal] = useState(false);
+	const [openModalMultiDelete, setOpenModalMultiDelete] = useState(false);
+	const [openModalDelete, setOpenModalDelete] = useState(false);
+
 	const [confirmLoadingModal, setConfirmLoadingModal] = useState(false);
+	const [confirmLoadingModalDelete, setConfirmLoadingModalDelete] =
+		useState(false);
 
 	const { lang } = UserLanguage();
 	useEffect(() => {
 		newUserMonthly();
 		getAllUserData();
 	}, []);
+
 	const newUserMonthly = async () => {
 		const data = await getNewUserInCurrentMonth();
 		setNewUserInCurrentMonth(data);
 	};
 
-	const showModal = () => {
-		setOpenModal(true);
+	const showModalMultiDelete = () => {
+		setOpenModalMultiDelete(true);
 	};
+
 	const handleOkModal = () => {
 		setConfirmLoadingModal(true);
 		handleDeleteMultipleUser();
-		setOpenModal(false);
+		setOpenModalMultiDelete(false);
 	};
-	const handleCancelModal = () => {
-		console.log('Clicked cancel button');
-		setOpenModal(false);
+
+	const handleDeleteModal = (user) => {
+		setSelectedUser(user);
+		setOpenModalDelete(true);
+	};
+
+	const handleCancelModalMultiDelete = () => {
+		setOpenModalMultiDelete(false);
 	};
 
 	const handleOpenUpdateUser = (record) => {
@@ -149,11 +169,6 @@ export default function TableUser() {
 		try {
 			const res = await axios.delete(
 				`http://localhost:3001/api/user/${id}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
 			);
 			console.log(res.data);
 		} catch (error) {
@@ -166,27 +181,27 @@ export default function TableUser() {
 			const res = await axios.post(
 				`http://localhost:3001/api/user/`,
 				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
 			);
-			const listData = { ...res.data, key: res.data.id };
-			return listData;
+			return res.data;
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
-	const handleDeleteUser = async (id) => {
+	const handleDeleteUser = async () => {
+		setConfirmLoadingModalDelete(true);
+
 		try {
-			await DeleteUser(id);
-			fetchDeleteData(token, id);
-			setListUsers(listUsers.filter((item) => item.id !== id));
-			setSearchDataSource(
-				searchDataSource.filter((item) => item.id !== id),
+			await DeleteUser(selectedUser?.id);
+			fetchDeleteData(token, selectedUser?.id);
+			setListUsers(
+				listUsers.filter((item) => item.id !== selectedUser?.id),
 			);
+			setSearchDataSource(
+				searchDataSource.filter((item) => item.id !== selectedUser?.id),
+			);
+			setConfirmLoadingModalDelete(false);
+			setOpenModalDelete(false);
 		} catch (err) {
 			console.log(err);
 		}
@@ -196,7 +211,7 @@ export default function TableUser() {
 		setLoadingCreate(true);
 		try {
 			const uid = await fetchCreateData(token, value);
-			await AddUserToDBByAdmin(uid, value);
+			AddUserToDBByAdmin(uid, value);
 			setOpenUpdate(false);
 			setLoadingCreate(false);
 			setOpenCreate(false);
@@ -204,7 +219,7 @@ export default function TableUser() {
 			getAllUserData();
 		} catch (e) {
 			toast.error(t('The email already in use'));
-			console.log(e.message);
+			console.log(e);
 			setLoadingCreate(false);
 		}
 	};
@@ -224,6 +239,7 @@ export default function TableUser() {
 		);
 		toast.success(t('Delete Success'));
 	};
+
 	const columns = [
 		{
 			title: t('Name'),
@@ -235,6 +251,7 @@ export default function TableUser() {
 			title: t('Phone Number'),
 			dataIndex: 'phone',
 			key: 'phone',
+			width: 210,
 		},
 		{
 			title: 'Email',
@@ -268,31 +285,71 @@ export default function TableUser() {
 			title: t('ID'),
 			dataIndex: 'id',
 			key: 'id',
+			ellipsis: true,
+			copyable: true,
 		},
 		{
 			width: 110,
-
 			title: t('Action'),
-			fixed: 'right',
+			// fixed: 'right',
 			key: 'action',
-			render: (_, record) => (
-				<Space size='middle'>
-					<Popconfirm
-						key='delete'
-						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteUser(record.id)}>
-						<Button
-							danger
-							type='text'
-							icon={<DeleteOutlined />}></Button>
-					</Popconfirm>
-					<Button
-						type='text'
-						key='update'
-						icon={<EditOutlined />}
-						onClick={() => handleOpenUpdateUser(record)}></Button>
-				</Space>
-			),
+			render: (_, record) => {
+				const menu = (
+					<Menu
+						items={[
+							{
+								key: '1',
+								label: (
+									<Button
+										type='text'
+										key='update'
+										onClick={() =>
+											handleOpenUpdateUser(record)
+										}>
+										{t('Update account')}
+									</Button>
+								),
+							},
+							{
+								key: '3',
+								label: (
+									<Button
+										type='text'
+										ghost
+										onClick={() =>
+											handleDeleteModal(record)
+										}>
+										{t('Delete account')}
+									</Button>
+								),
+							},
+						]}
+					/>
+				);
+
+				return (
+					<>
+						<Space size='middle'>
+							<Button
+								ghost
+								type='link'
+								icon={<MdContentCopy color='black' />}
+								onClick={() => copyToClipboard(record.id)}
+							/>
+
+							<Dropdown overlay={menu}>
+								<Button
+									ghost
+									type='link'
+									icon={
+										<BiDotsVerticalRounded color='black' />
+									}
+								/>
+							</Dropdown>
+						</Space>
+					</>
+				);
+			},
 		},
 	];
 	const getAllUserData = async () => {
@@ -706,7 +763,7 @@ export default function TableUser() {
 				width={400}
 				closable={false}
 				footer={null}
-				open={openModal}
+				open={openModalMultiDelete}
 				confirmLoading={confirmLoadingModal}>
 				<div>
 					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
@@ -725,12 +782,58 @@ export default function TableUser() {
 							justifyContent: 'flex-end',
 						}}>
 						<Button
-							onClick={handleCancelModal}
+							onClick={handleCancelModalMultiDelete}
 							style={{ borderRadius: 8 }}>
 							{t('Cancel')}
 						</Button>
 						<Button
 							onClick={handleOkModal}
+							style={{ borderRadius: 8 }}
+							type='primary'
+							danger>
+							{t('Delete')}
+						</Button>
+					</div>
+				</div>
+			</Modal>
+
+			<Modal
+				centered
+				width={450}
+				closable={false}
+				footer={null}
+				open={openModalDelete}
+				confirmLoading={confirmLoadingModalDelete}>
+				<div>
+					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
+						{t('Delete account')}
+					</h6>
+					<p style={{ fontWeight: 500, fontSize: 14 }}>
+						{t(
+							'After you have deleted an account, it will be permanently deleted. Accounts cannot be recovered',
+						)}
+						{'. '}
+						{t('Account email')}
+						{': '}
+					</p>
+					<p></p>
+					<b>{selectedUser?.email}</b>
+
+					<div
+						style={{
+							marginTop: 20,
+							display: 'flex',
+							gap: 5,
+							justifyContent: 'flex-end',
+						}}>
+						<Button
+							onClick={() => setOpenModalDelete(false)}
+							style={{ borderRadius: 8 }}>
+							{t('Cancel')}
+						</Button>
+						<Button
+							loading={confirmLoadingModalDelete}
+							onClick={handleDeleteUser}
 							style={{ borderRadius: 8 }}
 							type='primary'
 							danger>
@@ -770,7 +873,7 @@ export default function TableUser() {
 								style={{ marginRight: 5 }}
 							/>
 						}
-						onClick={() => showModal()}
+						onClick={() => showModalMultiDelete()}
 						className='table_deletemulpti-delete'>
 						{t('Delete')}
 					</Button>
@@ -788,7 +891,7 @@ export default function TableUser() {
 					boxShadow: 'rgb(153 196 227 / 25%) 0px 2px 8px',
 				}}
 				scroll={{
-					x: 800,
+					x: 1200,
 				}}
 				pagination={{
 					defaultPageSize: 5,

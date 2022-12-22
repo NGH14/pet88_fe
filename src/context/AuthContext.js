@@ -179,6 +179,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const AddUserToDBByAdmin = async (uid, additionalData) => {
 		const docRef = await doc(storage, 'users', uid);
+
 		const docSnap = await getDoc(docRef);
 		const cusdob = Timestamp.fromDate(new Date(additionalData?.dob || 0));
 		const userRole = additionalData?.role || 'user';

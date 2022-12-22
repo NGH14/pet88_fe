@@ -256,7 +256,9 @@ const Account = () => {
 												prefix: '84',
 												phone: user?.phone,
 												gender: user?.gender,
-												dob: moment(user?.dob.toDate()),
+												dob: moment(
+													user?.dob?.toDate(),
+												),
 												email: user?.email,
 											}}
 											onFinish={onFinish}

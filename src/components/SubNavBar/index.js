@@ -13,6 +13,7 @@ import AuthButton from './../GoogleAuthButton/index';
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import useScrollPosition from './../../hooks/useScrollPosition';
 
 function SubNavBar() {
 	const locate = useLocation();
@@ -21,10 +22,11 @@ function SubNavBar() {
 	const [visible, setVisible] = useState(false);
 	const { t } = useTranslation();
 	const [navBg, setNavBg] = useState(false);
+	const scrollPosition = useScrollPosition();
 
-	const changeNavBg = () => {
-		window.scrollY >= 50 ? setNavBg(true) : setNavBg(false);
-	};
+	useEffect(() => {
+		!scrollPosition > 0 ? setNavBg(false) : setNavBg(true);
+	}, [scrollPosition]);
 
 	const handleSignOut = async (e) => {
 		e.preventDefault();
@@ -35,13 +37,6 @@ function SubNavBar() {
 			console.log(error);
 		}
 	};
-
-	useEffect(() => {
-		window.addEventListener('scroll', changeNavBg);
-		return () => {
-			window.removeEventListener('scroll', changeNavBg);
-		};
-	});
 
 	const showDrawer = () => {
 		setVisible(true);
@@ -77,8 +72,8 @@ function SubNavBar() {
 	return (
 		<div>
 			{(() => {
-				switch (locate.pathname) {
-					case '/':
+				switch (locate.pathname.split('/')[1]) {
+					case '':
 						return (
 							<div
 								style={
@@ -186,9 +181,11 @@ function SubNavBar() {
 																}
 															/>
 														)}{' '}
+														{/* <span className='mobileHidden'> */}
 														{localStorage.getItem(
 															'name',
 														) || ` ${user?.name}`}
+														{/* </span> */}
 													</NavLink>
 												</Dropdown>
 											)}
@@ -198,7 +195,7 @@ function SubNavBar() {
 							</div>
 						);
 
-					case '/account':
+					case 'account':
 						return (
 							<div
 								style={{
@@ -239,9 +236,7 @@ function SubNavBar() {
 							</div>
 						);
 
-					case '/admin':
-					case '/admin/management-user':
-					case '/admin/management-hotel':
+					case 'admin':
 						return (
 							<div
 								style={{

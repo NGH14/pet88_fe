@@ -513,7 +513,6 @@ export const CalendarAdmin = () => {
 		);
 		setOpenDetailModal(false);
 	};
-
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
 			<div className='calendar-container'>
@@ -1053,7 +1052,7 @@ export const CalendarAdmin = () => {
 							);
 						}}
 						fullscreen={false}
-						onPanelChange={onPanelChange}
+						// onPanelChange={onPanelChange}
 						onSelect={onSubCalendarSelected}
 					/>
 

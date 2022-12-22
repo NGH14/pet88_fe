@@ -126,6 +126,8 @@
 
 }
 
+
+
 @media (max-width: 350px) {
 	.site-calendar-customize-header-wrapper {
 		flex-grow: 10;
@@ -136,4 +138,5 @@
 
 
 }
+
 

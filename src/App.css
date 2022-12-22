@@ -86,3 +86,13 @@ textarea {
 .ant-calendar-picker {
 	width: auto !important;
 }
+
+.ant-dropdown-menu, .ant-pagination-item, .ant-message-notice-content{
+	border-radius: 8px !important;
+}
+
+.ant-pagination-item-link {
+	border: unset  !important;
+}
+
+
