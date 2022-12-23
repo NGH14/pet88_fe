@@ -771,9 +771,9 @@ export default function TableRooms() {
 					expandedRowRender: (record) => expandedRowRender(record),
 				}}
 				pagination={{
-					onChange(current) {
-						setPage(current);
-					},
+					hideOnSinglePage: true,
+					showTotal: (total, range) =>
+						`${range[0]}-${range[1]} of ${total} items`,
 					defaultPageSize: 5,
 					showSizeChanger: true,
 					pageSizeOptions: ['5', '10', '20', '30'],

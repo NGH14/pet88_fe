@@ -436,6 +436,7 @@ export const CalendarAdmin = () => {
 
 		if (values?.title) {
 			const eventID = uid();
+
 			try {
 				const order = await axios.post(
 					`http://localhost:3001/api/order/admin/grooming`,
@@ -455,23 +456,19 @@ export const CalendarAdmin = () => {
 						service: 'grooming',
 					},
 				);
-				FetchAddEvent({
+				const event = {
 					id: eventID,
 					start: start.getTime(),
 					end: end.getTime(),
 					title,
 					order: order.data,
-				});
-				setEvent({
-					id: uid(),
-					start: start.getTime(),
-					end: end.getTime(),
-					title,
-					order: order.data,
-				});
+				};
+				FetchAddEvent(event);
+				setEvent(event);
+
 				setAllEvents((prev) => [
 					...prev,
-					{ id: uid(), start, end, title, order: order.data },
+					{ id: eventID, start, end, title, order: order.data },
 				]);
 				setOpenCreateModal(false);
 			} catch (error) {
