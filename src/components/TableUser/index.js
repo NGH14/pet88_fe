@@ -63,39 +63,55 @@ export default function TableUser() {
 	const [newUserInCurrentMonth, setNewUserInCurrentMonth] = React.useState(
 		[],
 	);
-
-	const [copyToClipboard, { success }] = useCopyToClipboard();
-
+	const [copyToClipboard] = useCopyToClipboard();
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listUsers, setListUsers] = React.useState();
 	const [additionInfo, setAdditionInfo] = React.useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [selectedUser, setSelectedUser] = useState({});
-
 	const [size, setSize] = useState('large');
-
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openCreate, setOpenCreate] = useState(false);
 	const [tableToolTip, setTableToolTip] = useState(false);
-
 	const [form] = Form.useForm();
-	const { token } = UserAuth();
+	const { token, forgotPassword } = UserAuth();
 	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
 	const { t } = useTranslation();
 
 	const [openModalMultiDelete, setOpenModalMultiDelete] = useState(false);
 	const [openModalDelete, setOpenModalDelete] = useState(false);
+	const [openModalResetPassword, setOpenModalResetPassword] = useState(false);
 
 	const [confirmLoadingModal, setConfirmLoadingModal] = useState(false);
 	const [confirmLoadingModalDelete, setConfirmLoadingModalDelete] =
 		useState(false);
+	const [
+		confirmLoadingModalResetPassword,
+		setConfirmLoadingModalResetPassword,
+	] = useState(false);
 
 	const { lang } = UserLanguage();
 	useEffect(() => {
 		newUserMonthly();
 		getAllUserData();
 	}, []);
+
+	const SendResetPassword = async () => {
+		setConfirmLoadingModalResetPassword(true);
+		try {
+			await forgotPassword(selectedUser?.email);
+			toast.success(t('Password reset email has been sent'));
+
+			setOpenModalResetPassword(false);
+			setConfirmLoadingModalResetPassword(false);
+		} catch (e) {
+			toast.error(t('Sorry, an error has occurred'));
+			console.log(e.message);
+			setConfirmLoadingModalResetPassword(false);
+			setOpenModalResetPassword(false);
+		}
+	};
 
 	const newUserMonthly = async () => {
 		const data = await getNewUserInCurrentMonth();
@@ -115,6 +131,11 @@ export default function TableUser() {
 	const handleDeleteModal = (user) => {
 		setSelectedUser(user);
 		setOpenModalDelete(true);
+	};
+
+	const handleSendResetPassword = (user) => {
+		setSelectedUser(user);
+		setOpenModalResetPassword(true);
 	};
 
 	const handleCancelModalMultiDelete = () => {
@@ -202,6 +223,7 @@ export default function TableUser() {
 			);
 			setConfirmLoadingModalDelete(false);
 			setOpenModalDelete(false);
+			toast.success(t('Delete Success'));
 		} catch (err) {
 			console.log(err);
 		}
@@ -311,6 +333,19 @@ export default function TableUser() {
 								),
 							},
 							{
+								key: '2',
+								label: (
+									<Button
+										type='text'
+										key='update'
+										onClick={() =>
+											handleSendResetPassword(record)
+										}>
+										{t('Reset Password')}
+									</Button>
+								),
+							},
+							{
 								key: '3',
 								label: (
 									<Button
@@ -389,7 +424,7 @@ export default function TableUser() {
 						dataSource={listUsers}
 						setDataSource={setSearchDataSource}
 						inputProps={{
-							placeholder: t('Search'),
+							placeholder: t('Name, ID, Email, Tag, '),
 							prefix: <SearchOutlined />,
 						}}
 					/>
@@ -813,10 +848,11 @@ export default function TableUser() {
 							'After you have deleted an account, it will be permanently deleted. Accounts cannot be recovered',
 						)}
 						{'. '}
+					</p>
+					<span>
 						{t('Account email')}
 						{': '}
-					</p>
-					<p></p>
+					</span>
 					<b>{selectedUser?.email}</b>
 
 					<div
@@ -838,6 +874,52 @@ export default function TableUser() {
 							type='primary'
 							danger>
 							{t('Delete')}
+						</Button>
+					</div>
+				</div>
+			</Modal>
+
+			<Modal
+				centered
+				width={450}
+				closable={false}
+				footer={null}
+				open={openModalResetPassword}
+				confirmLoading={confirmLoadingModalResetPassword}>
+				<div>
+					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
+						{t('Reset Password')}
+					</h6>
+					<p style={{ fontWeight: 500, fontSize: 14 }}>
+						{t(
+							'After you have deleted an account, it will be permanently deleted. Accounts cannot be recovered',
+						)}
+						{'. '}
+					</p>
+					<span>
+						{t('Account email')}
+						{': '}
+					</span>
+					<b>{selectedUser?.email}</b>
+
+					<div
+						style={{
+							marginTop: 20,
+							display: 'flex',
+							gap: 5,
+							justifyContent: 'flex-end',
+						}}>
+						<Button
+							onClick={() => setOpenModalDelete(false)}
+							style={{ borderRadius: 8 }}>
+							{t('Cancel')}
+						</Button>
+						<Button
+							loading={confirmLoadingModalResetPassword}
+							onClick={SendResetPassword}
+							style={{ borderRadius: 8 }}
+							type='primary'>
+							{t('Send')}
 						</Button>
 					</div>
 				</div>
