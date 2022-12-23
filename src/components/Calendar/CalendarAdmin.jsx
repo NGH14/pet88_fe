@@ -120,7 +120,6 @@ export const CalendarAdmin = () => {
 	const [openDetailModal, setOpenDetailModal] = useState(false);
 	const [accountType, setAccountType] = React.useState(true);
 	const { height, width } = useWindowDimensions();
-
 	const [form] = Form.useForm();
 
 	const [bounds, setBounds] = useState({
@@ -129,6 +128,7 @@ export const CalendarAdmin = () => {
 		bottom: 0,
 		right: 0,
 	});
+	const draggleRef = useRef(null);
 
 	const onChange = (value, selectedOptions) => {
 		setSelectedGroomingRoomId(selectedOptions[1].value);
@@ -141,8 +141,6 @@ export const CalendarAdmin = () => {
 				option.label.toLowerCase().indexOf(inputValue.toLowerCase()) >
 				-1,
 		);
-
-	const draggleRef = useRef(null);
 
 	const onStart = (_event, uiData) => {
 		const { clientWidth, clientHeight } = window.document.documentElement;
@@ -437,11 +435,13 @@ export const CalendarAdmin = () => {
 			  };
 
 		if (values?.title) {
+			const eventID = uid();
 			try {
 				const order = await axios.post(
 					`http://localhost:3001/api/order/admin/grooming`,
 					{
 						email: bookingUser.email || 'guest',
+						eventID,
 						userID: bookingUser.id || 'guest',
 						phone: bookingUser.phone || '0',
 						roomList: selectedGroomingRoomId,
@@ -456,7 +456,7 @@ export const CalendarAdmin = () => {
 					},
 				);
 				FetchAddEvent({
-					id: uid(),
+					id: eventID,
 					start: start.getTime(),
 					end: end.getTime(),
 					title,

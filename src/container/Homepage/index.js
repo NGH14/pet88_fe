@@ -88,7 +88,7 @@ function Homepage() {
 
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
-			<Layout className='mainLayout'>
+			<Layout className='mainLayout' id='top'>
 				<Header>
 					<SubNavBar></SubNavBar>
 					<AppHeader></AppHeader>
@@ -299,6 +299,7 @@ function Homepage() {
 						</ScrollTrigger>
 					</div>
 					<motion.div
+						id='about_section'
 						initial='offscreen'
 						whileInView='onscreen'
 						viewport={{ once: true, amount: 0.8 }}>

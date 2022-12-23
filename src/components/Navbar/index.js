@@ -9,16 +9,23 @@ import AuthButton from './../GoogleAuthButton/';
 import { useEffect } from 'react';
 import ChangeLanguage from './../ChangeLanguage/';
 import useScrollPosition from './../../hooks/useScrollPosition';
+import { HashLink } from 'react-router-hash-link';
 
 import './style.css';
-import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+	Link,
+	Navigate,
+	NavLink,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { UserAuth } from '../../context/AuthContext';
 
 const pages = [
-	{ title: 'home', url: '/' },
-	{ title: 'about', url: '/sign-in' },
-	{ title: 'service', url: '/dsads' },
+	{ title: 'home', url: '/#top' },
+	{ title: 'about', url: '/#about_section' },
+	{ title: 'service', url: '/#service_section' },
 ];
 
 function AppHeader() {
@@ -135,9 +142,10 @@ function AppHeader() {
 
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
 															key={page.title}
-															to={page.url}
+															to='#about'
+															// to={page.url}
 															style={{
 																transition:
 																	'color 0.3s ease-in-out',
@@ -158,11 +166,11 @@ function AppHeader() {
 																	'1px solid black',
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 												{user && (
-													<NavLink
+													<HashLink
 														to='./account'
 														style={{
 															transition:
@@ -183,11 +191,11 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('account')}
-													</NavLink>
+													</HashLink>
 												)}
 
 												{user?.role === 'admin' && (
-													<NavLink
+													<HashLink
 														to='/admin'
 														style={{
 															transition:
@@ -208,7 +216,7 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('Admin Centre')}
-													</NavLink>
+													</HashLink>
 												)}
 
 												<div className='drawer-auth'>
@@ -229,7 +237,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<NavLink to='/'>
+												<HashLink to='/'>
 													<img
 														src={
 															navBg
@@ -243,13 +251,13 @@ function AppHeader() {
 																'all 0.3s ease-in-out',
 														}}
 													/>
-												</NavLink>
+												</HashLink>
 											</div>
 
 											<div className='mobileHidden'>
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
 															key={page.title}
 															to={page.url}
 															style={{
@@ -270,7 +278,7 @@ function AppHeader() {
 																marginInline: 10,
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 											</div>
@@ -359,7 +367,7 @@ function AppHeader() {
 
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
 															key={page.title}
 															to={page.url}
 															style={{
@@ -382,11 +390,11 @@ function AppHeader() {
 																	'1px solid black',
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 												{user && (
-													<NavLink
+													<HashLink
 														to='/account'
 														style={{
 															transition:
@@ -407,11 +415,11 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('account')}
-													</NavLink>
+													</HashLink>
 												)}
 
 												{user?.role === 'admin' && (
-													<NavLink
+													<HashLink
 														to='/admin'
 														style={{
 															transition:
@@ -432,7 +440,7 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('Admin Centre')}
-													</NavLink>
+													</HashLink>
 												)}
 
 												<div className='drawer-auth'>
@@ -453,7 +461,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<NavLink to='/'>
+												<HashLink to='/'>
 													<img
 														src={Logo}
 														alt=''
@@ -463,13 +471,13 @@ function AppHeader() {
 																'all 0.3s ease-in-out',
 														}}
 													/>
-												</NavLink>
+												</HashLink>
 											</div>
 
 											<div className='mobileHidden'>
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
 															key={page.title}
 															to={page.url}
 															style={{
@@ -486,7 +494,7 @@ function AppHeader() {
 																marginInline: 10,
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 											</div>
@@ -599,7 +607,7 @@ function AppHeader() {
 
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
 															key={page.title}
 															to={page.url}
 															style={{
@@ -622,11 +630,11 @@ function AppHeader() {
 																	'1px solid black',
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 												{user && (
-													<NavLink
+													<HashLink
 														to='/account'
 														style={{
 															transition:
@@ -647,7 +655,7 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('account')}
-													</NavLink>
+													</HashLink>
 												)}
 
 												<div className='drawer-auth'>
@@ -668,7 +676,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<NavLink to='/'>
+												<HashLink to='/'>
 													<img
 														src={Logo}
 														alt=''
@@ -678,13 +686,13 @@ function AppHeader() {
 																'all 0.3s ease-in-out',
 														}}
 													/>
-												</NavLink>
+												</HashLink>
 											</div>
 
 											<div className='mobileHidden'>
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
 															key={page.title}
 															to={page.url}
 															style={{
@@ -701,7 +709,7 @@ function AppHeader() {
 																marginInline: 10,
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 											</div>

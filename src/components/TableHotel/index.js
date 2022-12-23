@@ -749,12 +749,12 @@ export default function TableHotel() {
 					),
 				}}
 				pagination={{
-					onChange(current) {
-						setPage(current);
-					},
 					defaultPageSize: 5,
 					showSizeChanger: true,
 					pageSizeOptions: ['5', '10', '20', '30'],
+					hideOnSinglePage: true,
+					showTotal: (total, range) =>
+						`${range[0]}-${range[1]} of ${total} items`,
 				}}
 				columns={columns}
 				dataSource={searchDataSource || listHotels}

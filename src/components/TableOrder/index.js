@@ -44,7 +44,6 @@ import { UserLanguage } from '../../context/LanguageContext';
 import moment from 'moment';
 import axios from 'axios';
 import './style.css';
-import { borderRadius } from '@mui/system';
 import { ToVND } from './../../utils/FormatCurrency';
 const { Option } = Select;
 
@@ -139,7 +138,7 @@ export default function TableOrder() {
 		setLoading(true);
 		try {
 			await axios.put(
-				`http://localhost:3001/api/order/status/${orderRecord._id}`,
+				`http://localhost:3001/api/order/update-status/${orderRecord._id}`,
 				value,
 			);
 

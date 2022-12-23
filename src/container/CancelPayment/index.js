@@ -40,7 +40,6 @@ export default function PaymentCancel() {
 			const res = await axios.put(
 				`http://localhost:3001/api/order/cancel/${id}`,
 			);
-			console.log(res.data);
 		} catch (error) {
 			console.error(error);
 		}

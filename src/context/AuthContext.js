@@ -218,7 +218,6 @@ export const AuthContextProvider = ({ children }) => {
 	const getNewUserInCurrentMonth = async () => {
 		try {
 			const res = await axios.get(`http://localhost:3001/api/user/store`);
-			console.log(res.data);
 			return res.data;
 		} catch (error) {
 			return error;

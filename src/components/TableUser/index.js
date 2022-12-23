@@ -35,6 +35,7 @@ import {
 	Modal,
 	Dropdown,
 	Menu,
+	Tooltip,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
@@ -76,6 +77,7 @@ export default function TableUser() {
 	const [tableToolTip, setTableToolTip] = useState(false);
 	const [form] = Form.useForm();
 	const { token, forgotPassword } = UserAuth();
+
 	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
 	const { t } = useTranslation();
 
@@ -93,7 +95,7 @@ export default function TableUser() {
 
 	const { lang } = UserLanguage();
 	useEffect(() => {
-		newUserMonthly();
+		// newUserMonthly();
 		getAllUserData();
 	}, []);
 
@@ -113,10 +115,10 @@ export default function TableUser() {
 		}
 	};
 
-	const newUserMonthly = async () => {
-		const data = await getNewUserInCurrentMonth();
-		setNewUserInCurrentMonth(data);
-	};
+	// const newUserMonthly = async () => {
+	// 	const data = await getNewUserInCurrentMonth();
+	// 	setNewUserInCurrentMonth(data);
+	// };
 
 	const showModalMultiDelete = () => {
 		setOpenModalMultiDelete(true);
@@ -280,6 +282,12 @@ export default function TableUser() {
 			dataIndex: 'email',
 			key: 'email',
 			width: 210,
+			ellipsis: true,
+			render: (email) => (
+				<Tooltip placement='top' title={email} showArrow={false}>
+					{email}
+				</Tooltip>
+			),
 		},
 		{
 			title: t('Tags'),
@@ -308,11 +316,10 @@ export default function TableUser() {
 			dataIndex: 'id',
 			key: 'id',
 			ellipsis: true,
-			copyable: true,
 		},
 		{
 			width: 110,
-			title: t('Action'),
+			title: t(''),
 			// fixed: 'right',
 			key: 'action',
 			render: (_, record) => {
@@ -364,13 +371,19 @@ export default function TableUser() {
 
 				return (
 					<>
-						<Space size='middle'>
-							<Button
-								ghost
-								type='link'
-								icon={<MdContentCopy color='black' />}
-								onClick={() => copyToClipboard(record.id)}
-							/>
+						<Space size='small' className='table_actions'>
+							<Tooltip
+								placement='bottom'
+								title={t('Copy UID')}
+								showArrow={false}
+								align={{ offset: [0, -5] }}>
+								<Button
+									ghost
+									type='link'
+									icon={<MdContentCopy color='black' />}
+									onClick={() => copyToClipboard(record.id)}
+								/>
+							</Tooltip>
 
 							<Dropdown overlay={menu}>
 								<Button
@@ -798,6 +811,7 @@ export default function TableUser() {
 				width={400}
 				closable={false}
 				footer={null}
+				onCancel={() => setOpenModalMultiDelete(false)}
 				open={openModalMultiDelete}
 				confirmLoading={confirmLoadingModal}>
 				<div>
@@ -838,6 +852,7 @@ export default function TableUser() {
 				closable={false}
 				footer={null}
 				open={openModalDelete}
+				onCancel={() => setOpenModalDelete(false)}
 				confirmLoading={confirmLoadingModalDelete}>
 				<div>
 					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
@@ -884,22 +899,22 @@ export default function TableUser() {
 				width={450}
 				closable={false}
 				footer={null}
+				onCancel={() => setOpenModalResetPassword(false)}
 				open={openModalResetPassword}
 				confirmLoading={confirmLoadingModalResetPassword}>
 				<div>
-					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
+					<h6
+						style={{
+							fontWeight: 700,
+							fontSize: 18,
+							paddingBottom: 10,
+						}}>
 						{t('Reset Password')}
 					</h6>
 					<p style={{ fontWeight: 500, fontSize: 14 }}>
-						{t(
-							'After you have deleted an account, it will be permanently deleted. Accounts cannot be recovered',
-						)}
-						{'. '}
+						{t('Send a password reset email to')}
 					</p>
-					<span>
-						{t('Account email')}
-						{': '}
-					</span>
+
 					<b>{selectedUser?.email}</b>
 
 					<div
@@ -910,7 +925,7 @@ export default function TableUser() {
 							justifyContent: 'flex-end',
 						}}>
 						<Button
-							onClick={() => setOpenModalDelete(false)}
+							onClick={() => setOpenModalResetPassword(false)}
 							style={{ borderRadius: 8 }}>
 							{t('Cancel')}
 						</Button>
@@ -979,6 +994,9 @@ export default function TableUser() {
 					defaultPageSize: 5,
 					showSizeChanger: true,
 					pageSizeOptions: ['5', '10', '20', '30'],
+					hideOnSinglePage: true,
+					showTotal: (total, range) =>
+						`${range[0]}-${range[1]} of ${total} items`,
 				}}
 				columns={columns}
 				dataSource={searchDataSource || listUsers}

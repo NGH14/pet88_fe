@@ -95,4 +95,14 @@ textarea {
 	border: unset  !important;
 }
 
+.ant-tooltip {
+	font-size: 13px;
+
+}
+
+.ant-pagination-total-text {
+	color: #999 !important;
+}
+
+
 
