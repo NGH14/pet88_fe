@@ -332,6 +332,15 @@ export default function TableOrder() {
 		},
 
 		{
+			title: 'Created',
+			dataIndex: 'createdAt',
+			key: 'createdAt',
+			render: (text) => <span>{text}</span>,
+			sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+			defaultSortOrder: 'descend',
+		},
+
+		{
 			width: 110,
 			title: t('Action'),
 			fixed: 'right',

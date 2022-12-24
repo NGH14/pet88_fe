@@ -81,7 +81,7 @@ export default function Department() {
 	const onFinishConfirm = async (value) => {
 		const startDate = new Date(search?.datesGrooming).getTime();
 		const endDate = new Date(
-			moment(search?.datesGrooming).add(2, 'hours'),
+			moment(search?.datesGrooming).add(1, 'hours'),
 		).getTime();
 
 		axios

@@ -440,8 +440,8 @@ export const CalendarAdmin = () => {
 	);
 
 	const onFinishCreateEvent = async (values) => {
-		const start = selectedDate.start;
-		const end = selectedDate.end;
+		const start = selectedDate?.start;
+		const end = selectedDate?.end;
 		const title = values?.title;
 		const price =
 			(new Date(selectedDate?.end).getHours() -
@@ -482,8 +482,8 @@ export const CalendarAdmin = () => {
 				);
 				const event = {
 					id: eventID,
-					start: start.getTime(),
-					end: end.getTime(),
+					start: start,
+					end: end,
 					title,
 					order: order.data,
 				};
@@ -1117,7 +1117,6 @@ export const CalendarAdmin = () => {
 					</div>
 				</div>
 				<DnDCalendar
-					showMultiDayTimes
 					allDayAccessor={false}
 					views={['day', 'week', 'month', 'agenda']}
 					resizable
