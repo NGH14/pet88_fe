@@ -53,6 +53,8 @@ export const AuthContextProvider = ({ children }) => {
 		});
 	};
 
+	const API_URL = process.env.REACT_APP_API;
+
 	const updateUserByAdmin = async (uid, value) => {
 		const userRef = doc(storage, 'users', uid);
 		const cusdob = Timestamp.fromDate(new Date(value.dob));
@@ -132,7 +134,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const GetAllHotel = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/hotel/`, {});
+			const res = await axios.get(`${API_URL}/hotel/`, {});
 			return res.data;
 		} catch (error) {
 			return console.error(error);

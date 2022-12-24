@@ -104,6 +104,7 @@ export const CalendarAdmin = () => {
 	const [groomingListOption, setGroomingListOption] = useState({});
 	const [defaultDate, setDefaultDate] = useState(new Date());
 	const [defaulGroomingOpion, setDefaulGroomingOpion] = useState([]);
+	const [calendarAdminPanel, setCalendarAdminPanel] = useState('day');
 
 	const [selectedDate, setSelectedDate] = useState({ start: 0, end: 0 });
 	const [selecteDetaildDate, setSelectedDetailDate] = useState({});
@@ -240,7 +241,7 @@ export const CalendarAdmin = () => {
 						name: value.name,
 						startDate: value.start,
 						endDate: value.end,
-						id: uid(),
+						id: value.id,
 						title: value.title,
 						order: value.order,
 					},
@@ -298,8 +299,8 @@ export const CalendarAdmin = () => {
 		}
 	};
 
-	const onPanelChange = (value, mode) => {
-		console.log(value.format('YYYY-MM-DD'), mode);
+	const onPanelChange = (value) => {
+		setCalendarAdminPanel(value);
 	};
 
 	const onSubCalendarSelected = (newValue) => {
@@ -323,6 +324,10 @@ export const CalendarAdmin = () => {
 
 	const handleSelectSlot = useCallback(
 		({ start, end }) => {
+			console.log({
+				test: moment(start).hour() < 8 && moment(end).hour() > 22.5,
+			});
+
 			setOpenCreateModal(true);
 			setSelectedDate({ start, end });
 		},
@@ -415,6 +420,25 @@ export const CalendarAdmin = () => {
 		}
 	};
 
+	const slotPropGetter = useCallback(
+		(date) => ({
+			className: 'slotDefault',
+			...(moment(date).hour() < 8 && {
+				style: {
+					backgroundColor: '#e6e6e6',
+					color: 'black',
+				},
+			}),
+			...(moment(date).hour() > 22.25 && {
+				style: {
+					backgroundColor: '#e6e6e6',
+					color: 'black',
+				},
+			}),
+		}),
+		[],
+	);
+
 	const onFinishCreateEvent = async (values) => {
 		const start = selectedDate.start;
 		const end = selectedDate.end;
@@ -466,10 +490,7 @@ export const CalendarAdmin = () => {
 				FetchAddEvent(event);
 				setEvent(event);
 
-				setAllEvents((prev) => [
-					...prev,
-					{ id: eventID, start, end, title, order: order.data },
-				]);
+				setAllEvents((prev) => [...prev, event]);
 				setOpenCreateModal(false);
 			} catch (error) {
 				console.error(error);
@@ -1096,6 +1117,8 @@ export const CalendarAdmin = () => {
 					</div>
 				</div>
 				<DnDCalendar
+					showMultiDayTimes
+					allDayAccessor={false}
 					views={['day', 'week', 'month', 'agenda']}
 					resizable
 					startAccessor='start'
@@ -1108,10 +1131,10 @@ export const CalendarAdmin = () => {
 
 					// 	return { style: { backgroundColor, border } };
 					// }}
+					selectable={calendarAdminPanel !== 'month' ? true : false}
 					longPressThreshold={10}
 					onSelectEvent={handleSelectEvent}
 					onSelectSlot={handleSelectSlot}
-					selectable={true}
 					messages={messages}
 					localizer={localizer}
 					date={defaultDate}
@@ -1122,7 +1145,9 @@ export const CalendarAdmin = () => {
 					onEventResize={resizeEvent}
 					onEventDrop={moveEvent}
 					step={30}
+					onView={onPanelChange}
 					popup
+					slotPropGetter={slotPropGetter}
 				/>
 			</div>
 		</ConfigProvider>

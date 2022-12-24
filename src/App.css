@@ -105,4 +105,7 @@ textarea {
 }
 
 
+.ant-modal-header, .ant-modal-body {
+	border-radius: 8px;
+}
 

@@ -77,14 +77,11 @@ export default function TableUser() {
 	const [tableToolTip, setTableToolTip] = useState(false);
 	const [form] = Form.useForm();
 	const { token, forgotPassword } = UserAuth();
-
 	const [searchDataSource, setSearchDataSource] = React.useState(listUsers);
 	const { t } = useTranslation();
-
 	const [openModalMultiDelete, setOpenModalMultiDelete] = useState(false);
 	const [openModalDelete, setOpenModalDelete] = useState(false);
 	const [openModalResetPassword, setOpenModalResetPassword] = useState(false);
-
 	const [confirmLoadingModal, setConfirmLoadingModal] = useState(false);
 	const [confirmLoadingModalDelete, setConfirmLoadingModalDelete] =
 		useState(false);
@@ -92,7 +89,7 @@ export default function TableUser() {
 		confirmLoadingModalResetPassword,
 		setConfirmLoadingModalResetPassword,
 	] = useState(false);
-
+	const API = process.env.REACT_APP_API;
 	const { lang } = UserLanguage();
 	useEffect(() => {
 		// newUserMonthly();
@@ -190,9 +187,7 @@ export default function TableUser() {
 
 	const fetchDeleteData = async (token, id) => {
 		try {
-			const res = await axios.delete(
-				`http://localhost:3001/api/user/${id}`,
-			);
+			const res = await axios.delete(`${API}/user/${id}`);
 			console.log(res.data);
 		} catch (error) {
 			console.error(error);

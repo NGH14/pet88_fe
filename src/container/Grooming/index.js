@@ -79,8 +79,6 @@ export default function Department() {
 	};
 
 	const onFinishConfirm = async (value) => {
-		console.log(value);
-
 		const startDate = new Date(search?.datesGrooming).getTime();
 		const endDate = new Date(
 			moment(search?.datesGrooming).add(2, 'hours'),
@@ -101,6 +99,8 @@ export default function Department() {
 				service: search.services,
 			})
 			.then((response) => {
+				// console.log(response);
+
 				setLoading(false);
 				navigate('/booking/success');
 			})
@@ -262,8 +262,7 @@ export default function Department() {
 										title={t('Confirm Booking')}
 										centered
 										open={openDetailModal}
-										// onOk={onFinishConfirm}
-										// footer={null}
+										footer={null}
 										onCancel={() =>
 											setOpenDetailModal(false)
 										}>

@@ -162,20 +162,20 @@ export default function TableOrder() {
 		setOpenCreate(false);
 	};
 
-	const handleDeleteOrder = async (id) => {
+	const handleDeleteOrder = async (value) => {
 		try {
-			const res = await axios.delete(
-				`http://localhost:3001/api/order/${id}`,
-				{},
-			);
+			await Promise.all([
+				axios.put(
+					`http://localhost:3001/api/grooming/room/event/delete/${value.eventID}`,
+				),
+				axios.delete(`http://localhost:3001/api/order/${value._id}`),
+			]);
 
-			setListorders(listorders.filter((item) => item._id !== id));
+			setListorders(listorders.filter((item) => item._id !== value._id));
 			setSearchDataSource(
-				searchDataSource.filter((item) => item._id !== id),
+				searchDataSource.filter((item) => item._id !== value._id),
 			);
 			toast.success(t('Delete Success'));
-
-			return res.data;
 		} catch (error) {
 			return console.error(error);
 		}
@@ -341,7 +341,7 @@ export default function TableOrder() {
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteOrder(record._id)}>
+						onConfirm={() => handleDeleteOrder(record)}>
 						<Button
 							danger
 							type='text'

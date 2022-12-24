@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
-import { auth } from '../utils/firebase';
+import React, { createContext, useContext } from 'react';
 
 const LanguageContext = createContext();
 
