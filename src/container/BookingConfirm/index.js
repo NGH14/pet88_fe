@@ -10,6 +10,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import { useTranslation } from 'react-i18next';
 import { BsCheck2Circle } from 'react-icons/bs';
 import axios from 'axios';
+import { uid } from 'uid';
 
 export default function BookingConfirm() {
 	const [loading, setLoading] = React.useState(true);
@@ -31,6 +32,7 @@ export default function BookingConfirm() {
 
 			setDataList(res.data);
 			await handleUpdateDate(res.data);
+			console.log(res.data);
 			setLoading(false);
 		} catch (error) {
 			console.error(error);
@@ -54,19 +56,44 @@ export default function BookingConfirm() {
 
 	const handleUpdateDate = async (data) => {
 		try {
-			const alldates = getDatesInRange(data.start, data.end);
+			if (data.service === 'hotel') {
+				const alldates = getDatesInRange(data.start, data.end);
 
-			await Promise.all(
-				data.products.map((room) => {
-					const res = axios.put(
-						`http://localhost:3001/api/hotel-room/availability/${room.roomId}`,
-						{
-							dates: alldates,
-						},
-					);
-					return res.data;
-				}),
-			);
+				await Promise.all(
+					data.products.map((room) => {
+						const res = axios.put(
+							`http://localhost:3001/api/hotel-room/availability/${room.roomId}`,
+							{
+								dates: alldates,
+							},
+						);
+						return res.data;
+					}),
+				);
+			}
+
+			if (data.service === 'grooming') {
+				const eventID = uid();
+				await Promise.all(
+					data.products.map((room) => {
+						console.log(room);
+						const res = axios.put(
+							`http://localhost:3001/api/grooming/availability/${room.roomId}`,
+							{
+								dates: {
+									name: data?.name,
+									startDate: data?.start,
+									endDate: data?.end,
+									id: eventID?.id,
+									title: data?.name,
+									order: data,
+								},
+							},
+						);
+						return res.data;
+					}),
+				);
+			}
 		} catch (err) {}
 	};
 

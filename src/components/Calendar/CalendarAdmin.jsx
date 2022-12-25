@@ -105,8 +105,11 @@ export const CalendarAdmin = () => {
 	const [defaultDate, setDefaultDate] = useState(new Date());
 	const [defaulGroomingOpion, setDefaulGroomingOpion] = useState([]);
 	const [calendarAdminPanel, setCalendarAdminPanel] = useState('day');
-
-	const [selectedDate, setSelectedDate] = useState({ start: 0, end: 0 });
+	const [selectedDate, setSelectedDate] = useState({
+		start: 0,
+		end: 0,
+		price: 0,
+	});
 	const [selecteDetaildDate, setSelectedDetailDate] = useState({});
 	const [selecteDetailType, setSelecteDetailType] = useState(false);
 	const { GetAllUser } = UserAuth();
@@ -177,6 +180,7 @@ export const CalendarAdmin = () => {
 	}, [width]);
 
 	React.useEffect(() => form.resetFields(), [openCreateModal]);
+	moment.locale(lang);
 
 	const fetchGroomingData = async () => {
 		try {
@@ -253,9 +257,9 @@ export const CalendarAdmin = () => {
 	};
 
 	const FetchUpdateEvent = async (value) => {
-		const startDate = value?.start || selecteDetaildDate.start.getTime();
-		const endDate = value?.end || selecteDetaildDate.end.getTime();
-		const title = value?.title || selecteDetaildDate.title;
+		const startDate = value?.start || selecteDetaildDate?.start.getTime();
+		const endDate = value?.end || selecteDetaildDate?.end.getTime();
+		const title = value?.title || selecteDetaildDate?.title;
 		const id = value?.id || selecteDetaildDate.id;
 		const order =
 			{
@@ -307,9 +311,8 @@ export const CalendarAdmin = () => {
 		setDefaultDate(newValue.toDate());
 	};
 
-	moment.locale(lang);
-
 	const handleSelectEvent = useCallback((event) => {
+		console.log(event);
 		setOpenDetailModal(true);
 		setSelecteDetailType(false);
 		setSelectedDetailDate(event);
@@ -322,17 +325,27 @@ export const CalendarAdmin = () => {
 		[lang],
 	);
 
-	const handleSelectSlot = useCallback(
-		({ start, end }) => {
-			console.log({
-				test: moment(start).hour() < 8 && moment(end).hour() > 22.5,
-			});
+	const handleSelectSlot = ({ start, end }) => {
+		const price =
+			(new Date(end).getHours() - new Date(start).getHours()) *
+			2 *
+			selectedGroomingRoomData?.price;
 
+		console.log(price);
+		if (price > 0) {
 			setOpenCreateModal(true);
-			setSelectedDate({ start, end });
-		},
-		[setAllEvents],
-	);
+			setSelectedDate({ start, end, price });
+		}
+
+		if (price <= 0) {
+			setOpenCreateModal(true);
+			setSelectedDate({
+				start,
+				end,
+				price: selectedGroomingRoomData?.price,
+			});
+		}
+	};
 
 	const moveEvent = useCallback(
 		({
@@ -472,7 +485,10 @@ export const CalendarAdmin = () => {
 						roomList: selectedGroomingRoomId,
 						photo: photo,
 						days: 0,
-						price,
+						price:
+							price !== 0
+								? price
+								: selectedGroomingRoomData.price,
 						start,
 						name: bookingUser.name || 'guest',
 						end,
@@ -682,14 +698,7 @@ export const CalendarAdmin = () => {
 								{new Intl.NumberFormat('vi-VI', {
 									style: 'currency',
 									currency: 'VND',
-								}).format(
-									(new Date(selectedDate?.end).getHours() -
-										new Date(
-											selectedDate?.start,
-										).getHours()) *
-										2 *
-										selectedGroomingRoomData.price,
-								)}
+								}).format(selectedDate?.price)}
 							</span>
 						</Form.Item>
 						<Form.Item

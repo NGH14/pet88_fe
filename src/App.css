@@ -44,6 +44,12 @@ textarea {
 	outline: none;
 }
 
+.flex_end {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+
 .App-header {
 	background-color: #282c34;
 	min-height: 100vh;

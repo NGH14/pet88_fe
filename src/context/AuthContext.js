@@ -69,9 +69,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const getOrderByUser = async (id) => {
 		try {
-			const res = await axios.get(
-				`http://localhost:3001/api/order/user/${user.id}`,
-			);
+			const res = await axios.get(`${API_URL}/order/user/${user.id}`);
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -143,10 +141,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const DeleteHotel = async (id) => {
 		try {
-			const res = await axios.delete(
-				`http://localhost:3001/api/hotel/${id}`,
-				{},
-			);
+			const res = await axios.delete(`${API_URL}/hotel/${id}`, {});
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -155,11 +150,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const CreateHotel = async (value) => {
 		try {
-			const res = await axios.post(
-				`http://localhost:3001/api/hotel`,
-				value,
-				{},
-			);
+			const res = await axios.post(`${API_URL}/hotel`, value, {});
 			return res.data;
 		} catch (error) {
 			return error;
@@ -168,11 +159,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const UpdateHotel = async (id, value) => {
 		try {
-			const res = await axios.put(
-				`http://localhost:3001/api/hotel/${id}`,
-				value,
-				{},
-			);
+			const res = await axios.put(`${API_URL}/hotel/${id}`, value, {});
 			return res.data;
 		} catch (error) {
 			return error;
@@ -208,7 +195,7 @@ export const AuthContextProvider = ({ children }) => {
 	const MultipleDeleteDepart = async (listDelete) => {
 		try {
 			const res = await axios.patch(
-				`http://localhost:3001/api/hotel/multiple-delete`,
+				`${API_URL}/hotel/multiple-delete`,
 				listDelete,
 			);
 			return res.data;
@@ -219,7 +206,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const getNewUserInCurrentMonth = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/user/store`);
+			const res = await axios.get(`${API_URL}/user/store`);
 			return res.data;
 		} catch (error) {
 			return error;

@@ -79,16 +79,15 @@ export default function Department() {
 	};
 
 	const onFinishConfirm = async (value) => {
-		const startDate = new Date(search?.datesGrooming).getTime();
-		const endDate = new Date(
-			moment(search?.datesGrooming).add(1, 'hours'),
-		).getTime();
+		const startDate = new Date(search?.datesGrooming);
+		const endDate = new Date(moment(search?.datesGrooming).add(1, 'hours'));
 
 		axios
 			.post(`http://localhost:3001/api/order/grooming/booking`, {
 				email: value?.email,
 				userID: user?.id || 'guest',
 				name: value?.name || 'guest',
+				phone: value?.phone || '-1',
 				roomList: selectedRooms,
 				photo: photo,
 				days: search.days,
@@ -99,8 +98,6 @@ export default function Department() {
 				service: search.services,
 			})
 			.then((response) => {
-				// console.log(response);
-
 				setLoading(false);
 				navigate('/booking/success');
 			})

@@ -264,6 +264,7 @@ export default function TableUser() {
 			title: t('Name'),
 			dataIndex: 'name',
 			sorter: (a, b) => a.name.length - b.name.length,
+			defaultSortOrder: 'descend',
 		},
 
 		{
@@ -740,11 +741,7 @@ export default function TableUser() {
 							</>
 						)}
 
-						<Form.Item
-							wrapperCol={{
-								offset: 4,
-								span: 16,
-							}}>
+						<Form.Item className='flex_end'>
 							<Button
 								style={{
 									marginInline: 15,

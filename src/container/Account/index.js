@@ -15,6 +15,7 @@ import {
 	Radio,
 	Tabs,
 	Tag,
+	Modal,
 } from 'antd';
 
 import viVN from 'antd/es/locale/vi_VN';
@@ -43,8 +44,14 @@ const Account = () => {
 	const navigate = useNavigate();
 	const [passwordLoading, setPasswordLoading] = useState(false);
 	const { lang } = UserLanguage();
-	const { user, updateProfile, updateUser, UpdatePassword, getOrderByUser } =
-		UserAuth();
+	const {
+		user,
+		updateProfile,
+		updateUser,
+		UpdatePassword,
+		getOrderByUser,
+		forgotPassword,
+	} = UserAuth();
 	const [name, setName] = React.useState(user?.name);
 	const [password, setPassword] = React.useState();
 	const [oldPassword, setOldPassword] = React.useState();
@@ -53,6 +60,12 @@ const Account = () => {
 	const [gender, setGender] = React.useState(user?.gender);
 	const [phone, setPhone] = React.useState(user?.phone);
 	const { t } = useTranslation();
+	const [openModalResetPassword, setOpenModalResetPassword] = useState(false);
+
+	const [
+		confirmLoadingModalResetPassword,
+		setConfirmLoadingModalResetPassword,
+	] = useState(false);
 
 	const columns = [
 		{
@@ -141,6 +154,22 @@ const Account = () => {
 		getOrder();
 	}, []);
 
+	const SendResetPassword = async () => {
+		setConfirmLoadingModalResetPassword(true);
+		try {
+			await forgotPassword(user?.email);
+			toast.success(t('Password reset email has been sent'));
+
+			setOpenModalResetPassword(false);
+			setConfirmLoadingModalResetPassword(false);
+		} catch (e) {
+			toast.error(t('Sorry, an error has occurred'));
+			console.log(e.message);
+			setConfirmLoadingModalResetPassword(false);
+			setOpenModalResetPassword(false);
+		}
+	};
+
 	const getOrder = async () => {
 		setLoadingOrder(true);
 		try {
@@ -214,6 +243,55 @@ const Account = () => {
 				<Content>
 					<HeroImage />
 					<div className='account-page'>
+						<Modal
+							centered
+							width={450}
+							closable={false}
+							footer={null}
+							onCancel={() => setOpenModalResetPassword(false)}
+							open={openModalResetPassword}
+							confirmLoading={confirmLoadingModalResetPassword}>
+							<div>
+								<h6
+									style={{
+										fontWeight: 700,
+										fontSize: 18,
+										paddingBottom: 10,
+									}}>
+									{t('Reset Password')}
+								</h6>
+								<p style={{ fontWeight: 500, fontSize: 14 }}>
+									{t('Send a password reset email to')}
+								</p>
+
+								<b>{user?.email}</b>
+
+								<div
+									style={{
+										marginTop: 20,
+										display: 'flex',
+										gap: 5,
+										justifyContent: 'flex-end',
+									}}>
+									<Button
+										onClick={() =>
+											setOpenModalResetPassword(false)
+										}
+										style={{ borderRadius: 8 }}>
+										{t('Cancel')}
+									</Button>
+									<Button
+										loading={
+											confirmLoadingModalResetPassword
+										}
+										onClick={SendResetPassword}
+										style={{ borderRadius: 8 }}
+										type='primary'>
+										{t('Send')}
+									</Button>
+								</div>
+							</div>
+						</Modal>
 						<div className='account-page_text'>
 							<h1 className='account-page_title'>
 								{t('account info')}
@@ -362,6 +440,16 @@ const Account = () => {
 										<div className='tabpane_formtext '>
 											<h2 className='form-title'>
 												{t('Change Password')}
+												<Button
+													type='link'
+													onClick={() =>
+														setOpenModalResetPassword(
+															true,
+														)
+													}>
+													{' '}
+													({t('Forgot Password')} )
+												</Button>
 											</h2>
 											<p>
 												{t(
