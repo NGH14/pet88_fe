@@ -143,6 +143,7 @@ function AppHeader() {
 												{pages.map((page, _) => {
 													return (
 														<HashLink
+															smooth
 															key={page.title}
 															to='#about'
 															// to={page.url}
@@ -171,6 +172,7 @@ function AppHeader() {
 												})}
 												{user && (
 													<HashLink
+														smooth
 														to='./account'
 														style={{
 															transition:
@@ -196,6 +198,7 @@ function AppHeader() {
 
 												{user?.role === 'admin' && (
 													<HashLink
+														smooth
 														to='/admin'
 														style={{
 															transition:
@@ -237,7 +240,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<HashLink to='/'>
+												<HashLink to='/' smooth>
 													<img
 														src={
 															navBg
@@ -258,6 +261,7 @@ function AppHeader() {
 												{pages.map((page, _) => {
 													return (
 														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -368,6 +372,7 @@ function AppHeader() {
 												{pages.map((page, _) => {
 													return (
 														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -395,6 +400,7 @@ function AppHeader() {
 												})}
 												{user && (
 													<HashLink
+														smooth
 														to='/account'
 														style={{
 															transition:
@@ -420,6 +426,7 @@ function AppHeader() {
 
 												{user?.role === 'admin' && (
 													<HashLink
+														smooth
 														to='/admin'
 														style={{
 															transition:
@@ -461,7 +468,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<HashLink to='/'>
+												<HashLink to='/' smooth>
 													<img
 														src={Logo}
 														alt=''
@@ -478,6 +485,7 @@ function AppHeader() {
 												{pages.map((page, _) => {
 													return (
 														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -608,6 +616,7 @@ function AppHeader() {
 												{pages.map((page, _) => {
 													return (
 														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -635,6 +644,7 @@ function AppHeader() {
 												})}
 												{user && (
 													<HashLink
+														smooth
 														to='/account'
 														style={{
 															transition:
@@ -676,7 +686,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<HashLink to='/'>
+												<HashLink to='/' smooth>
 													<img
 														src={Logo}
 														alt=''
@@ -693,6 +703,7 @@ function AppHeader() {
 												{pages.map((page, _) => {
 													return (
 														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{

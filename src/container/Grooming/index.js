@@ -276,6 +276,15 @@ export default function Department() {
 											onFinish={onFinishConfirm}
 											requiredMark={false}>
 											<Form.Item
+												rules={[
+													{
+														required: true,
+														message:
+															t(
+																'Please input name!',
+															),
+													},
+												]}
 												name='name'
 												label={<RiFileUserLine />}>
 												<Input
@@ -283,6 +292,14 @@ export default function Department() {
 												/>
 											</Form.Item>
 											<Form.Item
+												rules={[
+													{
+														required: true,
+														message: t(
+															'Please input email!',
+														),
+													},
+												]}
 												name='email'
 												label={<RiMailSendLine />}>
 												<Input
@@ -291,6 +308,14 @@ export default function Department() {
 											</Form.Item>
 
 											<Form.Item
+												rules={[
+													{
+														required: true,
+														message: t(
+															'Please input phone number!',
+														),
+													},
+												]}
 												name='phone'
 												label={<RiPhoneLine />}>
 												<Input

@@ -257,16 +257,17 @@ export const CalendarAdmin = () => {
 	};
 
 	const FetchUpdateEvent = async (value) => {
-		const startDate = value?.start || selecteDetaildDate?.start.getTime();
-		const endDate = value?.end || selecteDetaildDate?.end.getTime();
+		const startDate = value?.start || selecteDetaildDate?.start;
+		const endDate = value?.end || selecteDetaildDate?.end;
 		const title = value?.title || selecteDetaildDate?.title;
 		const id = value?.id || selecteDetaildDate.id;
 		const order =
 			{
+				...selecteDetaildDate?.order,
 				name: value.name,
 				email: value.email,
 				phone: value.phone,
-			} || selecteDetaildDate.order;
+			} || selecteDetaildDate?.order;
 
 		try {
 			await axios.put(
@@ -278,6 +279,40 @@ export const CalendarAdmin = () => {
 					order,
 				},
 			);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const FetchUpdateReSizeEvent = async (value) => {
+		const startDate = value?.start || selecteDetaildDate?.start;
+		const endDate = value?.end || selecteDetaildDate?.end;
+		const title = value?.title || selecteDetaildDate?.title;
+		const id = value?.id || selecteDetaildDate.id;
+		const order = value?.order;
+		// console.log(order.start, startDate);
+		try {
+			await axios.put(
+				`http://localhost:3001/api/grooming/room/event/${id}`,
+				{
+					startDate,
+					endDate,
+					title,
+					order,
+				},
+			);
+			const price =
+				(new Date(endDate).getHours() -
+					new Date(startDate).getHours()) *
+				2 *
+				selectedGroomingRoomData?.price;
+
+			await axios.put(`http://localhost:3001/api/order/${order._id}`, {
+				...order,
+				start: startDate,
+				endDate: endDate,
+				price: price !== 0 ? price : selectedGroomingRoomData?.price,
+			});
 		} catch (error) {
 			console.error(error);
 		}
@@ -312,7 +347,6 @@ export const CalendarAdmin = () => {
 	};
 
 	const handleSelectEvent = useCallback((event) => {
-		console.log(event);
 		setOpenDetailModal(true);
 		setSelecteDetailType(false);
 		setSelectedDetailDate(event);
@@ -331,7 +365,6 @@ export const CalendarAdmin = () => {
 			2 *
 			selectedGroomingRoomData?.price;
 
-		console.log(price);
 		if (price > 0) {
 			setOpenCreateModal(true);
 			setSelectedDate({ start, end, price });
@@ -348,62 +381,33 @@ export const CalendarAdmin = () => {
 	};
 
 	const moveEvent = useCallback(
-		({
-			event,
-			start,
-			end,
-			resourceId,
-			isAllDay: droppedOnAllDaySlot = true,
-		}) => {
-			const { allDay } = event;
-
-			if (!allDay && droppedOnAllDaySlot) {
-				event.allDay = true;
-			}
-			FetchUpdateEvent({
+		({ event, start, end }) => {
+			FetchUpdateReSizeEvent({
+				...event,
 				start,
 				end,
-				title: event.title,
-				id: event.id,
-				order: event.order,
 			});
 
 			setAllEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [
-					...filtered,
-					{
-						...existing,
-						start,
-						end,
-						resourceId,
-						allDay,
-						order: event.order,
-					},
-				];
+				return [...filtered, { ...existing, start, end }];
 			});
 		},
 		[setAllEvents],
 	);
-
 	const resizeEvent = useCallback(
 		({ event, start, end }) => {
-			FetchUpdateEvent({
+			FetchUpdateReSizeEvent({
+				...event,
 				start,
 				end,
-				title: event.title,
-				id: event.id,
-				order: event.order,
 			});
 
 			setAllEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [
-					...filtered,
-					{ ...existing, start, end, order: event.order },
-				];
+				return [...filtered, { ...existing, start, end }];
 			});
 		},
 		[setAllEvents],
@@ -526,6 +530,7 @@ export const CalendarAdmin = () => {
 							...obj,
 							title,
 							order: {
+								...obj.order,
 								name: values.name,
 								email: values.email,
 								phone: values.phone,
@@ -850,7 +855,6 @@ export const CalendarAdmin = () => {
 								<span>{selecteDetaildDate?.order?.email}</span>
 							)}
 						</Form.Item>
-
 						<Form.Item name='phone' label={<RiPhoneLine />}>
 							{selecteDetailType ? (
 								<Input placeholder={t('Enter event title')} />
@@ -1128,17 +1132,26 @@ export const CalendarAdmin = () => {
 				<DnDCalendar
 					allDayAccessor={false}
 					views={['day', 'week', 'month', 'agenda']}
-					resizable
+					resizable={calendarAdminPanel !== 'month' ? true : false}
 					startAccessor='start'
 					endAccessor='end'
-					// eventPropGetter={(event) => {
-					// 	const backgroundColor = event.allday
-					// 		? 'yellow'
-					// 		: '#9999';
-					// 	const border = event.allday ? 'yellow' : '#9999';
+					eventPropGetter={(event) => {
+						// const backgroundColor = event.allday
+						// 	? 'yellow'
+						// 	: '#9999';
+						// const border = event.allday ? 'yellow' : '#9999';
 
-					// 	return { style: { backgroundColor, border } };
-					// }}
+						return {
+							style: {
+								backgroundColor:
+									calendarAdminPanel !== 'agenda' &&
+									'#94795C',
+								border:
+									calendarAdminPanel !== 'agenda' &&
+									'#94795C',
+							},
+						};
+					}}
 					selectable={calendarAdminPanel !== 'month' ? true : false}
 					longPressThreshold={10}
 					onSelectEvent={handleSelectEvent}

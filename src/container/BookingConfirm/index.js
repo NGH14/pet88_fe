@@ -84,7 +84,7 @@ export default function BookingConfirm() {
 									name: data?.name,
 									startDate: data?.start,
 									endDate: data?.end,
-									id: eventID?.id,
+									id: eventID,
 									title: data?.name,
 									order: data,
 								},
