@@ -57,6 +57,7 @@ import { toast } from 'react-toastify';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const DnDCalendar = withDragAndDrop(RB);
+const { Paragraph } = Typography;
 
 const events = [
 	{
@@ -123,7 +124,7 @@ export const CalendarAdmin = () => {
 	const [openCreateModal, setOpenCreateModal] = useState(false);
 	const [openDetailModal, setOpenDetailModal] = useState(false);
 	const [accountType, setAccountType] = React.useState(true);
-	const { height, width } = useWindowDimensions();
+	const { width } = useWindowDimensions();
 	const [form] = Form.useForm();
 
 	const [bounds, setBounds] = useState({
@@ -133,6 +134,7 @@ export const CalendarAdmin = () => {
 		right: 0,
 	});
 	const draggleRef = useRef(null);
+	React.useEffect(() => form.resetFields());
 
 	const onChange = (value, selectedOptions) => {
 		setSelectedGroomingRoomId(selectedOptions[1].value);
@@ -179,7 +181,6 @@ export const CalendarAdmin = () => {
 		}
 	}, [width]);
 
-	React.useEffect(() => form.resetFields(), [openCreateModal]);
 	moment.locale(lang);
 
 	const fetchGroomingData = async () => {
@@ -251,6 +252,7 @@ export const CalendarAdmin = () => {
 					},
 				},
 			);
+			form.resetFields();
 		} catch (error) {
 			console.error(error);
 		}
@@ -279,6 +281,7 @@ export const CalendarAdmin = () => {
 					order,
 				},
 			);
+			form.resetFields();
 		} catch (error) {
 			console.error(error);
 		}
@@ -290,29 +293,32 @@ export const CalendarAdmin = () => {
 		const title = value?.title || selecteDetaildDate?.title;
 		const id = value?.id || selecteDetaildDate.id;
 		const order = value?.order;
-		// console.log(order.start, startDate);
-		try {
-			await axios.put(
-				`http://localhost:3001/api/grooming/room/event/${id}`,
-				{
-					startDate,
-					endDate,
-					title,
-					order,
-				},
-			);
-			const price =
-				(new Date(endDate).getHours() -
-					new Date(startDate).getHours()) *
-				2 *
-				selectedGroomingRoomData?.price;
+		const price =
+			(new Date(endDate).getHours() - new Date(startDate).getHours()) *
+			1 *
+			selectedGroomingRoomData?.price;
 
-			await axios.put(`http://localhost:3001/api/order/${order._id}`, {
-				...order,
-				start: startDate,
-				endDate: endDate,
-				price: price !== 0 ? price : selectedGroomingRoomData?.price,
-			});
+		const orderPrice = price > 0 ? price : selectedGroomingRoomData?.price;
+
+		try {
+			await Promise.all([
+				axios.put(
+					`http://localhost:3001/api/grooming/room/event/${id}`,
+					{
+						startDate,
+						endDate,
+						title,
+						order,
+					},
+				),
+
+				axios.put(`http://localhost:3001/api/order/${order._id}`, {
+					...order,
+					start: startDate,
+					endDate: endDate,
+					price: orderPrice,
+				}),
+			]);
 		} catch (error) {
 			console.error(error);
 		}
@@ -346,11 +352,11 @@ export const CalendarAdmin = () => {
 		setDefaultDate(newValue.toDate());
 	};
 
-	const handleSelectEvent = useCallback((event) => {
+	const handleSelectEvent = (event) => {
 		setOpenDetailModal(true);
 		setSelecteDetailType(false);
 		setSelectedDetailDate(event);
-	}, []);
+	};
 
 	const { messages } = useMemo(
 		() => ({
@@ -362,7 +368,7 @@ export const CalendarAdmin = () => {
 	const handleSelectSlot = ({ start, end }) => {
 		const price =
 			(new Date(end).getHours() - new Date(start).getHours()) *
-			2 *
+			1 *
 			selectedGroomingRoomData?.price;
 
 		if (price > 0) {
@@ -380,43 +386,35 @@ export const CalendarAdmin = () => {
 		}
 	};
 
-	const moveEvent = useCallback(
-		({ event, start, end }) => {
-			FetchUpdateReSizeEvent({
-				...event,
-				start,
-				end,
-			});
+	const moveEvent = ({ event, start, end }) => {
+		FetchUpdateReSizeEvent({
+			...event,
+			start,
+			end,
+		});
 
-			setAllEvents((prev) => {
-				const existing = prev.find((ev) => ev.id === event.id) ?? {};
-				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [...filtered, { ...existing, start, end }];
-			});
-		},
-		[setAllEvents],
-	);
-	const resizeEvent = useCallback(
-		({ event, start, end }) => {
-			FetchUpdateReSizeEvent({
-				...event,
-				start,
-				end,
-			});
+		setAllEvents((prev) => {
+			const existing = prev.find((ev) => ev.id === event.id) ?? {};
+			const filtered = prev.filter((ev) => ev.id !== event.id);
+			return [...filtered, { ...existing, start, end }];
+		});
+	};
+	const resizeEvent = ({ event, start, end }) => {
+		FetchUpdateReSizeEvent({
+			...event,
+			start,
+			end,
+		});
 
-			setAllEvents((prev) => {
-				const existing = prev.find((ev) => ev.id === event.id) ?? {};
-				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [...filtered, { ...existing, start, end }];
-			});
-		},
-		[setAllEvents],
-	);
+		setAllEvents((prev) => {
+			const existing = prev.find((ev) => ev.id === event.id) ?? {};
+			const filtered = prev.filter((ev) => ev.id !== event.id);
+			return [...filtered, { ...existing, start, end }];
+		});
+	};
 
-	const onNavigate = useCallback(
-		(newDate) => setDefaultDate(newDate),
-		[setDefaultDate],
-	);
+	const onNavigate = (newDate) => setDefaultDate(newDate);
+
 	const getAllUserData = async () => {
 		try {
 			const list = [];
@@ -463,7 +461,7 @@ export const CalendarAdmin = () => {
 		const price =
 			(new Date(selectedDate?.end).getHours() -
 				new Date(selectedDate?.start).getHours()) *
-			2 *
+			1 *
 			selectedGroomingRoomData.price;
 
 		const bookingUser = values.account
@@ -478,6 +476,9 @@ export const CalendarAdmin = () => {
 		if (values?.title) {
 			const eventID = uid();
 
+			const orderPrice =
+				price !== 0 ? price : selectedGroomingRoomData?.price;
+
 			try {
 				const order = await axios.post(
 					`http://localhost:3001/api/order/admin/grooming`,
@@ -489,10 +490,7 @@ export const CalendarAdmin = () => {
 						roomList: selectedGroomingRoomId,
 						photo: photo,
 						days: 0,
-						price:
-							price !== 0
-								? price
-								: selectedGroomingRoomData.price,
+						price: orderPrice,
 						start,
 						name: bookingUser.name || 'guest',
 						end,
@@ -551,6 +549,7 @@ export const CalendarAdmin = () => {
 			allEvents.filter((item) => item.id !== selecteDetaildDate.id),
 		);
 		setOpenDetailModal(false);
+		selecteDetaildDate();
 	};
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
@@ -917,13 +916,18 @@ export const CalendarAdmin = () => {
 										new Date(
 											selecteDetaildDate?.start,
 										).getHours()) *
-										2 *
+										1 *
 										selectedGroomingRoomData.price,
 								)}
 							</span>
 						</Form.Item>
 						<Form.Item label={<RiShoppingCartLine />}>
-							<span>{selecteDetaildDate?.order?._id}</span>
+							<Paragraph
+								copyable={{
+									tooltips: false,
+								}}>
+								{selecteDetaildDate?.order?._id}
+							</Paragraph>
 						</Form.Item>
 						<Form.Item
 							style={{
@@ -1083,7 +1087,6 @@ export const CalendarAdmin = () => {
 							);
 						}}
 						fullscreen={false}
-						// onPanelChange={onPanelChange}
 						onSelect={onSubCalendarSelected}
 					/>
 
@@ -1136,11 +1139,6 @@ export const CalendarAdmin = () => {
 					startAccessor='start'
 					endAccessor='end'
 					eventPropGetter={(event) => {
-						// const backgroundColor = event.allday
-						// 	? 'yellow'
-						// 	: '#9999';
-						// const border = event.allday ? 'yellow' : '#9999';
-
 						return {
 							style: {
 								backgroundColor:
@@ -1154,7 +1152,7 @@ export const CalendarAdmin = () => {
 					}}
 					selectable={calendarAdminPanel !== 'month' ? true : false}
 					longPressThreshold={10}
-					onSelectEvent={handleSelectEvent}
+					onSelectEvent={(e) => handleSelectEvent(e)}
 					onSelectSlot={handleSelectSlot}
 					messages={messages}
 					localizer={localizer}

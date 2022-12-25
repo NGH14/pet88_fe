@@ -92,6 +92,10 @@ general
 	width: 400px;
 }
 
+.homepage-content_subflexImg{
+	width: 500px;
+}
+
 .homepage-content_flexText {
 	line-height: 1.8;
 	max-width: 400px;
@@ -118,12 +122,18 @@ general
 	padding: 80px 80px 40px;
 }
 
+.homepage-servicecontent_text {
+	font-size: 16px;
+
+}
+
 .homepage-servicecontent_title {
 	line-height: 70px;
 	font-size: 50px;
 	width: 600px;
 	font-weight: 900;
 	letter-spacing: 0.02em;
+	text-transform: capitalize;
 }
 
 .grey {
@@ -350,6 +360,10 @@ general
 		padding: 10px;
 	}
 
+	.homepage-content_subflexImg{
+		width: 300px;
+	}
+
 	.homepage-content_flexImg {
 		width: 300px;
 	}
@@ -368,6 +382,7 @@ general
 		font-weight: 900;
 		word-wrap: normal;
 		width: 100%;
+		margin-top: 20px;
 	}
 	.mainLayout {
 		font-size: 12px;

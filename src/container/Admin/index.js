@@ -68,11 +68,6 @@ export default function Admin() {
 			getItem(t('Grooming Service'), '/admin/management-grooming'),
 		]),
 		getItem(t('User'), '/admin/management-user', <CgUserList />),
-		getItem(
-			t('Promotion'),
-			'/admin/management-promotion',
-			<RiCoupon3Line />,
-		),
 
 		getItem(t('Order'), '/admin/management-order', <MdOutlinePayments />),
 		// getItem(<ChangeLanguage fullWidth></ChangeLanguage>, '', null),
@@ -175,8 +170,7 @@ export default function Admin() {
 											return <TableUser />;
 										case '/admin/management-hotel':
 											return <TableHotel />;
-										case '/admin/management-promotion':
-											return <TableHotel />;
+
 										case '/admin/management-room-category':
 											return <TableRooms />;
 										case '/admin/management-grooming':

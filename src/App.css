@@ -116,3 +116,6 @@ textarea {
 	border-radius: 8px;
 }
 
+div.ant-typography, .ant-typography p {
+	margin-bottom: 0px;
+}

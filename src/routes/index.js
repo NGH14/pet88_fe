@@ -17,6 +17,12 @@ export const routes = [
 		element: React.lazy(() => import('../container/Login')),
 		private: false,
 	},
+
+	{
+		path: '/terms',
+		element: React.lazy(() => import('../container/Terms')),
+		private: false,
+	},
 	{
 		path: '/sign-up',
 		element: React.lazy(() => import('../container/Login')),

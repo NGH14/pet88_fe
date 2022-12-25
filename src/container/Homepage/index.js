@@ -47,6 +47,7 @@ import img4 from '../../assets/images/customer-logo-2.webp';
 import FIRST from '../../assets/images/dog-grooming-photography-2.jpg';
 import SECOND from '../../assets/images/dog-grooming-photography-1.jpg';
 import serviceImg1 from '../../assets/images/Illustration-Bond.png';
+import serviceImg2 from '../../assets/images/Illustration-Schedule.png';
 
 import 'react-before-after-slider-component/dist/build.css';
 import 'antd/es/date-picker/style/index.css';
@@ -250,7 +251,7 @@ function Homepage() {
 							</h3>
 							<p>
 								{t(
-									'Pet88 is dedicated to providing the best quality care for your pet. We offer the service, depending on your needs. We strive to be the most dependable	and accessible service in Vietnam and will go the extra distance to give you precisely what you are looking for in pet care',
+									'Pet88 is dedicated to providing the best quality care for your pet. We offer the service, depending on your needs.We strive to be the most dependable and accessible service in Vietnam and will go the extra distance to give you precisely what you are looking for in pet care',
 								)}
 							</p>
 						</div>
@@ -297,9 +298,56 @@ function Homepage() {
 								</div>
 							)}
 						</ScrollTrigger>
+						<div
+							id='about_section'
+							className='homepage-servicecontent'
+							variants={cardVariants}>
+							<h3 className='homepage-servicecontent_title'>
+								{t('about')} Pet88
+							</h3>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'The first goal of the project is to research and analyze the potential and the benefit of speed, simplicity, interoperability, versatility, and most important global platform support from the modern browser as Chrome, Firefox, etc. which is supported in the JavaScript programming language ecosystem in the booking pet service, includes a map, scheduler, notification, etc',
+								)}
+							</p>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'Drag & Drop Calendar is a calendar app that has Schedule, Week Agenda, Month, Day, and Week modes, and lets you drag and drop events from one day, week, or month to another in the manager.',
+								)}
+							</p>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'center',
+								}}>
+								<img
+									src={serviceImg2}
+									alt=''
+									className='homepage-content_subflexImg'
+								/>
+							</div>
+						</div>
+
+						<div
+							id='service_section'
+							className='homepage-servicecontent'
+							variants={cardVariants}>
+							<h3 className='homepage-servicecontent_title'>
+								{t('service')} Pet88
+							</h3>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'The interactive user interface includes two main views categories based on the user role, one for the customer who has the demand to book the pet service and another one for the manager and staff who can manage the system that not only CRUD but also other interaction like download, drag and drop to modify the service booking, etc',
+								)}
+							</p>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'The service helps to communicate between the front-end app and the database, which also store the keys to connect the third-party service, for example, this project has used the APIs from Firebase to store and authenticate the user by the Google account',
+								)}
+							</p>
+						</div>
 					</div>
 					<motion.div
-						id='about_section'
 						initial='offscreen'
 						whileInView='onscreen'
 						viewport={{ once: true, amount: 0.8 }}>

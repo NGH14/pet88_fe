@@ -48,7 +48,10 @@ const LeftSideSignin = ({ src }) => {
 
 				<p className='termofuse'>
 					{t('By continue using the webiste, you agree to the')}{' '}
-					<NavLink to='/' target='_blank'>
+					<NavLink
+						to='/terms'
+						target='_blank'
+						rel='noopener noreferrer'>
 						{t('Terms of use')}
 					</NavLink>
 				</p>

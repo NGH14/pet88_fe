@@ -53,14 +53,11 @@ export default function Department() {
 	const navigate = useNavigate();
 	const [selectedRooms, setSelectedRooms] = useState([]);
 	const [sumPrice, setSumPrice] = useState(0);
-	const [checkOutList, setcheckOutList] = useState([]);
 	const photo =
 		location.state.photos.length > 0
 			? location.state.photos[0]
 			: 'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
-	const currentDate = moment();
-	const futureMonth = moment(currentDate).add(1, 'M');
-	const futureWeek = moment(currentDate).add(1, 'W');
+
 	const { lang } = UserLanguage();
 	const { t } = useTranslation();
 	const [openDetailModal, setOpenDetailModal] = useState(false);
@@ -82,6 +79,15 @@ export default function Department() {
 		const startDate = new Date(search?.datesGrooming);
 		const endDate = new Date(moment(search?.datesGrooming).add(1, 'hours'));
 
+		const prices = dataList
+			.map((gr) => {
+				const isSelected = gr.roomNumbers.some((rn) => {
+					return selectedRooms.some((sr) => sr.roomId === rn._id);
+				});
+				return isSelected ? Number(gr.price) : undefined;
+			})
+			.filter((gr) => !!gr)
+			.reduce((v, t) => t + v, 0);
 		axios
 			.post(`http://localhost:3001/api/order/grooming/booking`, {
 				email: value?.email,
@@ -91,7 +97,7 @@ export default function Department() {
 				roomList: selectedRooms,
 				photo: photo,
 				days: search.days,
-				price: 0,
+				price: prices,
 				start: startDate,
 				end: endDate,
 				paymentMethod: 'cash',
