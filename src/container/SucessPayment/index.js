@@ -32,7 +32,6 @@ import { useTranslation } from 'react-i18next';
 import { SearchData } from '../../context/SearchContext';
 
 const { Step } = Steps;
-const description = 'This is a description.';
 const { Header, Content, Footer } = Layout;
 
 export default function PaymentSuccess() {
@@ -45,6 +44,7 @@ export default function PaymentSuccess() {
 	useEffect(() => {
 		fetchSuccess();
 	}, []);
+
 	const location = useLocation();
 	const id = location.pathname.split('/')[3];
 
@@ -78,6 +78,13 @@ export default function PaymentSuccess() {
 
 		return dates;
 	};
+
+	const priceWithoutVAT = dataList?.products?.reduce(
+		(total, room) => Number(total) + Number(room.price),
+		0,
+	);
+
+	const VAT = dataList?.price - priceWithoutVAT;
 
 	const handleUpdateDate = async (data) => {
 		try {
@@ -197,7 +204,7 @@ export default function PaymentSuccess() {
 										{new Intl.NumberFormat('vi-VI', {
 											style: 'currency',
 											currency: 'VND',
-										}).format((dataList?.price * 8) / 100)}
+										}).format(VAT)}
 									</td>
 								</div>
 

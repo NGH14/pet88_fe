@@ -77,7 +77,7 @@ export default function PaymentSuccess() {
 								}}></BsCheck2Circle>
 							<h1 style={{ fontWeight: 700 }}>
 								{' '}
-								{t('Booking Successfully')}
+								{t('Booking Successful')}
 							</h1>
 							<span className='forgotpassword-subtext'>
 								{t(

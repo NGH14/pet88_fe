@@ -38,6 +38,7 @@ import {
 	InputNumber,
 	Checkbox,
 	Radio,
+	Tooltip,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
@@ -130,10 +131,6 @@ export default function TableOrder() {
 		setOpenUpdate(true);
 	};
 
-	const handleOpenCreateRoom = async () => {
-		setOpenCreate(true);
-	};
-
 	const onFinishUpdate = async (value) => {
 		setLoading(true);
 		try {
@@ -187,41 +184,6 @@ export default function TableOrder() {
 				? userData.find((u) => u.email === value.user)
 				: { id: 'guest', email: value.user, phone: -1 };
 
-			// await axios
-			// 	.post(`http://localhost:3001/api/order/cash`, {
-			// 		email: user?.email,
-			// 		userID: user?.id || 'guest',
-			// 		roomList: sumPriceMap,
-			// 		photo: photo,
-			// 		days: search.days,
-			// 		price: totalPrice,
-			// 		start: search.datesHotels[0],
-			// 		end: search.datesHotels[1],
-			// 		paymentMethod: value?.paymentMethod,
-			// 		service: search.services,
-
-			// 		...value,
-			// 	})
-			// 	.then((response) => {
-			// 		setLoading(false);
-			// 		navigate('/booking/success');
-			// 	})
-			// 	.catch((err) => console.log(err.message));
-			// const roomNumbers = value.roomNumbers.map((room) => ({
-			// 	number: room,
-			// }));
-
-			// const data = {
-			// 	...value,
-			// 	hotelId: departmentID,
-			// 	roomNumbers,
-			// };
-
-			// await axios.post(
-			// 	`http://localhost:3001/api/order/${departmentID}`,
-			// 	data,
-			// );
-
 			console.log({ value, bookingUser });
 
 			setLoadingCreate(false);
@@ -273,7 +235,12 @@ export default function TableOrder() {
 			title: 'Order ID',
 			dataIndex: '_id',
 			key: 'email',
-			render: (text) => <span>{text}</span>,
+			render: (text) => (
+				<Tooltip placement='top' title={text} showArrow={false}>
+					{text}
+				</Tooltip>
+			),
+			ellipsis: true,
 		},
 		{
 			title: 'Service',
@@ -298,7 +265,7 @@ export default function TableOrder() {
 			title: 'Date (Nights)',
 			dataIndex: 'days',
 			key: 'days',
-			render: (text) => <span>{text}</span>,
+			render: (text) => <span>{text > 0 ? text : null}</span>,
 		},
 		{
 			title: 'Price',
@@ -335,7 +302,7 @@ export default function TableOrder() {
 			title: 'Created',
 			dataIndex: 'createdAt',
 			key: 'createdAt',
-			render: (text) => <span>{text}</span>,
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
 			sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
 			defaultSortOrder: 'descend',
 		},

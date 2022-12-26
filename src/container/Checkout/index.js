@@ -161,7 +161,7 @@ export default function Checkout() {
 										<div className='checkout_date'>
 											<div className='checkout_checkin'>
 												<h3 className='checkout-sub'>
-													{t('Check-in')}
+													{t('Drop off')}
 												</h3>
 												<p className='checkout-dates_text'>
 													{checkInDate}
@@ -170,7 +170,7 @@ export default function Checkout() {
 
 											<div className='checkout_checkout'>
 												<h3 className='checkout-sub'>
-													{t('Check-out')}
+													{t('Pick up')}
 												</h3>
 												<p className='checkout-dates_text'>
 													{checkOutDate}
@@ -196,7 +196,7 @@ export default function Checkout() {
 										<div className='checkout_price'>
 											<div className='checkout_counting'>
 												<h3 className='checkout-sub'>
-													{t('Check-in')}
+													{t('Room')}
 												</h3>
 												<p className='checkout-dates_text'>
 													{new Intl.NumberFormat(

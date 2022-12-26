@@ -64,7 +64,7 @@ export default function Admin() {
 
 		getItem(t('Business'), 'depart', <ReconciliationOutlined />, [
 			getItem(t('Departments'), '/admin/management-hotel'),
-			getItem(t('Room Categories'), '/admin/management-room-category'),
+			getItem(t('Hotel Service'), '/admin/management-room-category'),
 			getItem(t('Grooming Service'), '/admin/management-grooming'),
 		]),
 		getItem(t('User'), '/admin/management-user', <CgUserList />),

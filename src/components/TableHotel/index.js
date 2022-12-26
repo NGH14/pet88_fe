@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import {
@@ -6,8 +6,7 @@ import {
 	ExportTableButton,
 	SearchTableInput,
 } from 'ant-table-extensions';
-import { storage } from '../../utils/firebase';
-import { useNavigate } from 'react-router-dom';
+
 import { toast } from 'react-toastify';
 import {
 	FileExcelOutlined,
@@ -16,8 +15,6 @@ import {
 	EditOutlined,
 	MoreOutlined,
 	ReloadOutlined,
-	DownOutlined,
-	UploadOutlined,
 	InboxOutlined,
 } from '@ant-design/icons';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -30,18 +27,13 @@ import {
 	Form,
 	Input,
 	Select,
-	DatePicker,
 	Popconfirm,
 	Upload,
-	message,
 	Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { UserLanguage } from '../../context/LanguageContext';
-import moment from 'moment';
 import axios from 'axios';
 import './style.css';
-import { borderRadius } from '@mui/system';
 const { Option } = Select;
 
 const getBase64 = (file) =>
@@ -67,10 +59,8 @@ export default function TableHotel() {
 	const [tableToolTip, setTableToolTip] = useState(false);
 
 	const [form] = Form.useForm();
-	const { token } = UserAuth();
 	const [searchDataSource, setSearchDataSource] = React.useState(listHotels);
 	const { t } = useTranslation();
-	const [page, setPage] = React.useState(1);
 	const {
 		CreateHotel,
 		DeleteHotel,
@@ -79,7 +69,6 @@ export default function TableHotel() {
 		UpdateHotel,
 		MultipleDeleteDepart,
 	} = UserAuth();
-	const { lang } = UserLanguage();
 
 	const [previewOpen, setPreviewOpen] = React.useState(false);
 	const [previewImage, setPreviewImage] = React.useState('');
@@ -490,7 +479,7 @@ export default function TableHotel() {
 			</Drawer>
 
 			<Drawer
-				title={t('Create Hotel')}
+				title={t('Create Department')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}

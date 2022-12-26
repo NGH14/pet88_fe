@@ -16,6 +16,7 @@ import {
 	Tabs,
 	Tag,
 	Modal,
+	Tooltip,
 } from 'antd';
 
 import viVN from 'antd/es/locale/vi_VN';
@@ -72,7 +73,12 @@ const Account = () => {
 			title: 'Order ID',
 			dataIndex: '_id',
 			key: '_id',
-			render: (text) => <span>{text}</span>,
+			render: (text) => (
+				<Tooltip placement='top' title={text} showArrow={false}>
+					{text}
+				</Tooltip>
+			),
+			ellipsis: true,
 		},
 		{
 			title: t('Type'),
@@ -105,7 +111,7 @@ const Account = () => {
 			title: 'Date (Nights)',
 			dataIndex: 'days',
 			key: 'days',
-			render: (text) => <span>{text}</span>,
+			render: (text) => <span>{text > 0 ? text : null}</span>,
 		},
 		{
 			title: 'Price',
