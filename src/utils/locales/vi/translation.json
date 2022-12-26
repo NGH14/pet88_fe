@@ -173,7 +173,7 @@
 	"E-payment": "Thanh toán điện tử",
 	"Booking Successful":"Đặt chỗ thành công",
 	"A Verification email has been sent to your email address":"Một email xác minh đã được gửi đến địa chỉ email của bạn",
-
+	"Invalid enter your email!": "Nhập email của bạn không hợp lệ!",
 
 
     "The interactive user interface includes two main views categories based on the user role, one for the customer who has the demand to book the pet service and another one for the manager and staff who can manage the system that not only CRUD but also other interaction like download, drag and drop to modify the service booking, etc": "Giao diện người dùng tương tác bao gồm hai loại chế độ xem chính dựa trên vai trò của người dùng, một loại dành cho khách hàng có nhu cầu đặt dịch vụ thú cưng và một loại khác dành cho người quản lý và nhân viên có thể quản lý hệ thống không chỉ CRUD mà còn các tương tác khác như tải xuống, kéo và thả để sửa đổi đặt dịch vụ, v.v.",
