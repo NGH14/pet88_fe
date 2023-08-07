@@ -15,6 +15,11 @@
   
 }
 
+.ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+}
+
 .ant-layout-sider-children{
   background-color: white;
   border-right: 0.5px solid rgb(224, 225, 226);
@@ -31,6 +36,7 @@
 
   .ant-layout-header  {
     all: unset;
+    
   }
 
   .table_deletemulpti{
@@ -53,4 +59,12 @@
     font-weight: 400;
     color: #999;
     text-transform: lowercase;
+  }
+
+  @media (max-width: 800px) {
+    .admin-sitebar {
+      display: none;
+    }
+
+
   }

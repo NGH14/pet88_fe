@@ -11,9 +11,3 @@
 .steps-action {
     margin-top: 24px;
 }
-
-.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
-    top: -10px;
-    color: #1890ff;
-
-}

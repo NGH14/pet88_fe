@@ -31,15 +31,32 @@ const FormBookingHomepage = () => {
 	const futureWeek = moment(currentDate).add(1, 'W');
 	const { search, setSearchList } = SearchData();
 
+	const getDatesInRange = (startDate, endDate) => {
+		const start = new Date(startDate);
+		const end = new Date(endDate);
+		const date = new Date(start.getTime());
+		const dates = [];
+		while (date <= end) {
+			dates.push(new Date(date).getTime());
+			date.setDate(date.getDate() + 1);
+		}
+		return dates;
+	};
+
 	const fetchHotelData = async (value) => {
+		const city = value?.city || search?.city;
+
+		const alldates =
+			value.datesHotels || value.datesHotels?.length > 0
+				? getDatesInRange(value.datesHotels[0], value.datesHotels[1])
+				: [];
 		try {
-			const res = await axios.get(
-				`http://localhost:3001/api/hotel/find-hotel`,
+			const res = await axios.post(
+				`http://localhost:3001/api/hotel/find-hotel-able`,
 				{
-					params: {
-						city: value.city,
-						services: type,
-					},
+					city: city,
+					dates: alldates,
+					services: type,
 				},
 			);
 			return res.data;
@@ -61,6 +78,10 @@ const FormBookingHomepage = () => {
 
 		navigate('/search');
 	};
+	const disabledDate = (current) => {
+		// Can not select days before today and today
+		return current && current < moment().endOf('day');
+	};
 
 	return (
 		<div className='form_bookingservice'>
@@ -76,6 +97,7 @@ const FormBookingHomepage = () => {
 					padding: 20,
 					borderRadius: 15,
 					marginBlock: '10px 20px',
+					flexWrap: 'wrap',
 				}}>
 				<span>{t("I'm looking for service")}:</span>
 				<Radio.Group
@@ -91,7 +113,6 @@ const FormBookingHomepage = () => {
 						{t('hotel')}
 					</Radio>
 					<Radio value='grooming'>{t('grooming')}</Radio>
-					<Radio value='training'>{t('training')}</Radio>
 				</Radio.Group>
 			</div>
 			<Form
@@ -129,7 +150,7 @@ const FormBookingHomepage = () => {
 				</Form.Item>
 				{type === 'hotel' ? (
 					<Form.Item
-						className='form-item_bookinghomepage_others'
+						className='form-item_bookinghomepage_others form-item_datepicker'
 						name='datesHotels'
 						label={t('For these days')}>
 						<RangePicker
@@ -139,7 +160,7 @@ const FormBookingHomepage = () => {
 								[t('One Month')]: [currentDate, futureMonth],
 							}}
 							placeholder={[t('Drop off'), t('Pick up')]}
-							placement='bottomLeft'
+							placement='bottomRight'
 							className='form-item_bookinghomepage'
 							format={lang === 'vi' ? 'DD-MM-YYYY' : null}
 						/>
@@ -148,18 +169,22 @@ const FormBookingHomepage = () => {
 
 				{type === 'grooming' ? (
 					<Form.Item
-						className='form-item_bookinghomepage_others'
+						className='form-item_bookinghomepage_others form-item_datepicker'
 						name='datesGrooming'
 						label={t('Booking time')}>
 						<DatePicker
+							disabledDate={disabledDate}
+							style={{ width: '100%' }}
 							showTime={{
-								format: 'HH:mm',
+								format: 'HH:mm A',
 							}}
+							minuteStep={15}
+							use12Hours
 							placement='bottomLeft'
 							format={
 								lang === 'vi'
-									? `HH:mm, DD-MM-YYYY`
-									: 'HH:mm, YYYY-MM-DD '
+									? `HH:mm A, DD-MM-YYYY`
+									: 'HH:mm A, YYYY-MM-DD '
 							}
 							className='form-item_bookinghomepage booking_grooming'
 						/>

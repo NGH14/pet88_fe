@@ -37,6 +37,12 @@ general
 	width: 22%;
 }
 
+
+.form-item_bookingdepartpage, .form_bookingdepartpage .ant-select-selector,.form-button_bookingdepartpage{
+	border-radius: 5px !important;
+	width: 100%;
+}
+
 .department-page_content{
 	width: 70%;
 }

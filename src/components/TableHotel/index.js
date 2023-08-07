@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import {
@@ -6,8 +6,7 @@ import {
 	ExportTableButton,
 	SearchTableInput,
 } from 'ant-table-extensions';
-import { storage } from '../../utils/firebase';
-import { useNavigate } from 'react-router-dom';
+
 import { toast } from 'react-toastify';
 import {
 	FileExcelOutlined,
@@ -16,8 +15,6 @@ import {
 	EditOutlined,
 	MoreOutlined,
 	ReloadOutlined,
-	DownOutlined,
-	UploadOutlined,
 	InboxOutlined,
 } from '@ant-design/icons';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -30,15 +27,11 @@ import {
 	Form,
 	Input,
 	Select,
-	DatePicker,
 	Popconfirm,
 	Upload,
-	message,
 	Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { UserLanguage } from '../../context/LanguageContext';
-import moment from 'moment';
 import axios from 'axios';
 import './style.css';
 const { Option } = Select;
@@ -59,7 +52,6 @@ export default function TableHotel() {
 	const [loadingCreate, setLoadingCreate] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [listHotels, setListHotels] = React.useState();
-	const [additionInfo, setAdditionInfo] = React.useState(false);
 	const [size, setSize] = useState('large');
 
 	const [openUpdate, setOpenUpdate] = useState(false);
@@ -67,20 +59,16 @@ export default function TableHotel() {
 	const [tableToolTip, setTableToolTip] = useState(false);
 
 	const [form] = Form.useForm();
-	const { token } = UserAuth();
 	const [searchDataSource, setSearchDataSource] = React.useState(listHotels);
 	const { t } = useTranslation();
-	const [page, setPage] = React.useState(1);
 	const {
 		CreateHotel,
 		DeleteHotel,
-		updateUserByAdmin,
-		AddUserToDBByAdmin,
+
 		GetAllHotel,
 		UpdateHotel,
 		MultipleDeleteDepart,
 	} = UserAuth();
-	const { lang } = UserLanguage();
 
 	const [previewOpen, setPreviewOpen] = React.useState(false);
 	const [previewImage, setPreviewImage] = React.useState('');
@@ -101,11 +89,12 @@ export default function TableHotel() {
 	};
 	const handleOkModal = async () => {
 		setConfirmLoadingModal(true);
+		setSelectedRowKeys([]);
 		await handleDeleteMultipleHotel();
+
 		setOpenModal(false);
 	};
 	const handleCancelModal = () => {
-		console.log('Clicked cancel button');
 		setOpenModal(false);
 	};
 
@@ -116,6 +105,7 @@ export default function TableHotel() {
 					const data = new FormData();
 					data.append('file', file);
 					data.append('upload_preset', 'pet88_upload');
+					data.append('folder', 'c26b8c7d0d092585470a0265ebfa1f9779');
 
 					const uploadRes = await axios.post(
 						'https://api.cloudinary.com/v1_1/dggxjymsy/image/upload',
@@ -164,7 +154,7 @@ export default function TableHotel() {
 		getAllHotelData();
 	}, []);
 
-	const handleOpenUpdateUser = (record) => {
+	const handleOpenUpdateHotel = (record) => {
 		SetDeparmentRecord(record);
 		setOpenUpdate(true);
 	};
@@ -249,6 +239,7 @@ export default function TableHotel() {
 			dataIndex: 'name',
 			key: 'name',
 		},
+
 		{
 			title: t('Type'),
 			dataIndex: 'type',
@@ -268,6 +259,7 @@ export default function TableHotel() {
 			dataIndex: 'address',
 			key: 'address',
 		},
+
 		{
 			title: t('Services'),
 			dataIndex: 'services',
@@ -299,7 +291,7 @@ export default function TableHotel() {
 						type='text'
 						key='update'
 						icon={<EditOutlined />}
-						onClick={() => handleOpenUpdateUser(record)}></Button>
+						onClick={() => handleOpenUpdateHotel(record)}></Button>
 				</Space>
 			),
 		},
@@ -447,9 +439,6 @@ export default function TableHotel() {
 								<Option value='grooming'>
 									{t('Grooming')}
 								</Option>
-								<Option value='training'>
-									{t('Training')}
-								</Option>
 							</Select>
 						</Form.Item>
 						<Form.Item
@@ -490,7 +479,7 @@ export default function TableHotel() {
 			</Drawer>
 
 			<Drawer
-				title={t('Create Hotel')}
+				title={t('Create Department')}
 				width={fullWidth >= 1000 ? '878px' : fullWidth}
 				onClose={onCloseCreateUser}
 				open={openCreate}
@@ -544,14 +533,10 @@ export default function TableHotel() {
 								<Option value='grooming'>
 									{t('Grooming')}
 								</Option>
-								<Option value='training'>
-									{t('Training')}
-								</Option>
 							</Select>
 						</Form.Item>
 						<Form.Item label='File' name='file'>
 							<Dragger
-								accept='.png,.jpeg'
 								maxCount={3}
 								multiple={true}
 								onClick={() => setShowFile(true)}
@@ -574,13 +559,14 @@ export default function TableHotel() {
 							</Dragger>
 						</Form.Item>
 						<Form.Item
-							wrapperCol={{
-								offset: 4,
-								span: 16,
+							style={{
+								display: 'flex',
+								justifyContent: 'flex-end',
+								marginInline: '0px auto',
 							}}>
 							<Button
 								style={{
-									marginInline: 15,
+									marginInline: '0px 15px',
 									height: 'fit-content',
 									fontSize: 16,
 									lineHeight: 1.8,
@@ -650,14 +636,40 @@ export default function TableHotel() {
 			) : null}
 
 			<Modal
-				title='Title'
+				width={400}
+				closable={false}
+				footer={null}
 				open={openModal}
-				onOk={handleOkModal}
-				confirmLoading={confirmLoadingModal}
-				onCancel={handleCancelModal}>
-				<p>
-					{selectedRowKeys.length} {t('selected')}
-				</p>
+				confirmLoading={confirmLoadingModal}>
+				<div>
+					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
+						{t('Delete')} {selectedRowKeys.length} {t('department')}{' '}
+						{t('selected')}?
+					</h6>
+					<p style={{ fontWeight: 500, fontSize: 14 }}>
+						{t('This will permanently remove')} {t('department')}
+					</p>
+					<div
+						style={{
+							marginTop: 20,
+							display: 'flex',
+							gap: 5,
+							justifyContent: 'flex-end',
+						}}>
+						<Button
+							onClick={handleCancelModal}
+							style={{ borderRadius: 8 }}>
+							{t('Cancel')}
+						</Button>
+						<Button
+							onClick={handleOkModal}
+							style={{ borderRadius: 8 }}
+							type='primary'
+							danger>
+							{t('Delete')}
+						</Button>
+					</div>
+				</div>
 			</Modal>
 			{selectedRowKeys.length > 0 ? (
 				<div className='table_deletemulpti'>
@@ -703,13 +715,35 @@ export default function TableHotel() {
 				scroll={{
 					x: 800,
 				}}
+				expandable={{
+					expandedRowRender: (record) => (
+						<>
+							<p
+								style={{
+									margin: 0,
+								}}>
+								{t('Created Date')}
+								{t(': ')}
+								{new Date(record.createdAt).toLocaleString()}
+							</p>
+							<p
+								style={{
+									margin: 0,
+								}}>
+								{t('Last Update Date')}
+								{t(': ')}
+								{new Date(record.updatedAt).toLocaleString()}
+							</p>
+						</>
+					),
+				}}
 				pagination={{
-					onChange(current) {
-						setPage(current);
-					},
 					defaultPageSize: 5,
 					showSizeChanger: true,
 					pageSizeOptions: ['5', '10', '20', '30'],
+					hideOnSinglePage: true,
+					showTotal: (total, range) =>
+						`${range[0]}-${range[1]} of ${total} items`,
 				}}
 				columns={columns}
 				dataSource={searchDataSource || listHotels}

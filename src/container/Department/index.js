@@ -38,8 +38,6 @@ export default function Department() {
 	const id = location.pathname.split('/')[2];
 
 	const { search, setSearchList } = SearchData();
-
-	const days = location.state.days;
 	const [loading, setLoading] = useState(true);
 	const [loadingTable, setLoadingTable] = useState(true);
 	const [form] = Form.useForm();
@@ -67,11 +65,10 @@ export default function Department() {
 		const sum = selectedRooms.reduce((sum, n) => sum + Number(n.price), 0);
 
 		setSumPrice(sum);
-
 		Object.entries(selectedRooms).forEach(([k, v]) => {
 			if (v === 0) delete selectedRooms[k];
 		});
-	}, [selectedRooms]);
+	}, [selectedRooms, loadingTable]);
 
 	const onFinish = async (values) => {
 		setLoadingTable(true);
@@ -130,11 +127,14 @@ export default function Department() {
 	};
 
 	const handleLoadData = async () => {
+		setDataList([]);
 		await axios
 			.post(`http://localhost:3001/api/hotel/availability/${id}`, {
 				dates: alldates,
 			})
 			.then((response) => {
+				setSumPrice(0);
+				setSelectedRooms([]);
 				setDataList(response.data);
 				setLoading(false);
 				setLoadingTable(false);
@@ -149,9 +149,25 @@ export default function Department() {
 			sorter: (a, b) => a.title.length - b.title.length,
 		},
 		{
+			title: t('Type'),
+			dataIndex: 'type',
+		},
+		{
 			title: `${t('Price for')} ${search.days} nights`,
 			dataIndex: 'price',
-			render: (price) => search.days * price,
+			render: (price) => (
+				<span>
+					{new Intl.NumberFormat('vi-VI', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(search.days * price)}
+					{` (${new Intl.NumberFormat('vi-VI', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(price)} ${t('per night')})`}
+				</span>
+			),
+			sorter: (a, b) => a.price - b.price,
 		},
 		{
 			title: t('Room'),
@@ -269,9 +285,6 @@ export default function Department() {
 										</div>
 									</div>
 
-									{/* <Button onClick={handleCheckout}>
-										Check out
-									</Button> */}
 									<div className='department-page_roomcontent'>
 										<Form
 											form={form}

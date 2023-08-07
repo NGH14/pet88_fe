@@ -32,7 +32,11 @@ import TableHotel from '../../components/TableHotel';
 import { RiCalendarEventLine, RiCoupon3Line } from 'react-icons/ri';
 import { MdOutlinePayments } from 'react-icons/md';
 import { CgUserList } from 'react-icons/cg';
-import { CalendarAdmin } from './../../components/Calendar';
+import { CalendarAdmin } from './../../components/Calendar/CalendarAdmin';
+import TableRooms from '../../components/TableRooms';
+import TableGrooming from './../../components/TableGrooming/index';
+import TableOrder from '../../components/TableOrder';
+import ChangeLanguage from './../../components/ChangeLanguage/index';
 
 const { Header, Content, Sider } = Layout;
 
@@ -57,19 +61,22 @@ export default function Admin() {
 
 	const items = [
 		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
-		getItem(
-			t('Department'),
-			'/admin/management-hotel',
-			<ReconciliationOutlined />,
-		),
+
+		getItem(t('Business'), 'depart', <ReconciliationOutlined />, [
+			getItem(t('Departments'), '/admin/management-hotel'),
+			getItem(t('Hotel Service'), '/admin/management-room-category'),
+			getItem(t('Grooming Service'), '/admin/management-grooming'),
+		]),
 		getItem(t('User'), '/admin/management-user', <CgUserList />),
-		getItem(
-			t('Promotion'),
-			'/admin/management-promotion',
-			<RiCoupon3Line />,
-		),
+
 		getItem(t('Order'), '/admin/management-order', <MdOutlinePayments />),
+		// getItem(<ChangeLanguage fullWidth></ChangeLanguage>, '', null),
 	];
+
+	const handleClickMenu = (path) => {
+		navigate(path);
+		setCollapsed(true);
+	};
 
 	useEffect(() => {
 		if (!user?.role || user?.role !== 'admin') {
@@ -77,6 +84,7 @@ export default function Admin() {
 		}
 		setLoading(false);
 	}, [user]);
+
 	return loading ? (
 		<LoadingSpinner />
 	) : (
@@ -86,7 +94,9 @@ export default function Admin() {
 					style={{
 						minHeight: '100vh',
 					}}>
-					<Sider collapsed={collapsed}>
+					<Sider
+						collapsed={collapsed}
+						className={collapsed && 'admin-sitebar'}>
 						<NavLink to='/admin'>
 							<div className='logo_admin-container'>
 								{collapsed ? (
@@ -111,7 +121,7 @@ export default function Admin() {
 							</div>
 						</NavLink>
 						<Menu
-							onClick={({ key }) => navigate(key)}
+							onClick={({ key }) => handleClickMenu(key)}
 							theme='light'
 							defaultSelectedKeys={['/admin']}
 							mode='inline'
@@ -125,7 +135,7 @@ export default function Admin() {
 								display: 'flex',
 								justifyContent: 'space-between',
 								padding: 0,
-								margin: 'auto	',
+								margin: 'auto',
 							}}>
 							<Button
 								style={{ backgroundColor: 'white' }}
@@ -143,7 +153,6 @@ export default function Admin() {
 						</Header>
 						<Content
 							style={{
-								padding: '0 16px',
 								backgroundColor: '#F7F8FA',
 							}}>
 							<div
@@ -161,8 +170,13 @@ export default function Admin() {
 											return <TableUser />;
 										case '/admin/management-hotel':
 											return <TableHotel />;
-										case '/admin/management-promotion':
-											return <TableHotel />;
+
+										case '/admin/management-room-category':
+											return <TableRooms />;
+										case '/admin/management-grooming':
+											return <TableGrooming />;
+										case '/admin/management-order':
+											return <TableOrder />;
 										default:
 											return null;
 									}

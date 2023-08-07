@@ -28,22 +28,14 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './style.css';
 
-import { Calendar } from '../../components/Calendar';
-import GoogleAuthButton from '../../components/GoogleAuthButton/';
 import { UserLanguage } from '../../context/LanguageContext';
-import { momentLocalizer } from 'react-big-calendar';
-import { Link } from 'react-router-dom';
-import HeroImage from '../../components/HeroImageHomepage/index';
-// translation catalog
-import { Col, Divider, Row } from 'antd';
 
+import HeroImage from '../../components/HeroImageHomepage/index';
 import { Layout } from 'antd';
 import AppHeader from './../../components/Navbar/';
 import SubNavBar from './../../components/SubNavBar/index';
 import ScrollTrigger from 'react-scroll-trigger';
 import FooterWave from './../../components/Footer/index';
-import ListOfUser from '../../components/ListUser';
-import { UserAuth } from '../../context/AuthContext';
 import SwiperCore, { Autoplay, Pagination as swiperPagination } from 'swiper';
 import 'swiper/css/autoplay';
 import ReactBeforeSliderComponent from 'react-before-after-slider-component';
@@ -58,12 +50,11 @@ import serviceImg1 from '../../assets/images/Illustration-Bond.png';
 import serviceImg2 from '../../assets/images/Illustration-Schedule.png';
 
 import 'react-before-after-slider-component/dist/build.css';
+import 'antd/es/date-picker/style/index.css';
+import 'antd/es/input/style/index.css';
+
 const { Header, Content, Footer } = Layout;
-const style = {
-	background: '#0092ff',
-	padding: '8px 0',
-};
-// initialize i18next with catalog and language to use
+
 SwiperCore.use([Autoplay]);
 
 const FIRST_IMAGE = {
@@ -89,31 +80,23 @@ const cardVariants = {
 
 function Homepage() {
 	const [countUp, setCountUp] = React.useState(false);
-	const { token } = UserAuth();
-	const [t, i18n] = useTranslation();
-	const { lang, SetLanguage } = UserLanguage();
+	const [t] = useTranslation();
+	const { lang } = UserLanguage();
 
 	React.useEffect(() => {
 		document.title = `Pet88 - ${t('Pet Care Services')} `;
 	});
 
-	const changeLanguage = (lng) => {
-		i18n.changeLanguage(lng);
-		SetLanguage(lng);
-	};
-
-	/* ... */
-
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
-			<Layout className='mainLayout'>
+			<Layout className='mainLayout' id='top'>
 				<Header>
 					<SubNavBar></SubNavBar>
 					<AppHeader></AppHeader>
 				</Header>
 				<Content>
 					<HeroImage />
-					<div className='white'>
+					<div className='homepage_whitebackground'>
 						<div className='wrap-content'>
 							<p>{t('leading partner')}</p>
 							<Swiper
@@ -268,7 +251,7 @@ function Homepage() {
 							</h3>
 							<p>
 								{t(
-									'Pet88 is dedicated to providing the best quality care for your pet. We offer the service, depending on your needs. We strive to be the most dependable	and accessible service in Vietnam and will go the extra distance to give you precisely what you are looking for in pet care',
+									'Pet88 is dedicated to providing the best quality care for your pet. We offer the service, depending on your needs.We strive to be the most dependable and accessible service in Vietnam and will go the extra distance to give you precisely what you are looking for in pet care',
 								)}
 							</p>
 						</div>
@@ -315,6 +298,54 @@ function Homepage() {
 								</div>
 							)}
 						</ScrollTrigger>
+						<div
+							id='about_section'
+							className='homepage-servicecontent'
+							variants={cardVariants}>
+							<h3 className='homepage-servicecontent_title'>
+								{t('about')} Pet88
+							</h3>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'The first goal of the project is to research and analyze the potential and the benefit of speed, simplicity, interoperability, versatility, and most important global platform support from the modern browser as Chrome, Firefox, etc. which is supported in the JavaScript programming language ecosystem in the booking pet service, includes a map, scheduler, notification, etc',
+								)}
+							</p>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'Drag & Drop Calendar is a calendar app that has Schedule, Week Agenda, Month, Day, and Week modes, and lets you drag and drop events from one day, week, or month to another in the manager.',
+								)}
+							</p>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'center',
+								}}>
+								<img
+									src={serviceImg2}
+									alt=''
+									className='homepage-content_subflexImg'
+								/>
+							</div>
+						</div>
+
+						<div
+							id='service_section'
+							className='homepage-servicecontent'
+							variants={cardVariants}>
+							<h3 className='homepage-servicecontent_title'>
+								{t('service')} Pet88
+							</h3>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'The interactive user interface includes two main views categories based on the user role, one for the customer who has the demand to book the pet service and another one for the manager and staff who can manage the system that not only CRUD but also other interaction like download, drag and drop to modify the service booking, etc',
+								)}
+							</p>
+							<p className='homepage-servicecontent_text'>
+								{t(
+									'The service helps to communicate between the front-end app and the database, which also store the keys to connect the third-party service, for example, this project has used the APIs from Firebase to store and authenticate the user by the Google account',
+								)}
+							</p>
+						</div>
 					</div>
 					<motion.div
 						initial='offscreen'

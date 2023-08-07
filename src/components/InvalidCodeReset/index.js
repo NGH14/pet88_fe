@@ -22,7 +22,7 @@ const InValidDisplay = (state) => {
 		state && (
 			<div className='invalidpage' style={{ textAlign: 'center' }}>
 				<h1 className='invalidpage-heading'>
-					Resetting your password again!
+					Reset password link has expired
 				</h1>
 				<span className='invalidpage-subtext'>
 					Your request to reset your password has expired or the link

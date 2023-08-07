@@ -1,223 +1,168 @@
-import format from 'date-fns/format';
-import getDay from 'date-fns/getDay';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import React, { useCallback, useMemo, useState } from 'react';
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import { uid } from 'uid';
+import React, { Fragment, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 import {
-	Button,
 	Calendar,
-	Col,
-	ConfigProvider,
-	Radio,
-	Row,
-	Select,
-	Typography,
-} from 'antd';
-
-import {
-	Calendar as RB,
-	dateFnsLocalizer,
+	Views,
+	DateLocalizer,
 	momentLocalizer,
 } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
-import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
-import 'moment/locale/vi';
-import 'moment/locale/en-gb';
-import { UserLanguage } from '../../context/LanguageContext';
+import events from '../../data/events';
+import { useState } from 'react';
+import { useCallback } from 'react';
 
-import viVN from 'antd/es/locale/vi_VN';
-import './style.css';
-const DnDCalendar = withDragAndDrop(RB);
+// const DnDCalendar = withDragAndDrop(Calendar);
+const mLocalizer = momentLocalizer(moment);
 
-const events = [
-	{
-		id: uid(),
-		title: 'Big Meeting',
-		allDay: true,
-		start: new Date(2022, 11, 1),
-		end: new Date(2022, 11, 15),
-	},
-];
+const ColoredDateCellWrapper = ({ children }) =>
+	React.cloneElement(React.Children.only(children), {
+		style: {
+			backgroundColor: 'lightblue',
+		},
+	});
 
-const langMessage = {
-	en: null,
-	vi: {
-		week: 'Tuần',
-		work_week: 'Ngày trong tuần',
-		day: 'Ngày',
-		month: 'Tháng',
-		previous: 'Trước',
-		next: 'Sau',
-		today: 'Hôm nay',
-		agenda: 'Lịch trình',
-		date: 'Ngày',
-		time: 'Thời gian',
-		event: 'Sự kiện',
-		allDay: 'cả ngày',
-		noEventsInRange: 'Không có sự kiện nào',
+export function Basic({
+	localizer = mLocalizer,
+	showDemoLink = true,
+	...props
+}) {
+	const { components, defaultDate, max, views } = useMemo(
+		() => ({
+			components: {
+				timeSlotWrapper: ColoredDateCellWrapper,
+			},
+			defaultDate: new Date(2015, 3, 1),
 
-		showMore: (total) => `+${total} Xem Thêm`,
-	},
+			views: Object.keys(Views).map((k) => Views[k]),
+		}),
+		[],
+	);
+
+	return (
+		<Fragment>
+			<div style={{ height: 600 }} {...props}>
+				<Calendar
+					components={components}
+					defaultDate={defaultDate}
+					events={events}
+					localizer={localizer}
+					max={max}
+					showMultiDayTimes
+					step={60}
+					views={views}
+				/>
+			</div>
+		</Fragment>
+	);
+}
+Basic.propTypes = {
+	localizer: PropTypes.instanceOf(DateLocalizer),
+	showDemoLink: PropTypes.bool,
 };
 
-export const CalendarAdmin = () => {
-	const { lang } = UserLanguage();
-	const [allEvents, setAllEvents] = useState(events);
-	const [defaultDate, setDefaultDate] = useState(new Date());
-	const localizer = momentLocalizer(moment);
-	moment.locale(lang);
-	
-	const onPanelChange = (value, mode) => {
-		console.log(value.format('YYYY-MM-DD'), mode);
-	};
-	const onSubCalendarSelected = (newValue) => {
-		setDefaultDate(newValue.toDate());
-	};
+export function Selectable({ localizer }) {
+	const [myEvents, setEvents] = useState(events);
 
+	const handleSelectSlot = useCallback(
+		({ start, end }) => {
+			const title = window.prompt('New Event name');
+			if (title) {
+				setEvents((prev) => [...prev, { start, end, title }]);
+			}
+		},
+		[setEvents],
+	);
 
 	const handleSelectEvent = useCallback(
 		(event) => window.alert(event.title),
 		[],
 	);
 
-	const { messages } = useMemo(
+	const { defaultDate, scrollToTime } = useMemo(
 		() => ({
-			messages: langMessage[lang],
+			defaultDate: new Date(2015, 3, 12),
+			scrollToTime: new Date(1970, 1, 1, 6),
 		}),
-		[lang],
+		[],
 	);
 
-	const handleSelectSlot = useCallback(
-		({ start, end }) => {
-			const title = window.prompt('New Event name');
-			if (title) {
-				setAllEvents((prev) => [
-					...prev,
-					{ id: uid(), start, end, title },
-				]);
-			}
-		},
-		[setAllEvents],
+	return (
+		<Fragment>
+			<div style={{ height: 600 }}>
+				<Calendar
+					defaultDate={defaultDate}
+					defaultView={Views.WEEK}
+					events={myEvents}
+					localizer={localizer}
+					onSelectEvent={handleSelectEvent}
+					onSelectSlot={handleSelectSlot}
+					selectable
+					scrollToTime={scrollToTime}
+				/>
+			</div>
+		</Fragment>
 	);
+}
+
+Selectable.propTypes = {
+	localizer: PropTypes.instanceOf(DateLocalizer),
+};
+
+const DragAndDropCalendar = withDragAndDrop(Calendar);
+
+export function DragAndDrop({ localizer }) {
+	const [myEvents, setMyEvents] = useState(events);
 
 	const moveEvent = useCallback(
-		({
-			event,
-			start,
-			end,
-			resourceId,
-			isAllDay: droppedOnAllDaySlot = true,
-		}) => {
+		({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
 			const { allDay } = event;
-
 			if (!allDay && droppedOnAllDaySlot) {
 				event.allDay = true;
 			}
 
-			setAllEvents((prev) => {
+			setMyEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
-				return [
-					...filtered,
-					{ ...existing, start, end, resourceId, allDay },
-				];
+				return [...filtered, { ...existing, start, end, allDay }];
 			});
 		},
-		[setAllEvents],
+		[setMyEvents],
 	);
 
 	const resizeEvent = useCallback(
 		({ event, start, end }) => {
-			setAllEvents((prev) => {
+			setMyEvents((prev) => {
 				const existing = prev.find((ev) => ev.id === event.id) ?? {};
 				const filtered = prev.filter((ev) => ev.id !== event.id);
 				return [...filtered, { ...existing, start, end }];
 			});
 		},
-		[setAllEvents],
+		[setMyEvents],
 	);
+
+	const defaultDate = useMemo(() => new Date(2015, 3, 12), []);
 
 	return (
-		<ConfigProvider locale={lang === 'vi' && viVN}>
-			<div className='calendar-container'>
-				<div className='site-calendar-customize-header-wrapper'>
-					<Calendar
-						headerRender={({ value, onChange }) => {
-							const date = value.format('MMMM, YYYY');
-							return (
-								<div
-									style={{
-										display: 'flex',
-										justifyContent: 'space-between',
-										alignItems: 'center',
-									}}>
-									<span
-										style={{
-											textTransform: 'capitalize',
-											fontSize: 14,
-											fontWeight: 600
-										}}>
-										{date}
-									</span>
-									<div style={{ display: 'flex', gap: 5 }}>
-										<Button
-											style={{ padding: 0 }}
-											type='text'
-											onClick={() => {
-												const newValue = moment(
-													value,
-												).subtract(1, 'M');
-												onChange(newValue);
-											}}>
-											<IoIosArrowBack />
-										</Button>
-										<Button
-											style={{ padding: 0 }}
-											type='text'
-											onClick={() => {
-												const newValue = moment(
-													value,
-												).add(1, 'M');
-												onChange(newValue);
-											}}>
-											<IoIosArrowForward />
-										</Button>
-									</div>
-								</div>
-							);
-						}}
-						fullscreen={false}
-						onPanelChange={onPanelChange}
-						onSelect={onSubCalendarSelected}
-					/>
-				</div>
-
-				<DnDCalendar
-					views={['day', 'week', 'month', 'agenda']}
-					resizable
-					startAccessor='start'
-					endAccessor='end'
-					onSelectEvent={handleSelectEvent}
-					onSelectSlot={handleSelectSlot}
-					selectable={true}
-					messages={messages}
+		<Fragment>
+			<div style={{ height: 600 }}>
+				<DragAndDropCalendar
+					defaultDate={defaultDate}
+					defaultView={Views.MONTH}
+					events={myEvents}
 					localizer={localizer}
-					date={defaultDate}
-					culture={lang}
-					events={allEvents}
-					defaultView="day"
-					onEventResize={resizeEvent}
 					onEventDrop={moveEvent}
-					step={15}
+					onEventResize={resizeEvent}
 					popup
+					resizable
 				/>
 			</div>
-		</ConfigProvider>
+		</Fragment>
 	);
+}
+DragAndDrop.propTypes = {
+	localizer: PropTypes.instanceOf(DateLocalizer),
 };

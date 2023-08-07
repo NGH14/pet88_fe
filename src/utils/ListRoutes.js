@@ -1,8 +1,9 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { PrivateRoute } from '../utils/PrivateRoute';
-export const listRoute = (list) => {
+import { PrivateRoute } from './PrivateRoute';
+
+const ListRoutes = (list) => {
 	return list.map((route, index) => {
 		return (
 			<Route
@@ -23,3 +24,5 @@ export const listRoute = (list) => {
 		);
 	});
 };
+
+export default ListRoutes;

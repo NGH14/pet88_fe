@@ -23,8 +23,8 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search);
 }
 
-const ResetPasswordForm = ({ state }) => {
-	const [counter, setCounter] = useState(15);
+const ResetPasswordForm = () => {
+	const [counter, setCounter] = useState(10);
 	const [runCounter, setRunCounter] = useState(false);
 	const [success, setSuccess] = useState(false);
 	const [loading, setLoading] = useState(false);

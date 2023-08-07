@@ -53,6 +53,8 @@ export const AuthContextProvider = ({ children }) => {
 		});
 	};
 
+	const API_URL = process.env.REACT_APP_API;
+
 	const updateUserByAdmin = async (uid, value) => {
 		const userRef = doc(storage, 'users', uid);
 		const cusdob = Timestamp.fromDate(new Date(value.dob));
@@ -67,9 +69,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const getOrderByUser = async (id) => {
 		try {
-			const res = await axios.get(
-				`http://localhost:3001/api/order/user/${user.id}`,
-			);
+			const res = await axios.get(`${API_URL}/order/user/${user.id}`);
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -132,11 +132,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const GetAllHotel = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/hotel/`, {
-				headers: {
-					Authorization: 'Bearer ' + token,
-				},
-			});
+			const res = await axios.get(`${API_URL}/hotel/`, {});
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -145,14 +141,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const DeleteHotel = async (id) => {
 		try {
-			const res = await axios.delete(
-				`http://localhost:3001/api/hotel/${id}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
-			);
+			const res = await axios.delete(`${API_URL}/hotel/${id}`, {});
 			return res.data;
 		} catch (error) {
 			return console.error(error);
@@ -161,15 +150,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const CreateHotel = async (value) => {
 		try {
-			const res = await axios.post(
-				`http://localhost:3001/api/hotel`,
-				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
-			);
+			const res = await axios.post(`${API_URL}/hotel`, value, {});
 			return res.data;
 		} catch (error) {
 			return error;
@@ -178,15 +159,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const UpdateHotel = async (id, value) => {
 		try {
-			const res = await axios.put(
-				`http://localhost:3001/api/hotel/${id}`,
-				value,
-				{
-					headers: {
-						Authorization: 'Bearer ' + token,
-					},
-				},
-			);
+			const res = await axios.put(`${API_URL}/hotel/${id}`, value, {});
 			return res.data;
 		} catch (error) {
 			return error;
@@ -195,6 +168,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const AddUserToDBByAdmin = async (uid, additionalData) => {
 		const docRef = await doc(storage, 'users', uid);
+
 		const docSnap = await getDoc(docRef);
 		const cusdob = Timestamp.fromDate(new Date(additionalData?.dob || 0));
 		const userRole = additionalData?.role || 'user';
@@ -221,7 +195,7 @@ export const AuthContextProvider = ({ children }) => {
 	const MultipleDeleteDepart = async (listDelete) => {
 		try {
 			const res = await axios.patch(
-				`http://localhost:3001/api/hotel/multiple-delete`,
+				`${API_URL}/hotel/multiple-delete`,
 				listDelete,
 			);
 			return res.data;
@@ -232,8 +206,7 @@ export const AuthContextProvider = ({ children }) => {
 
 	const getNewUserInCurrentMonth = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/user/store`);
-			console.log(res.data);
+			const res = await axios.get(`${API_URL}/user/store`);
 			return res.data;
 		} catch (error) {
 			return error;

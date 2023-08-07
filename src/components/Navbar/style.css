@@ -13,10 +13,9 @@
   color: rgb(249,107,24) !important;
 }
 
-.pet88-menu .ant-drawer-body{
+.pet88-menu .ant-drawer-body {
     display: flex !important;
     flex-direction: column;
-    height: 100%;
     width: 100%;
     /* justify-content: space-between; */
 
@@ -26,11 +25,10 @@
     margin-block: auto 10px;
 }
 
-@media only screen and (max-width: 767px) {
+@media (max-width: 767px) {
 
     .flexleft {
         margin-inline: auto;
     }
-    
   
   }

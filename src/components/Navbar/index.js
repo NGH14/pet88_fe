@@ -8,15 +8,31 @@ import { CloseOutlined, MenuOutlined, LogoutOutlined } from '@ant-design/icons';
 import AuthButton from './../GoogleAuthButton/';
 import { useEffect } from 'react';
 import ChangeLanguage from './../ChangeLanguage/';
+import useScrollPosition from './../../hooks/useScrollPosition';
+import { HashLink } from 'react-router-hash-link';
 
 import './style.css';
-import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+	Link,
+	Navigate,
+	NavLink,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { UserAuth } from '../../context/AuthContext';
+
+const pages = [
+	{ title: 'home', url: '/#top' },
+	{ title: 'about', url: '/#about_section' },
+	{ title: 'service', url: '/#service_section' },
+];
 
 function AppHeader() {
 	const locate = useLocation();
 	const navigate = useNavigate();
+	const scrollPosition = useScrollPosition();
+	const [navBg, setNavBg] = useState(false);
 
 	const { user, SignOut } = UserAuth();
 	const [visible, setVisible] = useState(false);
@@ -32,30 +48,17 @@ function AppHeader() {
 		}
 	};
 
-	const [navBg, setNavBg] = useState(false);
-
-	const changeNavBg = () => {
-		window.scrollY >= 50 ? setNavBg(true) : setNavBg(false);
-	};
-
-	const pages = [
-		{ title: 'home', url: '/' },
-		{ title: 'about', url: '/sign-in' },
-		{ title: 'service', url: '/dsads' },
-	];
-
 	useEffect(() => {
-		window.addEventListener('scroll', changeNavBg);
-		return () => {
-			window.removeEventListener('scroll', changeNavBg);
-		};
-	});
+		!scrollPosition > 0 ? setNavBg(false) : setNavBg(true);
+	}, [scrollPosition]);
 
 	const showDrawer = () => {
+		document.body.style.overflow = 'hidden !important';
 		setVisible(true);
 	};
 
 	const onClose = () => {
+		document.body.style.overflow = 'unset';
 		setVisible(false);
 	};
 
@@ -139,9 +142,11 @@ function AppHeader() {
 
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
+															smooth
 															key={page.title}
-															to={page.url}
+															to='#about'
+															// to={page.url}
 															style={{
 																transition:
 																	'color 0.3s ease-in-out',
@@ -162,11 +167,12 @@ function AppHeader() {
 																	'1px solid black',
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 												{user && (
-													<NavLink
+													<HashLink
+														smooth
 														to='./account'
 														style={{
 															transition:
@@ -187,8 +193,35 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('account')}
-													</NavLink>
+													</HashLink>
 												)}
+
+												{user?.role === 'admin' && (
+													<HashLink
+														smooth
+														to='/admin'
+														style={{
+															transition:
+																'color 0.3s ease-in-out',
+
+															color:
+																visible || navBg
+																	? 'black'
+																	: 'white',
+															fontFamily:
+																'Nunito Sans',
+															textTransform:
+																'uppercase',
+															fontWeight: 700,
+															fontSize: 16,
+															padding: 15,
+															borderBottom:
+																'1px solid black',
+														}}>
+														{t('Admin Centre')}
+													</HashLink>
+												)}
+
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={
@@ -207,7 +240,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<NavLink to='/'>
+												<HashLink to='/' smooth>
 													<img
 														src={
 															navBg
@@ -221,13 +254,14 @@ function AppHeader() {
 																'all 0.3s ease-in-out',
 														}}
 													/>
-												</NavLink>
+												</HashLink>
 											</div>
 
 											<div className='mobileHidden'>
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -248,7 +282,7 @@ function AppHeader() {
 																marginInline: 10,
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 											</div>
@@ -337,7 +371,8 @@ function AppHeader() {
 
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -360,11 +395,12 @@ function AppHeader() {
 																	'1px solid black',
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 												{user && (
-													<NavLink
+													<HashLink
+														smooth
 														to='/account'
 														style={{
 															transition:
@@ -385,8 +421,35 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('account')}
-													</NavLink>
+													</HashLink>
 												)}
+
+												{user?.role === 'admin' && (
+													<HashLink
+														smooth
+														to='/admin'
+														style={{
+															transition:
+																'color 0.3s ease-in-out',
+
+															color:
+																visible || navBg
+																	? 'black'
+																	: 'white',
+															fontFamily:
+																'Nunito Sans',
+															textTransform:
+																'uppercase',
+															fontWeight: 700,
+															fontSize: 16,
+															padding: 15,
+															borderBottom:
+																'1px solid black',
+														}}>
+														{t('Admin Centre')}
+													</HashLink>
+												)}
+
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={
@@ -405,7 +468,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<NavLink to='/'>
+												<HashLink to='/' smooth>
 													<img
 														src={Logo}
 														alt=''
@@ -415,13 +478,14 @@ function AppHeader() {
 																'all 0.3s ease-in-out',
 														}}
 													/>
-												</NavLink>
+												</HashLink>
 											</div>
 
 											<div className='mobileHidden'>
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -438,13 +502,12 @@ function AppHeader() {
 																marginInline: 10,
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 											</div>
 										</div>
-
-										<div className=''>
+										<div className='mobileHidden'>
 											<Button
 												style={{ fontWeight: '700' }}
 												type='text'
@@ -458,8 +521,24 @@ function AppHeader() {
 														}}
 													/>
 												}>
-												{!visible && t('Logout')}
+												{t('Logout')}
 											</Button>
+										</div>
+
+										<div className='mobileVisible'>
+											<Button
+												style={{ fontWeight: '700' }}
+												type='text'
+												onClick={(e) =>
+													handleSignOut(e)
+												}
+												icon={
+													<LogoutOutlined
+														style={{
+															fontWeight: '700',
+														}}
+													/>
+												}></Button>
 										</div>
 									</div>
 								</div>
@@ -536,7 +615,8 @@ function AppHeader() {
 
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -559,11 +639,12 @@ function AppHeader() {
 																	'1px solid black',
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 												{user && (
-													<NavLink
+													<HashLink
+														smooth
 														to='/account'
 														style={{
 															transition:
@@ -584,8 +665,9 @@ function AppHeader() {
 																'1px solid black',
 														}}>
 														{t('account')}
-													</NavLink>
+													</HashLink>
 												)}
+
 												<div className='drawer-auth'>
 													<AuthButton
 														TextColor={
@@ -604,7 +686,7 @@ function AppHeader() {
 										</div>
 										<div className='flexleft'>
 											<div className='logo'>
-												<NavLink to='/'>
+												<HashLink to='/' smooth>
 													<img
 														src={Logo}
 														alt=''
@@ -614,13 +696,14 @@ function AppHeader() {
 																'all 0.3s ease-in-out',
 														}}
 													/>
-												</NavLink>
+												</HashLink>
 											</div>
 
 											<div className='mobileHidden'>
 												{pages.map((page, _) => {
 													return (
-														<NavLink
+														<HashLink
+															smooth
 															key={page.title}
 															to={page.url}
 															style={{
@@ -637,7 +720,7 @@ function AppHeader() {
 																marginInline: 10,
 															}}>
 															{t(page.title)}
-														</NavLink>
+														</HashLink>
 													);
 												})}
 											</div>

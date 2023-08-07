@@ -17,6 +17,11 @@ const HeroBlockStyled = styled.div`
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+
+	@media only screen and (max-width: 425px) {
+		background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2)),
+			no-repeat;
+	}
 `;
 
 const HeroInlineStyled = styled.div``;

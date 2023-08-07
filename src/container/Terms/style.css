@@ -1,10 +1,9 @@
 .tac_title-heading {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 30px;
     display: flex;
     flex-direction: column;
     gap: 0px;
-
     /* text-align: center; */
 }
 
@@ -20,6 +19,7 @@
     letter-spacing: 0.01071em;
     width: 100%;
     border-radius: 4px;
+    
 }
 .tac_content {
     line-height: 44px;
@@ -29,10 +29,361 @@
     color: rgb(54, 99, 113);
     font-size: 1.2em;
     line-height: 44px;
-    font-weight: 600;
+    font-weight: 800;
 }
 .tac_content-text {
     font-size: 1.1em;
     line-height: 28px;
     text-align: 'justify'
+}
+
+/* 
+general 
+-------
+*/
+
+.invoice-card {
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	padding: 10px 2em;
+	min-height: 25em;
+	width: 30em;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0px 10px 30px 5px rgba(0, 0, 0, 0.15);
+  }
+  
+  .invoice-card > div {
+	margin: 5px 0;
+  }
+  
+  .invoice-title {
+	flex: 3;
+  }
+  
+  .invoice-title #date {
+	display: block;
+	margin: 8px 0;
+	font-size: 12px;
+  }
+  
+  .invoice-title #main-title {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 2em;
+  }
+  
+  .invoice-title #main-title h4 {
+	letter-spacing: 2.5px;
+  }
+  
+  .invoice-title span {
+	color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .invoice-details {
+	flex: 1;
+	border-top: 0.5px dashed grey;
+	border-bottom: 0.5px dashed grey;
+	display: flex;
+	align-items: center;
+  }
+  
+  .invoice-table {
+	width: 100%;
+	border-collapse: collapse;
+  }
+  
+  .invoice-table thead tr td {
+	font-size: 12px;
+	letter-spacing: 1px;
+	color: grey;
+	padding: 8px 0;
+  }
+  
+  .invoice-table thead tr td:nth-last-child(1),
+  .row-data td:nth-last-child(1),
+  .calc-row td:nth-last-child(1)
+  {
+	text-align: right;
+  }
+  
+  .invoice-table tbody tr td {
+	  padding: 8px 0;
+	  letter-spacing: 0;
+  }
+  
+  .invoice-table .row-data #unit {
+	text-align: center !important;
+  }
+  
+  .invoice-table .row-data span {
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .invoice-footer {
+	flex: 1;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+  }
+  
+  .invoice-footer #later {
+	margin-right: 5px;
+  }
+
+  
+
+.ant-input {
+	border-radius: 5px;
+}
+.success_payment-page {
+	padding: 5px;
+	background-color: rgb(255, 255, 255) !important;
+	min-height: 800px;
+	padding: 50px 50px;
+}
+.success_payment-breadcum .ant-breadcrumb{
+	padding-right: 15px;
+	max-width: 1300px;
+	font-size: 12px !important;
+	margin-bottom: 15px;
+	text-transform: capitalize;
+	font-weight: 600;
+}
+
+.ant-steps-item-title {
+	font-weight: 700;
+}
+.payment_status-page {
+	text-align: center;
+	min-height: 500px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+
+.success_payment-page_containner {
+	padding: 50px 15px;
+
+	max-width: 1350px;
+	margin: auto;
+	min-height: 800px;
+}
+
+ .success_payment-toolbox{
+	display: flex;
+	flex-direction: column;
+	width: 22%;
+}
+
+.success_payment-page_content{
+	width: 70%;
+}
+
+.checkoutpage_step {
+	margin-block: 30px;
+}
+.success_payment-page_title {
+	text-transform: capitalize;
+	font-size: 3rem;
+	font-weight: bold;
+	color: rgb(63, 63, 122);
+}
+
+.tabpane_formtext .form-title {
+	text-transform: capitalize;
+	font-weight: 600;
+	margin-top: 30px;
+}
+
+.success_paymentLayout {
+	background-color: transparent !important;
+}
+
+.success_paymentLayout .ant-layout-header {
+	background-color: transparent !important;
+	padding: 0;
+	height: auto;
+	line-height: 1.6;
+}
+
+
+/* 
+      header
+      ------ 
+      */
+.success_paymentLayout .ant-layout-header {
+	transition: all 0.5s ease-in-out;
+	left: 0;
+	right: 0;
+	z-index: 999;
+}
+
+.container-fluid {
+	margin: 0 auto;
+	max-width: 1400px;
+	padding: 0 15px;
+}
+
+.header {
+	transition: all 0.5s ease-in-out;
+	min-height: 60px;
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 0px 10px;
+}
+
+.header .logo {
+	font-size: 22px;
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+.header .logo .fas {
+	color: #1890ff;
+	margin: 0 5px 0 0;
+	font-size: 28px;
+}
+
+.header .logo a {
+	color: #333;
+}
+
+.header .ant-anchor-wrapper {
+	background: none;
+}
+
+.header .ant-anchor {
+	display: flex;
+}
+
+.header .ant-anchor-ink {
+	display: none;
+}
+
+.header .ant-anchor-link {
+	padding: 0 20px;
+	line-height: 1.4;
+	position: relative;
+}
+
+/* ant menu */
+.header .ant-menu {
+	border: 0;
+	background: none !important;
+}
+
+.header .ant-menu li.ant-menu-item {
+	position: relative;
+	color: #333;
+}
+
+.header .ant-menu li.ant-menu-item:before,
+.header .ant-menu li.ant-menu-item:after {
+	content: '';
+	background: #1890ff;
+	width: 1px;
+	position: absolute;
+	top: 2px;
+	bottom: 2px;
+	left: 30%;
+	opacity: 0;
+	transition: all 0.3s linear;
+}
+
+.header .ant-menu li.ant-menu-item:after {
+	left: auto;
+	right: 30%;
+}
+
+.header .ant-menu li.ant-menu-item,
+.header .ant-menu li.ant-menu-item-selected {
+	border: 0 !important;
+}
+
+.header .ant-menu li.ant-menu-item-selected,
+.header .ant-menu li.ant-menu-item:hover {
+	color: #1890ff;
+	background: none;
+}
+
+.header .ant-menu li.ant-menu-item-selected:before,
+.header .ant-menu li.ant-menu-item:hover:before {
+	left: 5%;
+	opacity: 1;
+}
+
+.header .ant-menu li.ant-menu-item-selected:after,
+.header .ant-menu li.ant-menu-item:hover:after {
+	right: 5%;
+	opacity: 1;
+}
+
+.ant-layout-footer {
+	padding: 0;
+}
+
+.mobileVisible {
+	display: none;
+}
+
+.mobileHidden {
+	display: block;
+}
+
+/* 
+      responsive
+      ----------
+      */
+@media only screen and (max-width: 991px) {
+	.pricingBlock .ant-row > div:nth-child(2) .ant-list-item {
+		transform: scale(1.14);
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.success_paymentLayout {
+		font-size: 12px;
+	}
+	.swiper-slide img {
+		max-width: 50px;
+	}
+	.slider-text_header {
+		font-size: 15px;
+	}
+
+	.slider-contain img {
+		height: 200px;
+	}
+
+	.countup-number {
+		font-size: 3rem;
+	}
+	.countup-block {
+		height: 10em;
+		width: 100%;
+	}
+
+	.slider-beforeafter {
+		margin: 10px;
+	}
+
+	.pricingBlock .ant-row > div:nth-child(2) .ant-list-item {
+		transform: scale(1);
+	}
+
+	.mobileVisible {
+		display: block;
+	}
+
+	.mobileHidden {
+		display: none;
+	}
 }

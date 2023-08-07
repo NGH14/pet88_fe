@@ -32,7 +32,6 @@ import { useTranslation } from 'react-i18next';
 import { SearchData } from '../../context/SearchContext';
 
 const { Step } = Steps;
-const description = 'This is a description.';
 const { Header, Content, Footer } = Layout;
 
 export default function PaymentSuccess() {
@@ -46,9 +45,11 @@ export default function PaymentSuccess() {
 		fetchSuccess();
 	}, []);
 
-	console.log(dataList);
+	const location = useLocation();
+	const id = location.pathname.split('/')[3];
+
 	const handleClick = () => {
-		navigate(-3, { replace: true });
+		navigate('/', { replace: true });
 	};
 	const fetchSuccess = async () => {
 		try {
@@ -56,8 +57,8 @@ export default function PaymentSuccess() {
 				`http://localhost:3001/api/order/success/${id}`,
 			);
 
-			await handleUpdateDate(res.data);
 			setDataList(res.data);
+			handleUpdateDate(res.data);
 		} catch (error) {
 			console.error(error);
 		}
@@ -78,13 +79,17 @@ export default function PaymentSuccess() {
 		return dates;
 	};
 
-	const alldates =
-		search.datesHotels || search.datesHotels?.length > 0
-			? getDatesInRange(search.datesHotels[0], search.datesHotels[1])
-			: [];
+	const priceWithoutVAT = dataList?.products?.reduce(
+		(total, room) => Number(total) + Number(room.price),
+		0,
+	);
+
+	const VAT = dataList?.price - priceWithoutVAT;
 
 	const handleUpdateDate = async (data) => {
 		try {
+			const alldates = getDatesInRange(data.start, data.end);
+
 			await Promise.all(
 				data.products.map((room) => {
 					const res = axios.put(
@@ -99,8 +104,6 @@ export default function PaymentSuccess() {
 		} catch (err) {}
 	};
 
-	const location = useLocation();
-	const id = location.pathname.split('/')[3];
 	return (
 		<ConfigProvider locale={lang === 'vi' && viVN}>
 			<Layout className='departhtLayout'>
@@ -201,7 +204,7 @@ export default function PaymentSuccess() {
 										{new Intl.NumberFormat('vi-VI', {
 											style: 'currency',
 											currency: 'VND',
-										}).format((dataList?.price * 8) / 100)}
+										}).format(VAT)}
 									</td>
 								</div>
 

@@ -1,68 +1,93 @@
-.form_bookinghomepage{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 15px 20px;
-    flex-grow: 1;
+.form_bookinghomepage {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 5px;
+	padding: 15px 20px;
+	flex-grow: 1;
 }
 
-.form_bookinghomepage .ant-form-item-label{
-    font-weight: bold;
-    text-transform: capitalize;
+.form_bookinghomepage .ant-form-item-label {
+	font-weight: bold;
+	text-transform: capitalize;
 }
 
-.form-item_bookinghomepage_city{
-    width: 40%;
+.form-item_bookinghomepage_city {
+	width: 40%;
 }
 
-.form-item_bookinghomepage_others{
-    width: 50%;
+.form-item_bookinghomepage_others {
+	width: 50%;
 }
 
-.form-item_bookinghomepage_others .ant-picker {
-    width: 100% !important;
+
+
+.form-item_bookinghomepage,
+.ant-select-selector {
+	border-radius: 5px !important;
+	margin-inline: 0 auto;
 }
 
-.form-item_bookinghomepage, .ant-select-selector{
-    border-radius: 5px !important;
-    margin-inline: 0 auto;
+.form-button_bookinghomepage {
+	border-radius: 45px;
+	font-weight: bold;
 }
 
-.form-button_bookinghomepage{
-    border-radius: 45px;
-    font-weight: bold;
-}
-
-.radio_formType .ant-radio-button-wrapper{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 50px;
-    height: 150px;
+.radio_formType .ant-radio-button-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 50px;
+	height: 150px;
 }
 
 .form_bookingservice {
-    width: 700px;
-    background-color: white;
-    border-radius: 15px;
-    box-shadow:
-    0 2.8px 2.2px rgba(0, 0, 0, 0.040),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.055),
-    0 12.5px 10px rgba(0, 0, 0, 0.065),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.078),
-    0 41.8px 33.4px rgba(0, 0, 0, 0.090),
-    0 100px 50px rgba(0, 0, 0, 0.1);
+	width: 700px;
+	background-color: white;
+	border-radius: 15px;
+	box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
+		0 6.7px 5.3px rgba(0, 0, 0, 0.055), 0 12.5px 10px rgba(0, 0, 0, 0.065),
+		0 22.3px 17.9px rgba(0, 0, 0, 0.078),
+		0 41.8px 33.4px rgba(0, 0, 0, 0.09), 0 100px 50px rgba(0, 0, 0, 0.1);
 }
 
-    
+
 @media only screen and (max-width: 767px) {
-    .form_bookingservice {
-        width: 300px;
-    }
-    .form-item_bookinghomepage, .ant-select-selector{
-        width: 100% !important;
-    }
-    
+	.form-item_datepicker {
+		width: 100%;
+	}
+	.form_bookingservice {
+		width: 400px;
+	}
+	.form-item_bookinghomepage,
+	.ant-select-selector {
+		width: 100% !important;
+	}
+}
+
+
+@media(max-width: 576px) { 
+	.ant-picker-panels, .ant-picker-datetime-panel { 
+	  flex-direction: column;
+	} 
+	.form_bookingservice {
+		width: 350px;
+	}
   }
 
+
+
+@media only screen and (max-width: 350px) {
+    
+.form-item_bookinghomepage_others .ant-picker {
+	width: 100% !important;
+}
+    
+	.form_bookingservice {
+		width: 300px;
+	}
+
+	.form_bookinghomepage .ant-calendar-picker {
+		width: 300px !important;
+	}
+}

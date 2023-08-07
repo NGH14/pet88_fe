@@ -15,6 +15,8 @@ import {
 	Radio,
 	Tabs,
 	Tag,
+	Modal,
+	Tooltip,
 } from 'antd';
 
 import viVN from 'antd/es/locale/vi_VN';
@@ -43,8 +45,14 @@ const Account = () => {
 	const navigate = useNavigate();
 	const [passwordLoading, setPasswordLoading] = useState(false);
 	const { lang } = UserLanguage();
-	const { user, updateProfile, updateUser, UpdatePassword, getOrderByUser } =
-		UserAuth();
+	const {
+		user,
+		updateProfile,
+		updateUser,
+		UpdatePassword,
+		getOrderByUser,
+		forgotPassword,
+	} = UserAuth();
 	const [name, setName] = React.useState(user?.name);
 	const [password, setPassword] = React.useState();
 	const [oldPassword, setOldPassword] = React.useState();
@@ -53,25 +61,57 @@ const Account = () => {
 	const [gender, setGender] = React.useState(user?.gender);
 	const [phone, setPhone] = React.useState(user?.phone);
 	const { t } = useTranslation();
+	const [openModalResetPassword, setOpenModalResetPassword] = useState(false);
+
+	const [
+		confirmLoadingModalResetPassword,
+		setConfirmLoadingModalResetPassword,
+	] = useState(false);
 
 	const columns = [
 		{
 			title: 'Order ID',
 			dataIndex: '_id',
-			key: 'email',
+			key: '_id',
+			render: (text) => (
+				<Tooltip placement='top' title={text} showArrow={false}>
+					{text}
+				</Tooltip>
+			),
+			ellipsis: true,
+		},
+		{
+			title: t('Type'),
+			dataIndex: 'service',
+			key: 'service',
 			render: (text) => <span>{text}</span>,
 		},
 		{
 			title: 'Room Booking',
 			dataIndex: 'products',
 			key: 'products',
-			render: (products) => products.map((_) => <p>{_.roomNumber}</p>),
+			render: (products) =>
+				products?.length > 0 && Array.isArray(products)
+					? products?.map((_) => <p>{_.roomNumber}</p>)
+					: null,
+		},
+		{
+			title: t('Drop off'),
+			dataIndex: 'start',
+			key: 'start',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
+		},
+		{
+			title: t('Pick up'),
+			dataIndex: 'end',
+			key: 'end',
+			render: (text) => <span>{text?.slice(0, 10)}</span>,
 		},
 		{
 			title: 'Date (Nights)',
 			dataIndex: 'days',
 			key: 'days',
-			render: (text) => <span>{text}</span>,
+			render: (text) => <span>{text > 0 ? text : null}</span>,
 		},
 		{
 			title: 'Price',
@@ -87,7 +127,7 @@ const Account = () => {
 			),
 		},
 		{
-			title: 'Booking Date',
+			title: 'Created at',
 			dataIndex: 'createdAt',
 			key: 'createdAt',
 			render: (text) => <span>{text?.slice(0, 10)}</span>,
@@ -100,9 +140,16 @@ const Account = () => {
 				<Tag color={text === 'success' ? 'green' : 'red'}>{text}</Tag>
 			),
 		},
+		{
+			title: 'Confirm',
+			dataIndex: 'confirm',
+			key: 'confirm',
+			render: (text) => (
+				<Tag color={text === 'confimred' ? 'green' : 'red'}>{text}</Tag>
+			),
+		},
 	];
 
-	console.log(orderList);
 	useEffect(() => {
 		if (!user) {
 			navigate('/');
@@ -113,7 +160,21 @@ const Account = () => {
 		getOrder();
 	}, []);
 
-	console.log(orderList);
+	const SendResetPassword = async () => {
+		setConfirmLoadingModalResetPassword(true);
+		try {
+			await forgotPassword(user?.email);
+			toast.success(t('Password reset email has been sent'));
+
+			setOpenModalResetPassword(false);
+			setConfirmLoadingModalResetPassword(false);
+		} catch (e) {
+			toast.error(t('Sorry, an error has occurred'));
+			console.log(e.message);
+			setConfirmLoadingModalResetPassword(false);
+			setOpenModalResetPassword(false);
+		}
+	};
 
 	const getOrder = async () => {
 		setLoadingOrder(true);
@@ -121,7 +182,6 @@ const Account = () => {
 			const orders = await getOrderByUser();
 			setOrderList(orders);
 			setLoadingOrder(false);
-			console.log(orders);
 		} catch (error) {
 			console.log(error);
 			setLoadingOrder(false);
@@ -189,6 +249,55 @@ const Account = () => {
 				<Content>
 					<HeroImage />
 					<div className='account-page'>
+						<Modal
+							centered
+							width={450}
+							closable={false}
+							footer={null}
+							onCancel={() => setOpenModalResetPassword(false)}
+							open={openModalResetPassword}
+							confirmLoading={confirmLoadingModalResetPassword}>
+							<div>
+								<h6
+									style={{
+										fontWeight: 700,
+										fontSize: 18,
+										paddingBottom: 10,
+									}}>
+									{t('Reset Password')}
+								</h6>
+								<p style={{ fontWeight: 500, fontSize: 14 }}>
+									{t('Send a password reset email to')}
+								</p>
+
+								<b>{user?.email}</b>
+
+								<div
+									style={{
+										marginTop: 20,
+										display: 'flex',
+										gap: 5,
+										justifyContent: 'flex-end',
+									}}>
+									<Button
+										onClick={() =>
+											setOpenModalResetPassword(false)
+										}
+										style={{ borderRadius: 8 }}>
+										{t('Cancel')}
+									</Button>
+									<Button
+										loading={
+											confirmLoadingModalResetPassword
+										}
+										onClick={SendResetPassword}
+										style={{ borderRadius: 8 }}
+										type='primary'>
+										{t('Send')}
+									</Button>
+								</div>
+							</div>
+						</Modal>
 						<div className='account-page_text'>
 							<h1 className='account-page_title'>
 								{t('account info')}
@@ -199,7 +308,7 @@ const Account = () => {
 								)}
 							</p>
 						</div>
-						<div className='form-account '>
+						<div className='form-account'>
 							<Tabs tabPosition='top'>
 								<TabPane tab={t('Profile')} key='1'>
 									<div className='account-tab_formcontain '>
@@ -231,7 +340,9 @@ const Account = () => {
 												prefix: '84',
 												phone: user?.phone,
 												gender: user?.gender,
-												dob: moment(user?.dob.toDate()),
+												dob: moment(
+													user?.dob?.toDate(),
+												),
 												email: user?.email,
 											}}
 											onFinish={onFinish}
@@ -307,11 +418,12 @@ const Account = () => {
 												<Input disabled />
 											</Form.Item>
 											<Form.Item
-												wrapperCol={{
-													offset: 4,
-													span: 16,
+												style={{
+													display: 'flex',
+													justifyContent: 'flex-end',
 												}}>
 												<Button
+													className='fullwidth-button'
 													loading={loading}
 													style={{
 														height: 'fit-content',
@@ -334,6 +446,16 @@ const Account = () => {
 										<div className='tabpane_formtext '>
 											<h2 className='form-title'>
 												{t('Change Password')}
+												<Button
+													type='link'
+													onClick={() =>
+														setOpenModalResetPassword(
+															true,
+														)
+													}>
+													{' '}
+													({t('Forgot Password')} )
+												</Button>
 											</h2>
 											<p>
 												{t(
@@ -430,9 +552,9 @@ const Account = () => {
 												<Input.Password />
 											</Form.Item>
 											<Form.Item
-												wrapperCol={{
-													offset: 4,
-													span: 16,
+												style={{
+													display: 'flex',
+													justifyContent: 'flex-end',
 												}}>
 												<Button
 													style={{
@@ -459,6 +581,9 @@ const Account = () => {
 							<Tabs tabPosition='top'>
 								<TabPane tab={t('History')} key='3'>
 									<Table
+										scroll={{
+											x: 800,
+										}}
 										loading={loadingOrder}
 										columns={columns}
 										dataSource={orderList}

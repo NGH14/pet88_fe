@@ -1,30 +1,38 @@
+import { Basic, Selectable, DragAndDrop } from './../components/Calendar/index';
+import moment from 'moment';
+import {
+	Calendar,
+	Views,
+	DateLocalizer,
+	momentLocalizer,
+} from 'react-big-calendar';
 
-import { Calendar } from '../components/Calendar/';
-import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'COMPONENTS/Calendar',
-  component: Calendar,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
-  parameters: {
-    layout: 'centered',
-  },
+	title: 'COMPONENTS/Calendar',
+	component: Calendar,
+	parameters: {
+		docs: {
+			page: null,
+		},
+	},
 };
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = (args) => <Calendar {...args} />;
+const localizer = momentLocalizer(moment);
 
+export function BasicCalendar() {
+	return <Basic localizer={localizer} />;
+}
 
+BasicCalendar.storyName = 'Basic';
 
-export const Primary = Template.bind({});
-// // More on args: https://storybook.js.org/docs/react/writing-stories/args
-// Primary.args = {
-//   primary: true,
-//   label: 'Calendar',
-// };
+export function SelectableCalendar() {
+	return <Selectable localizer={localizer} />;
+}
 
+SelectableCalendar.storyName = 'Selectable';
 
+export function DnDCalendar() {
+	return <DragAndDrop localizer={localizer} />;
+}
+
+DnDCalendar.storyName = 'Drag and Drop';

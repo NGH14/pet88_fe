@@ -7,7 +7,6 @@ import { Layout } from 'antd';
 import { ConfigProvider } from 'antd';
 
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-import { listRoute } from './utils/routes';
 import { routes } from './routes/';
 import viVN from 'antd/es/locale/vi_VN';
 
@@ -17,11 +16,10 @@ import { AuthContextProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import i18n from 'i18next';
-import {
-	LanguageContextProvider,
-	UserLanguage,
-} from './context/LanguageContext';
+import { LanguageContextProvider } from './context/LanguageContext';
 import { SearchContextProvider } from './context/SearchContext';
+import ListRoutes from './utils/ListRoutes';
+
 function App() {
 	return (
 		<AuthContextProvider>
@@ -41,7 +39,7 @@ function App() {
 								pauseOnHover
 								theme='light'
 							/>
-							<Routes>{listRoute(routes)}</Routes>
+							<Routes>{ListRoutes(routes)}</Routes>
 						</BrowserRouter>
 					</SearchContextProvider>
 				</I18nextProvider>

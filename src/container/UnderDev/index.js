@@ -12,8 +12,7 @@ import img from '../../assets/images/undraw_bug_fixing_oc7a (1).png';
 import './style.css';
 
 export default function UnderDev() {
-	const navigate = useNavigate();
-
+	const { t } = useTranslation();
 	return (
 		<>
 			<div className='underpage'>
@@ -25,11 +24,13 @@ export default function UnderDev() {
 							margin: 15,
 							textTransform: 'capitalize',
 						}}>
-						Site under construction and maintenance{' '}
+						{t('Site under construction and maintenance')}
 					</h1>
 
 					<p>
-						Sorry about this inconvenience, please come back later
+						{t(
+							'Sorry about this inconvenience, please come back later',
+						)}
 					</p>
 
 					<NavLink to={'/'}>Go Back</NavLink>
