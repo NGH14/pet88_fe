@@ -7,6 +7,7 @@ import {
 	Button,
 	Calendar,
 	Cascader,
+	Checkbox,
 	Col,
 	ConfigProvider,
 	DatePicker,
@@ -118,15 +119,14 @@ export const CalendarAdmin = () => {
 		'https://res.cloudinary.com/dggxjymsy/image/upload/v1667986972/pet88_upload/e10adb13acb1f3da8724a9149a58bd00_jwdh7h.jpg';
 	const [disabled, setDisabled] = useState(false);
 	const [userData, setUserData] = React.useState([]);
-	const [userDataOption, setUserDataOpion] = React.useState([]);
+	const [userDataOption, setUserDataOption] = React.useState([]);
 	const { t } = useTranslation();
 	const localizer = momentLocalizer(moment);
 	const [openCreateModal, setOpenCreateModal] = useState(false);
 	const [openDetailModal, setOpenDetailModal] = useState(false);
-	const [accountType, setAccountType] = React.useState(true);
+	const [accountType, setAccountType] = React.useState(false);
 	const { width } = useWindowDimensions();
 	const [form] = Form.useForm();
-
 	const [bounds, setBounds] = useState({
 		left: 0,
 		top: 0,
@@ -364,7 +364,7 @@ export const CalendarAdmin = () => {
 		}),
 		[lang],
 	);
-
+	console.log(accountType);
 	const handleSelectSlot = ({ start, end }) => {
 		const price =
 			(new Date(end).getHours() - new Date(start).getHours()) *
@@ -427,7 +427,7 @@ export const CalendarAdmin = () => {
 			list.forEach((doc) => {
 				option.push({ value: doc.email, label: doc.email });
 			});
-			setUserDataOpion(option);
+			setUserDataOption(option);
 			setUserData(list);
 		} catch (error) {
 			toast.error(t('Fail to load email data'));
@@ -582,7 +582,8 @@ export const CalendarAdmin = () => {
 							cancel='.drag-button_modal .createEvent_form .createEvent_btn'
 							disabled={disabled}
 							bounds={bounds}
-							onStart={(event, uiData) => onStart(event, uiData)}>
+							onStart={(event, uiData) => onStart(event, uiData)}
+						>
 							<div ref={draggleRef}>{modal}</div>
 						</Draggable>
 					)}
@@ -590,7 +591,8 @@ export const CalendarAdmin = () => {
 					open={openCreateModal}
 					onOk={() => setOpenCreateModal(false)}
 					footer={null}
-					onCancel={() => setOpenCreateModal(false)}>
+					onCancel={() => setOpenCreateModal(false)}
+				>
 					<Form
 						className='createEvent_form'
 						colon={false}
@@ -598,14 +600,16 @@ export const CalendarAdmin = () => {
 						name='horizontal_login'
 						layout='horizontal'
 						onFinish={onFinishCreateEvent}
-						requiredMark={false}>
+						requiredMark={false}
+					>
 						<Form.Item
 							label={
 								<RiFileTextLine
 									style={{
 										fontSize: 14,
 										textTransform: 'capitalize',
-									}}></RiFileTextLine>
+									}}
+								></RiFileTextLine>
 							}
 							name='title'
 							rules={[
@@ -613,7 +617,8 @@ export const CalendarAdmin = () => {
 									required: true,
 									message: t('Please enter the title'),
 								},
-							]}>
+							]}
+						>
 							<Input placeholder={t('Enter event title')} />
 						</Form.Item>
 
@@ -626,7 +631,8 @@ export const CalendarAdmin = () => {
 										(option?.label ?? '')
 											.toLowerCase()
 											.includes(input.toLowerCase())
-									}></Select>
+									}
+								></Select>
 							</Form.Item>
 						) : (
 							<>
@@ -642,36 +648,45 @@ export const CalendarAdmin = () => {
 								</Form.Item>
 							</>
 						)}
-						<Form.Item
-							label={<RiUserSettingsLine />}
-							name='account'
-							initialValue={true}>
-							<Radio.Group
+
+						<Form label={<RiUserSettingsLine />} name='account'>
+							{/* <Radio.Group
 								value={accountType}
-								onChange={(e) =>
-									setAccountType(e.target.value)
-								}>
+								onChange={(e) => setAccountType(e.target.value)}
+							>
 								<Radio value={false}>{t('Guest')}</Radio>
 								<Radio value={true}>{t('Has Account')}</Radio>
-							</Radio.Group>
-						</Form.Item>
+							</Radio.Group> */}
+							<Checkbox
+								checked={accountType}
+								defaultChecked={accountType}
+								onChange={(e) =>
+									setAccountType(e.target.checked)
+								}
+							>
+								Has Account
+							</Checkbox>
+						</Form>
 						<Form.Item
 							style={{
 								marginBottom: 0,
-							}}>
+							}}
+						>
 							<Form.Item
 								label={
 									<RiCalendarEventFill
 										style={{
 											fontSize: 14,
 											textTransform: 'capitalize',
-										}}></RiCalendarEventFill>
+										}}
+									></RiCalendarEventFill>
 								}
 								name='start'
 								style={{
 									display: 'flex',
 									alignContent: 'center',
-								}}>
+								}}
+							>
 								<span>
 									{moment(
 										new Date(selectedDate?.start).getTime(),
@@ -691,13 +706,15 @@ export const CalendarAdmin = () => {
 									style={{
 										fontSize: 14,
 										textTransform: 'capitalize',
-									}}></RiCoinLine>
+									}}
+								></RiCoinLine>
 							}
 							name='start'
 							style={{
 								display: 'flex',
 								alignContent: 'center',
-							}}>
+							}}
+						>
 							<span>
 								{new Intl.NumberFormat('vi-VI', {
 									style: 'currency',
@@ -711,7 +728,8 @@ export const CalendarAdmin = () => {
 								display: 'flex',
 								justifyContent: 'flex-end',
 								marginBlock: '5px -5px',
-							}}>
+							}}
+						>
 							<Button
 								className='drag-button_modal'
 								style={{
@@ -722,7 +740,8 @@ export const CalendarAdmin = () => {
 									borderRadius: 5,
 								}}
 								type='text'
-								onClick={() => setOpenCreateModal(false)}>
+								onClick={() => setOpenCreateModal(false)}
+							>
 								{t('Close')}
 							</Button>
 							<Button
@@ -736,7 +755,8 @@ export const CalendarAdmin = () => {
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
 								type='primary'
-								htmlType='submit'>
+								htmlType='submit'
+							>
 								{t('Confirm')}
 							</Button>
 						</Form.Item>
@@ -762,11 +782,13 @@ export const CalendarAdmin = () => {
 								setDisabled(true);
 							}}
 							onFocus={() => {}}
-							onBlur={() => {}}>
+							onBlur={() => {}}
+						>
 							<Button
 								className='drag-button_modal'
 								type='text'
-								onClick={() => handleDeleteEvent()}>
+								onClick={() => handleDeleteEvent()}
+							>
 								<RiDeleteBinLine></RiDeleteBinLine>{' '}
 							</Button>
 							<Button
@@ -774,17 +796,20 @@ export const CalendarAdmin = () => {
 								type='text'
 								onClick={() =>
 									setSelecteDetailType(!selecteDetailType)
-								}>
+								}
+							>
 								<RiEditLine></RiEditLine>{' '}
 							</Button>
 							<Button
 								className='drag-button_modal'
 								type='text'
-								onClick={() => setOpenDetailModal(false)}>
+								onClick={() => setOpenDetailModal(false)}
+							>
 								<RiCloseFill
 									style={{
 										fontSize: 18,
-									}}></RiCloseFill>{' '}
+									}}
+								></RiCloseFill>{' '}
 							</Button>
 						</div>
 					}
@@ -793,7 +818,8 @@ export const CalendarAdmin = () => {
 							cancel='.drag-button_modal .updateEvent_form'
 							disabled={disabled}
 							bounds={bounds}
-							onStart={(event, uiData) => onStart(event, uiData)}>
+							onStart={(event, uiData) => onStart(event, uiData)}
+						>
 							<div ref={draggleRef} style={{}}>
 								{modal}
 							</div>
@@ -803,7 +829,8 @@ export const CalendarAdmin = () => {
 					open={openDetailModal}
 					onOk={() => setOpenDetailModal(false)}
 					footer={null}
-					onCancel={() => setOpenDetailModal(false)}>
+					onCancel={() => setOpenDetailModal(false)}
+				>
 					<Form
 						className='updateEvent_form'
 						colon={false}
@@ -817,7 +844,8 @@ export const CalendarAdmin = () => {
 							phone: selecteDetaildDate?.order?.phone,
 						}}
 						onFinish={onFinishUpdateEvent}
-						requiredMark={false}>
+						requiredMark={false}
+					>
 						<Form.Item
 							label={
 								<RiFileTextLine
@@ -825,7 +853,8 @@ export const CalendarAdmin = () => {
 										fontSize: 14,
 
 										textTransform: 'capitalize',
-									}}></RiFileTextLine>
+									}}
+								></RiFileTextLine>
 							}
 							name='title'
 							rules={[
@@ -833,7 +862,8 @@ export const CalendarAdmin = () => {
 									required: true,
 									message: t('Please enter the title'),
 								},
-							]}>
+							]}
+						>
 							{selecteDetailType ? (
 								<Input placeholder={t('Enter event title')} />
 							) : (
@@ -864,19 +894,22 @@ export const CalendarAdmin = () => {
 						<Form.Item
 							style={{
 								marginBottom: 0,
-							}}>
+							}}
+						>
 							<Form.Item
 								label={
 									<RiCalendarEventFill
 										style={{
 											fontSize: 14,
 											textTransform: 'capitalize',
-										}}></RiCalendarEventFill>
+										}}
+									></RiCalendarEventFill>
 								}
 								style={{
 									display: 'flex',
 									alignContent: 'center',
-								}}>
+								}}
+							>
 								<span>
 									{moment(
 										new Date(
@@ -898,13 +931,15 @@ export const CalendarAdmin = () => {
 									style={{
 										fontSize: 14,
 										textTransform: 'capitalize',
-									}}></RiCoinLine>
+									}}
+								></RiCoinLine>
 							}
 							name='start'
 							style={{
 								display: 'flex',
 								alignContent: 'center',
-							}}>
+							}}
+						>
 							<span>
 								{new Intl.NumberFormat('vi-VI', {
 									style: 'currency',
@@ -925,7 +960,8 @@ export const CalendarAdmin = () => {
 							<Paragraph
 								copyable={{
 									tooltips: false,
-								}}>
+								}}
+							>
 								{selecteDetaildDate?.order?._id}
 							</Paragraph>
 						</Form.Item>
@@ -935,7 +971,8 @@ export const CalendarAdmin = () => {
 								justifyContent: 'flex-end',
 
 								marginBlock: '5px -5px',
-							}}>
+							}}
+						>
 							<Button
 								className='drag-button_modal'
 								style={{
@@ -946,7 +983,8 @@ export const CalendarAdmin = () => {
 									borderRadius: 5,
 								}}
 								type='text'
-								onClick={() => setOpenDetailModal(false)}>
+								onClick={() => setOpenDetailModal(false)}
+							>
 								{t('Close')}
 							</Button>
 							{selecteDetailType ? (
@@ -961,7 +999,8 @@ export const CalendarAdmin = () => {
 											'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 									}}
 									type='primary'
-									htmlType='submit'>
+									htmlType='submit'
+								>
 									{t('Confirm')}
 								</Button>
 							) : null}
@@ -970,7 +1009,8 @@ export const CalendarAdmin = () => {
 				</Modal>
 				<div
 					className='site-calendar-customize-header-wrapper'
-					style={subCalendarCollapse ? { display: 'none' } : null}>
+					style={subCalendarCollapse ? { display: 'none' } : null}
+				>
 					<Calendar
 						headerRender={({ value, onChange }) => {
 							const date = value.format('MMMM, YYYY');
@@ -985,7 +1025,8 @@ export const CalendarAdmin = () => {
 													value,
 												).add(1, 'W');
 												onChange(newValue);
-											}}>
+											}}
+										>
 											1 {t('week')}
 										</Button>
 									</Menu.Item>
@@ -998,7 +1039,8 @@ export const CalendarAdmin = () => {
 													value,
 												).add(2, 'W');
 												onChange(newValue);
-											}}>
+											}}
+										>
 											2 {t('weeks')}
 										</Button>
 									</Menu.Item>
@@ -1011,7 +1053,8 @@ export const CalendarAdmin = () => {
 													value,
 												).add(3, 'W');
 												onChange(newValue);
-											}}>
+											}}
+										>
 											3 {t('weeks')}
 										</Button>
 									</Menu.Item>
@@ -1024,7 +1067,8 @@ export const CalendarAdmin = () => {
 													value,
 												).add(4, 'W');
 												onChange(newValue);
-											}}>
+											}}
+										>
 											4 {t('weeks')}
 										</Button>
 									</Menu.Item>
@@ -1037,17 +1081,20 @@ export const CalendarAdmin = () => {
 											display: 'flex',
 											justifyContent: 'space-between',
 											alignItems: 'center',
-										}}>
+										}}
+									>
 										<span
 											style={{
 												textTransform: 'capitalize',
 												fontSize: 14,
 												fontWeight: 600,
-											}}>
+											}}
+										>
 											{date}
 										</span>
 										<div
-											style={{ display: 'flex', gap: 5 }}>
+											style={{ display: 'flex', gap: 5 }}
+										>
 											<Button
 												style={{ padding: 0 }}
 												type='text'
@@ -1056,7 +1103,8 @@ export const CalendarAdmin = () => {
 														value,
 													).subtract(1, 'M');
 													onChange(newValue);
-												}}>
+												}}
+											>
 												<IoIosArrowBack />
 											</Button>
 											<Button
@@ -1067,7 +1115,8 @@ export const CalendarAdmin = () => {
 														value,
 													).add(1, 'M');
 													onChange(newValue);
-												}}>
+												}}
+											>
 												<IoIosArrowForward />
 											</Button>
 										</div>
@@ -1079,7 +1128,8 @@ export const CalendarAdmin = () => {
 												marginBlock: 20,
 												boxShadow:
 													'rgb(112 144 176 / 20%) 0px 2px 8px',
-											}}>
+											}}
+										>
 											{t('Quick Jump')}
 										</Button>
 									</Dropdown>
