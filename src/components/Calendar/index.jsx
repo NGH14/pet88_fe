@@ -34,6 +34,7 @@ import { UserLanguage } from '../../context/LanguageContext';
 import viVN from 'antd/es/locale/vi_VN';
 import './style.css';
 const DnDCalendar = withDragAndDrop(RB);
+
 const events = [
 	{
 		id: uid(),
@@ -69,8 +70,9 @@ export const CalendarAdmin = () => {
 	const { lang } = UserLanguage();
 	const [allEvents, setAllEvents] = useState(events);
 	const [defaultDate, setDefaultDate] = useState(new Date());
-
 	const localizer = momentLocalizer(moment);
+	moment.locale(lang);
+	
 	const onPanelChange = (value, mode) => {
 		console.log(value.format('YYYY-MM-DD'), mode);
 	};
@@ -78,14 +80,11 @@ export const CalendarAdmin = () => {
 		setDefaultDate(newValue.toDate());
 	};
 
-	moment.locale(lang);
 
 	const handleSelectEvent = useCallback(
 		(event) => window.alert(event.title),
 		[],
 	);
-
-	console.log(allEvents);
 
 	const { messages } = useMemo(
 		() => ({
