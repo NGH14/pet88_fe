@@ -229,7 +229,8 @@ const Account = () => {
 				style={{
 					width: 70,
 					fontSize: 14,
-				}}>
+				}}
+			>
 				<Option value='84'>+84</Option>
 			</Select>
 		</Form.Item>
@@ -256,14 +257,16 @@ const Account = () => {
 							footer={null}
 							onCancel={() => setOpenModalResetPassword(false)}
 							open={openModalResetPassword}
-							confirmLoading={confirmLoadingModalResetPassword}>
+							confirmLoading={confirmLoadingModalResetPassword}
+						>
 							<div>
 								<h6
 									style={{
 										fontWeight: 700,
 										fontSize: 18,
 										paddingBottom: 10,
-									}}>
+									}}
+								>
 									{t('Reset Password')}
 								</h6>
 								<p style={{ fontWeight: 500, fontSize: 14 }}>
@@ -278,12 +281,14 @@ const Account = () => {
 										display: 'flex',
 										gap: 5,
 										justifyContent: 'flex-end',
-									}}>
+									}}
+								>
 									<Button
 										onClick={() =>
 											setOpenModalResetPassword(false)
 										}
-										style={{ borderRadius: 8 }}>
+										style={{ borderRadius: 8 }}
+									>
 										{t('Cancel')}
 									</Button>
 									<Button
@@ -292,7 +297,8 @@ const Account = () => {
 										}
 										onClick={SendResetPassword}
 										style={{ borderRadius: 8 }}
-										type='primary'>
+										type='primary'
+									>
 										{t('Send')}
 									</Button>
 								</div>
@@ -348,7 +354,8 @@ const Account = () => {
 											onFinish={onFinish}
 											onFinishFailed={onFinishFailed}
 											autoComplete='off'
-											requiredMark={false}>
+											requiredMark={false}
+										>
 											<Form.Item
 												onChange={(e) =>
 													setName(e.target.value)
@@ -362,12 +369,14 @@ const Account = () => {
 															'Please input your username!',
 														),
 													},
-												]}>
+												]}
+											>
 												<Input />
 											</Form.Item>
 											<Form.Item
 												name='dob'
-												label={t('Date of Birth')}>
+												label={t('Date of Birth')}
+											>
 												<DatePicker
 													onChange={onChangeDate}
 													disabledDate={(current) =>
@@ -382,11 +391,13 @@ const Account = () => {
 											</Form.Item>
 											<Form.Item
 												name='gender'
-												label={t('Gender')}>
+												label={t('Gender')}
+											>
 												<Select
 													onChange={
 														handleGenderChange
-													}>
+													}
+												>
 													<Option value='male'>
 														{t('Male')}
 													</Option>
@@ -404,7 +415,8 @@ const Account = () => {
 												}
 												type='number'
 												name='phone'
-												label={t('Phone Number')}>
+												label={t('Phone Number')}
+											>
 												<Input
 													addonBefore={prefixSelector}
 													style={{
@@ -414,14 +426,16 @@ const Account = () => {
 											</Form.Item>
 											<Form.Item
 												label='Email'
-												name='email'>
+												name='email'
+											>
 												<Input disabled />
 											</Form.Item>
 											<Form.Item
 												style={{
 													display: 'flex',
 													justifyContent: 'flex-end',
-												}}>
+												}}
+											>
 												<Button
 													className='fullwidth-button'
 													loading={loading}
@@ -434,7 +448,8 @@ const Account = () => {
 															'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 													}}
 													type='primary'
-													htmlType='submit'>
+													htmlType='submit'
+												>
 													{t('Confirm')}
 												</Button>
 											</Form.Item>
@@ -452,7 +467,8 @@ const Account = () => {
 														setOpenModalResetPassword(
 															true,
 														)
-													}>
+													}
+												>
 													{' '}
 													({t('Forgot Password')} )
 												</Button>
@@ -474,7 +490,8 @@ const Account = () => {
 											onFinish={onFinishPassword}
 											onFinishFailed={onFinishFailed}
 											requiredMark={false}
-											autoComplete='off'>
+											autoComplete='off'
+										>
 											<Form.Item
 												onChange={(e) =>
 													setOldPassword(
@@ -490,7 +507,8 @@ const Account = () => {
 															'Please enter your password!',
 														),
 													},
-												]}>
+												]}
+											>
 												<Input.Password />
 											</Form.Item>
 											<Form.Item
@@ -514,7 +532,8 @@ const Account = () => {
 															'Password must be minimum 6 characters.',
 														),
 													},
-												]}>
+												]}
+											>
 												<Input.Password />
 											</Form.Item>
 											<Form.Item
@@ -548,14 +567,16 @@ const Account = () => {
 															);
 														},
 													}),
-												]}>
+												]}
+											>
 												<Input.Password />
 											</Form.Item>
 											<Form.Item
 												style={{
 													display: 'flex',
 													justifyContent: 'flex-end',
-												}}>
+												}}
+											>
 												<Button
 													style={{
 														height: 'fit-content',
@@ -568,7 +589,8 @@ const Account = () => {
 													}}
 													loading={passwordLoading}
 													type='primary'
-													htmlType='submit'>
+													htmlType='submit'
+												>
 													{t('Confirm')}
 												</Button>
 											</Form.Item>

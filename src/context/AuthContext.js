@@ -30,6 +30,8 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
+const API_URL = process.env.REACT_APP_API;
+
 export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = React.useState();
 	const [firebaseAuthUser, setFireBaseAuthUser] = React.useState({});
@@ -53,8 +55,6 @@ export const AuthContextProvider = ({ children }) => {
 		});
 	};
 
-	const API_URL = process.env.REACT_APP_API;
-
 	const updateUserByAdmin = async (uid, value) => {
 		const userRef = doc(storage, 'users', uid);
 		const cusdob = Timestamp.fromDate(new Date(value.dob));
@@ -67,7 +67,7 @@ export const AuthContextProvider = ({ children }) => {
 		});
 	};
 
-	const getOrderByUser = async (id) => {
+	const getOrderByUser = async () => {
 		try {
 			const res = await axios.get(`${API_URL}/order/user/${user.id}`);
 			return res.data;
@@ -285,7 +285,8 @@ export const AuthContextProvider = ({ children }) => {
 				getOrderByUser,
 				MultipleDeleteDepart,
 				getNewUserInCurrentMonth,
-			}}>
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
