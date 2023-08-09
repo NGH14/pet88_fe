@@ -2,18 +2,20 @@ import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { BrowserRouter, Routes } from 'react-router-dom';
 
-import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-import { routes } from './routes/';
-
-import './index.css';
-import './App.css';
 import { AuthContextProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import i18n from 'i18next';
 import { LanguageContextProvider } from './context/LanguageContext';
 import { SearchContextProvider } from './context/SearchContext';
 import ListRoutes from './utils/ListRoutes';
+
+import { routes } from './routes/';
+
+import 'antd/dist/antd.css';
+import 'react-toastify/dist/ReactToastify.css';
+
+import './index.css';
+import './App.css';
 
 function App() {
 	return (
