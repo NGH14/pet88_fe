@@ -1,15 +1,8 @@
-import React, { useEffect } from 'react';
-import ResetPasswordForm from '../../components/ResetPasswordForm';
-import DogImg from '../../assets/images/Wallpaper-Linz-Doggies-Turquiose-1.webp';
-import { motion } from 'framer-motion';
-import { UserAuth } from '../../context/AuthContext';
-import { useNavigate, useLocation, NavLink } from 'react-router-dom';
-import InValidDisplay from './../../components/InvalidCodeReset/index';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
 import img from '../../assets/images/undraw_bug_fixing_oc7a (1).png';
 import './style.css';
+import { NavLink } from 'react-router-dom';
 
 export default function UnderDev() {
 	const { t } = useTranslation();
@@ -23,7 +16,8 @@ export default function UnderDev() {
 							fontWeight: 700,
 							margin: 15,
 							textTransform: 'capitalize',
-						}}>
+						}}
+					>
 						{t('Site under construction and maintenance')}
 					</h1>
 
