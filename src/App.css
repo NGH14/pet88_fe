@@ -4,15 +4,12 @@ html {
 	transition: all ease-in-out 1s;
 	font-size: 62.5%;
 	height: 100%;
-	
 }
 body {
-    overflow: auto;
-
+	overflow: auto;
 	height: 100vh;
 	width: 100vw;
 }
-
 
 textarea {
 	padding: 12px;
@@ -94,28 +91,30 @@ textarea {
 	width: auto !important;
 }
 
-.ant-dropdown-menu, .ant-pagination-item, .ant-message-notice-content{
+.ant-dropdown-menu,
+.ant-pagination-item,
+.ant-message-notice-content {
 	border-radius: 8px !important;
 }
 
 .ant-pagination-item-link {
-	border: unset  !important;
+	border: unset !important;
 }
 
 .ant-tooltip {
 	font-size: 13px;
-
 }
 
 .ant-pagination-total-text {
 	color: #999 !important;
 }
 
-
-.ant-modal-header, .ant-modal-body {
+.ant-modal-header,
+.ant-modal-body {
 	border-radius: 8px;
 }
 
-div.ant-typography, .ant-typography p {
+div.ant-typography,
+.ant-typography p {
 	margin-bottom: 0px;
 }
