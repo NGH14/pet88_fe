@@ -70,6 +70,8 @@ const events = [
 	},
 ];
 
+const API = process.env.REACT_APP_API;
+
 const langMessage = {
 	en: {
 		previous: '<',
@@ -134,6 +136,8 @@ export const CalendarAdmin = () => {
 		right: 0,
 	});
 	const draggleRef = useRef(null);
+	moment.locale(lang);
+
 	React.useEffect(() => form.resetFields());
 
 	const onChange = (value, selectedOptions) => {
@@ -181,11 +185,9 @@ export const CalendarAdmin = () => {
 		}
 	}, [width]);
 
-	moment.locale(lang);
-
 	const fetchGroomingData = async () => {
 		try {
-			const res = await axios.get(`http://localhost:3001/api/grooming`);
+			const res = await axios.get(`${API}/grooming`);
 
 			const list = [];
 			res.data.map((data) => {
@@ -217,7 +219,7 @@ export const CalendarAdmin = () => {
 		const roomId = id || selectedGroomingRoomId;
 		try {
 			const res = await axios.get(
-				`http://localhost:3001/api/grooming/room/${roomId}`,
+				`${API}/grooming/room/${roomId}`,
 			);
 
 			const list = [];
@@ -240,7 +242,7 @@ export const CalendarAdmin = () => {
 	const FetchAddEvent = async (value) => {
 		try {
 			await axios.put(
-				`http://localhost:3001/api/grooming/availability/${selectedGroomingRoomId}`,
+				`${API}/grooming/availability/${selectedGroomingRoomId}`,
 				{
 					dates: {
 						name: value.name,
@@ -273,7 +275,7 @@ export const CalendarAdmin = () => {
 
 		try {
 			await axios.put(
-				`http://localhost:3001/api/grooming/room/event/${id}`,
+				`${API}/grooming/room/event/${id}`,
 				{
 					startDate,
 					endDate,
@@ -303,7 +305,7 @@ export const CalendarAdmin = () => {
 		try {
 			await Promise.all([
 				axios.put(
-					`http://localhost:3001/api/grooming/room/event/${id}`,
+					`${API}/grooming/room/event/${id}`,
 					{
 						startDate,
 						endDate,
@@ -312,7 +314,7 @@ export const CalendarAdmin = () => {
 					},
 				),
 
-				axios.put(`http://localhost:3001/api/order/${order._id}`, {
+				axios.put(`${API}/order/${order._id}`, {
 					...order,
 					start: startDate,
 					endDate: endDate,
@@ -329,10 +331,10 @@ export const CalendarAdmin = () => {
 		try {
 			await Promise.all([
 				axios.put(
-					`http://localhost:3001/api/grooming/room/event/delete/${id}`,
+					`${API}/grooming/room/event/delete/${id}`,
 				),
 				axios.put(
-					`http://localhost:3001/api/order/update-status/${selecteDetaildDate.order._id}`,
+					`${API}/order/update-status/${selecteDetaildDate.order._id}`,
 					{
 						paid: 'cancel',
 						confirm: 'cancel',
@@ -481,7 +483,7 @@ export const CalendarAdmin = () => {
 
 			try {
 				const order = await axios.post(
-					`http://localhost:3001/api/order/admin/grooming`,
+					`${API}/order/admin/grooming`,
 					{
 						email: bookingUser.email || 'guest',
 						eventID,
