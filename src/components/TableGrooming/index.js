@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import {
@@ -6,8 +6,7 @@ import {
 	ExportTableButton,
 	SearchTableInput,
 } from 'ant-table-extensions';
-import { storage } from '../../utils/firebase';
-import { useNavigate } from 'react-router-dom';
+
 import { toast } from 'react-toastify';
 import {
 	FileExcelOutlined,
@@ -26,34 +25,18 @@ import {
 	Button,
 	Drawer,
 	Space,
-	Tag,
 	Form,
 	Input,
 	Select,
-	DatePicker,
 	Popconfirm,
-	Upload,
-	message,
 	Modal,
 	InputNumber,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { UserLanguage } from '../../context/LanguageContext';
-import moment from 'moment';
 import axios from 'axios';
 import './style.css';
-import { borderRadius } from '@mui/system';
 const { Option } = Select;
-
-const getBase64 = (file) =>
-	new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result);
-		reader.onerror = (error) => reject(error);
-	});
-
-const { Dragger } = Upload;
 
 export default function TableGrooming() {
 	const [tableLoading, setTableLoading] = React.useState(true);
@@ -284,19 +267,20 @@ export default function TableGrooming() {
 					<Popconfirm
 						key='delete'
 						title={t('Are you sure to delete?')}
-						onConfirm={() => handleDeleteGrooming(record._id)}>
+						onConfirm={() => handleDeleteGrooming(record._id)}
+					>
 						<Button
 							danger
 							type='text'
-							icon={<DeleteOutlined />}></Button>
+							icon={<DeleteOutlined />}
+						></Button>
 					</Popconfirm>
 					<Button
 						type='text'
 						key='update'
 						icon={<EditOutlined />}
-						onClick={() =>
-							handleOpenUpdateCategory(record)
-						}></Button>
+						onClick={() => handleOpenUpdateCategory(record)}
+					></Button>
 				</Space>
 			),
 		},
@@ -378,7 +362,8 @@ export default function TableGrooming() {
 				<p
 					style={{
 						margin: 15,
-					}}>
+					}}
+				>
 					{t('Created Date')}
 					{t(': ')}
 					{new Date(record.createdAt).toLocaleString()}
@@ -386,7 +371,8 @@ export default function TableGrooming() {
 				<p
 					style={{
 						margin: 15,
-					}}>
+					}}
+				>
 					{t('Last Update Date')}
 					{t(': ')}
 					{new Date(record.updatedAt).toLocaleString()}
@@ -405,7 +391,8 @@ export default function TableGrooming() {
 					<Button
 						icon={<MoreOutlined style={{ fontSize: 20 }} />}
 						onClick={() => setTableToolTip(!tableToolTip)}
-						type='text'></Button>
+						type='text'
+					></Button>
 				</div>
 				<div className='tablegrooming_rightheader'>
 					<SearchTableInput
@@ -421,7 +408,8 @@ export default function TableGrooming() {
 						className='tablegrooming_createbutton'
 						loading={loadingCreate}
 						type='primary'
-						onClick={handleOpenCreateRoom}>
+						onClick={handleOpenCreateRoom}
+					>
 						{t('Create new')}
 					</Button>
 					<Button
@@ -432,7 +420,8 @@ export default function TableGrooming() {
 							/>
 						}
 						onClick={() => getAllGroomingData()}
-						type='text'></Button>
+						type='text'
+					></Button>
 				</div>
 			</div>
 
@@ -443,7 +432,8 @@ export default function TableGrooming() {
 				open={openUpdate}
 				bodyStyle={{
 					paddingBottom: 80,
-				}}>
+				}}
+			>
 				{openUpdate ? (
 					<Form
 						form={form}
@@ -464,7 +454,8 @@ export default function TableGrooming() {
 						onFinish={onFinishUpdate}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
-						requiredMark={false}>
+						requiredMark={false}
+					>
 						<Form.Item label={t('Title')} name='title'>
 							<Input />
 						</Form.Item>
@@ -501,7 +492,8 @@ export default function TableGrooming() {
 							wrapperCol={{
 								offset: 4,
 								span: 16,
-							}}>
+							}}
+						>
 							<Button
 								style={{
 									marginInline: 15,
@@ -512,7 +504,8 @@ export default function TableGrooming() {
 									boxShadow:
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
-								onClick={onCloseUpdateRoom}>
+								onClick={onCloseUpdateRoom}
+							>
 								{t('Close')}
 							</Button>
 							<Button
@@ -526,7 +519,8 @@ export default function TableGrooming() {
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
 								type='primary'
-								htmlType='submit'>
+								htmlType='submit'
+							>
 								{t('Confirm')}
 							</Button>
 						</Form.Item>
@@ -541,7 +535,8 @@ export default function TableGrooming() {
 				open={openCreate}
 				bodyStyle={{
 					paddingBottom: 80,
-				}}>
+				}}
+			>
 				{openCreate ? (
 					<Form
 						form={form}
@@ -553,7 +548,8 @@ export default function TableGrooming() {
 						onFinish={onFinishCreateGrooming}
 						onFinishFailed={onFinishFailed}
 						autoComplete='off'
-						requiredMark={false}>
+						requiredMark={false}
+					>
 						<Form.Item name='department' label={t('Department')}>
 							<Select>
 								{hotelData.map((data) => (
@@ -601,7 +597,8 @@ export default function TableGrooming() {
 							wrapperCol={{
 								offset: 4,
 								span: 16,
-							}}>
+							}}
+						>
 							<Button
 								style={{
 									marginInline: 15,
@@ -612,7 +609,8 @@ export default function TableGrooming() {
 									boxShadow:
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
-								onClick={onCloseCreateUser}>
+								onClick={onCloseCreateUser}
+							>
 								{t('Close')}
 							</Button>
 							<Button
@@ -626,7 +624,8 @@ export default function TableGrooming() {
 										'rgb(0 0 0 / 25%) 0px 2px 4px 0px',
 								}}
 								type='primary'
-								htmlType='submit'>
+								htmlType='submit'
+							>
 								{t('Confirm')}
 							</Button>
 						</Form.Item>
@@ -642,7 +641,8 @@ export default function TableGrooming() {
 						style={{
 							width: 100,
 						}}
-						onChange={setSize}>
+						onChange={setSize}
+					>
 						<Option value='small'> {t('Small')}</Option>
 						<Option value='middle'>{t('Medium')}</Option>
 						<Option value='large'>{t('Large')}</Option>
@@ -655,7 +655,8 @@ export default function TableGrooming() {
 							type: 'primary',
 							icon: <FileExcelOutlined />,
 						}}
-						showColumnPicker>
+						showColumnPicker
+					>
 						{t('Export')}
 					</ExportTableButton>
 				</div>
@@ -666,7 +667,8 @@ export default function TableGrooming() {
 				closable={false}
 				footer={null}
 				open={openModal}
-				confirmLoading={confirmLoadingModal}>
+				confirmLoading={confirmLoadingModal}
+			>
 				<div>
 					<h6 style={{ fontWeight: 700, fontSize: 16 }}>
 						{t('Delete')} {selectedRowKeys.length} {t('room')}{' '}
@@ -682,17 +684,20 @@ export default function TableGrooming() {
 							display: 'flex',
 							gap: 5,
 							justifyContent: 'flex-end',
-						}}>
+						}}
+					>
 						<Button
 							onClick={handleCancelModal}
-							style={{ borderRadius: 8 }}>
+							style={{ borderRadius: 8 }}
+						>
 							{t('Cancel')}
 						</Button>
 						<Button
 							onClick={handleOkModal}
 							style={{ borderRadius: 8 }}
 							type='primary'
-							danger>
+							danger
+						>
 							{t('Delete')}
 						</Button>
 					</div>
@@ -706,7 +711,8 @@ export default function TableGrooming() {
 					<Button
 						type='text'
 						onClick={() => setSelectedRowKeys([])}
-						className='table_deletemulpti-deselect'>
+						className='table_deletemulpti-deselect'
+					>
 						{t('Deselect')}
 					</Button>
 					<Button
@@ -723,7 +729,8 @@ export default function TableGrooming() {
 							/>
 						}
 						onClick={() => showModal()}
-						className='table_deletemulpti-delete'>
+						className='table_deletemulpti-delete'
+					>
 						{t('Delete')}
 					</Button>
 				</div>
