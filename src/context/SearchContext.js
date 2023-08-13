@@ -2,7 +2,7 @@ import React, { createContext, useContext } from 'react';
 
 const SearchContext = createContext();
 
-const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+const MILLISECONDS_PER_DAY = 86_400_000;
 
 export const SearchContextProvider = ({ children }) => {
 	const [search, setSearch] = React.useState(
