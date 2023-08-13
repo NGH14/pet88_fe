@@ -1,13 +1,13 @@
 import './style.css';
 
 import React from 'react';
-import a from '../../assets/images/j-balla-photography-cMtiWjiAvq4-unsplash-_1_.webp';
-import b from '../../assets/images/Wallpaper-Linz-Doggies-Turquiose-1.webp';
-import c from '../../assets/images/page-image.60943b86 (1).webp';
+import photo1 from '../../assets/images/j-balla-photography-cMtiWjiAvq4-unsplash-_1_.webp';
+import photo2 from '../../assets/images/Wallpaper-Linz-Doggies-Turquiose-1.webp';
+import photo3 from '../../assets/images/page-image.60943b86 (1).webp';
 import { useTranslation } from 'react-i18next';
 
 const RightSideLogin = () => {
-	const listImgs = [a, b, c];
+	const listImgs = [photo1, photo3, photo2];
 	const [t] = useTranslation();
 
 	const img = listImgs[Math.floor(Math.random() * listImgs.length)];
