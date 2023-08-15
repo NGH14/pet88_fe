@@ -1,15 +1,14 @@
 import React from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { MailOutlined } from '@ant-design/icons';
 
 import { UserAuth } from '../../context/AuthContext';
 import './style.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import AddUser from './../AddUser/index';
 
 const SignUpForm = () => {
 	const [displayName, setDisplayName] = React.useState('');
@@ -19,9 +18,9 @@ const SignUpForm = () => {
 	const [emailStatus, setEmailStatus] = React.useState();
 	const [password, setPassword] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
-	const { createUser, updateProfile, AddUserToDB } = UserAuth();
+	const { createUser, AddUserToDB } = UserAuth();
 	const navigate = useNavigate();
-	const [t, i18n] = useTranslation();
+	const [t] = useTranslation();
 
 	const handleEmail = (e) => {
 		setEmail(e);

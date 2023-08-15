@@ -60,7 +60,7 @@ export default function Admin() {
 	const { lang, SetLanguage } = UserLanguage();
 
 	const items = [
-		getItem(t('Calendar'), '/admin', <RiCalendarEventLine />),
+		getItem(t('Appointment'), '/admin', <RiCalendarEventLine />),
 
 		getItem(t('Business'), 'depart', <ReconciliationOutlined />, [
 			getItem(t('Departments'), '/admin/management-hotel'),
@@ -93,10 +93,12 @@ export default function Admin() {
 				<Layout
 					style={{
 						minHeight: '100vh',
-					}}>
+					}}
+				>
 					<Sider
 						collapsed={collapsed}
-						className={collapsed && 'admin-sitebar'}>
+						className={collapsed && 'admin-sitebar'}
+					>
 						<NavLink to='/admin'>
 							<div className='logo_admin-container'>
 								{collapsed ? (
@@ -136,13 +138,15 @@ export default function Admin() {
 								justifyContent: 'space-between',
 								padding: 0,
 								margin: 'auto',
-							}}>
+							}}
+						>
 							<Button
 								style={{ backgroundColor: 'white' }}
 								ghost
 								type='text'
 								className='trigger'
-								onClick={() => setCollapsed(!collapsed)}>
+								onClick={() => setCollapsed(!collapsed)}
+							>
 								{collapsed ? (
 									<MenuUnfoldOutlined></MenuUnfoldOutlined>
 								) : (
@@ -154,13 +158,15 @@ export default function Admin() {
 						<Content
 							style={{
 								backgroundColor: '#F7F8FA',
-							}}>
+							}}
+						>
 							<div
 								className='site-layout-background'
 								style={{
 									padding: 24,
 									minHeight: 360,
-								}}>
+								}}
+							>
 								{' '}
 								{(() => {
 									switch (location.pathname) {
