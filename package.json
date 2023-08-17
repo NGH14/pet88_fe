@@ -43,7 +43,6 @@
     "storybook-addon-pseudo-states": "^1.15.1",
     "styled-components": "^5.3.6",
     "swiper": "^8.4.4",
-    "uid": "^2.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
