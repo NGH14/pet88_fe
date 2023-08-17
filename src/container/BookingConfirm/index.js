@@ -10,14 +10,14 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import { useTranslation } from 'react-i18next';
 import { BsCheck2Circle } from 'react-icons/bs';
 import axios from 'axios';
-import { uid } from 'uid';
+import useUUID from '../../hooks/useUUID';
 
 export default function BookingConfirm() {
 	const [loading, setLoading] = React.useState(true);
 	const [t] = useTranslation();
 	const location = useLocation();
 	const id = location.pathname.split('/')[2];
-
+	const UUID = useUUID();
 	const [dataList, setDataList] = React.useState([]);
 
 	useEffect(() => {
@@ -73,7 +73,7 @@ export default function BookingConfirm() {
 			}
 
 			if (data.service === 'grooming') {
-				const eventID = uid();
+				const eventID = UUID;
 				await Promise.all(
 					data.products.map((room) => {
 						console.log(room);
@@ -106,7 +106,8 @@ export default function BookingConfirm() {
 					style={{
 						backgroundImage: ` linear-gradient(rgba(255,255,255,.6), rgba(255,255,255,.4)),url(${DogImg})`,
 					}}
-					className='confirmBooking'>
+					className='confirmBooking'
+				>
 					<div className='confirmBooking-form'>
 						<div
 							style={{
@@ -115,13 +116,15 @@ export default function BookingConfirm() {
 								justifyContent: 'center',
 								alignItems: 'center',
 								flexDirection: 'column',
-							}}>
+							}}
+						>
 							<BsCheck2Circle
 								color='#4BB543'
 								style={{
 									fontSize: 50,
 									marginBottom: 30,
-								}}></BsCheck2Circle>
+								}}
+							></BsCheck2Circle>
 							<h1 style={{ fontWeight: 700 }}>
 								{t('Confirmation Booking Successfully')}
 							</h1>
@@ -129,7 +132,8 @@ export default function BookingConfirm() {
 								style={{
 									fontWeight: 600,
 									color: '#444',
-								}}>
+								}}
+							>
 								{' '}
 								{t(
 									`Booking #${id} are confirmed. 
@@ -141,7 +145,8 @@ export default function BookingConfirm() {
 									fontWeight: 400,
 									color: '#999',
 									fontStyle: 'italic',
-								}}>
+								}}
+							>
 								{' '}
 								{t(
 									` 

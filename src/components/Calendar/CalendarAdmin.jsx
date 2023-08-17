@@ -1,8 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Draggable from 'react-draggable';
-
-import { uid } from 'uid';
+import UUID from '../../hooks/useUUID';
 import {
 	Button,
 	Calendar,
@@ -62,13 +61,15 @@ const { Paragraph } = Typography;
 
 const events = [
 	{
-		id: uid(),
+		id: UUID(),
 		title: 'Big Meeting',
 		allDay: true,
 		start: new Date(2022, 11, 1),
 		end: new Date(2022, 11, 15),
 	},
 ];
+
+console.log(events);
 
 const API = process.env.REACT_APP_API;
 
@@ -218,9 +219,7 @@ export const CalendarAdmin = () => {
 	const fetchEvent = async (id) => {
 		const roomId = id || selectedGroomingRoomId;
 		try {
-			const res = await axios.get(
-				`${API}/grooming/room/${roomId}`,
-			);
+			const res = await axios.get(`${API}/grooming/room/${roomId}`);
 
 			const list = [];
 			res.data.unavailableDates.map((data) => {
@@ -274,15 +273,12 @@ export const CalendarAdmin = () => {
 			} || selecteDetaildDate?.order;
 
 		try {
-			await axios.put(
-				`${API}/grooming/room/event/${id}`,
-				{
-					startDate,
-					endDate,
-					title,
-					order,
-				},
-			);
+			await axios.put(`${API}/grooming/room/event/${id}`, {
+				startDate,
+				endDate,
+				title,
+				order,
+			});
 			form.resetFields();
 		} catch (error) {
 			console.error(error);
@@ -304,15 +300,12 @@ export const CalendarAdmin = () => {
 
 		try {
 			await Promise.all([
-				axios.put(
-					`${API}/grooming/room/event/${id}`,
-					{
-						startDate,
-						endDate,
-						title,
-						order,
-					},
-				),
+				axios.put(`${API}/grooming/room/event/${id}`, {
+					startDate,
+					endDate,
+					title,
+					order,
+				}),
 
 				axios.put(`${API}/order/${order._id}`, {
 					...order,
@@ -330,9 +323,7 @@ export const CalendarAdmin = () => {
 		const id = value.id || selecteDetaildDate.id;
 		try {
 			await Promise.all([
-				axios.put(
-					`${API}/grooming/room/event/delete/${id}`,
-				),
+				axios.put(`${API}/grooming/room/event/delete/${id}`),
 				axios.put(
 					`${API}/order/update-status/${selecteDetaildDate.order._id}`,
 					{
@@ -476,30 +467,27 @@ export const CalendarAdmin = () => {
 			  };
 
 		if (values?.title) {
-			const eventID = uid();
+			const eventID = UUID();
 
 			const orderPrice =
 				price !== 0 ? price : selectedGroomingRoomData?.price;
 
 			try {
-				const order = await axios.post(
-					`${API}/order/admin/grooming`,
-					{
-						email: bookingUser.email || 'guest',
-						eventID,
-						userID: bookingUser.id || 'guest',
-						phone: bookingUser.phone || '0',
-						roomList: selectedGroomingRoomId,
-						photo: photo,
-						days: 0,
-						price: orderPrice,
-						start,
-						name: bookingUser.name || 'guest',
-						end,
-						paymentMethod: 'cash',
-						service: 'grooming',
-					},
-				);
+				const order = await axios.post(`${API}/order/admin/grooming`, {
+					email: bookingUser.email || 'guest',
+					eventID,
+					userID: bookingUser.id || 'guest',
+					phone: bookingUser.phone || '0',
+					roomList: selectedGroomingRoomId,
+					photo: photo,
+					days: 0,
+					price: orderPrice,
+					start,
+					name: bookingUser.name || 'guest',
+					end,
+					paymentMethod: 'cash',
+					service: 'grooming',
+				});
 				const event = {
 					id: eventID,
 					start: start,
