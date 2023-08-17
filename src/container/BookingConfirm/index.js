@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
-import ResetPasswordForm from '../../components/ResetPasswordForm';
 import DogImg from '../../assets/images/Wallpaper-Linz-Doggies-Turquiose-1.webp';
 import './style.css';
-import { motion } from 'framer-motion';
-import { UserAuth } from '../../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-import InValidDisplay from './../../components/InvalidCodeReset/index';
+import { useLocation } from 'react-router-dom';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useTranslation } from 'react-i18next';
 import { BsCheck2Circle } from 'react-icons/bs';
