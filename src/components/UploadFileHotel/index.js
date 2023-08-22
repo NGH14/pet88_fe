@@ -1,12 +1,11 @@
 import React from 'react';
-import 'antd/dist/antd.css';
-import { UploadOutlined } from '@ant-design/icons';
 import { Button, Form, message, Modal, Upload } from 'antd';
-import './style.css';
 import { InboxOutlined } from '@ant-design/icons';
-import { async } from '@firebase/util';
 import axios from 'axios';
 import { UserAuth } from '../../context/AuthContext';
+
+import 'antd/dist/antd.css';
+import './style.css';
 
 const getBase64 = (file) =>
 	new Promise((resolve, reject) => {
@@ -111,7 +110,8 @@ const UploadFileHotel = () => {
 							required: true,
 							message: 'Please input your File!',
 						},
-					]}>
+					]}
+				>
 					<Dragger
 						accept='.png,.jpeg'
 						maxCount={3}
@@ -121,7 +121,8 @@ const UploadFileHotel = () => {
 						listType='picture'
 						defaultFileList={[...fileList]}
 						className='upload-list-inline'
-						{...props}>
+						{...props}
+					>
 						<p className='ant-upload-drag-icon'>
 							<InboxOutlined />
 						</p>
@@ -141,7 +142,8 @@ const UploadFileHotel = () => {
 						loading={uploading}
 						style={{
 							marginTop: 16,
-						}}>
+						}}
+					>
 						{uploading ? 'Uploading' : 'Start Upload'}
 					</Button>
 				</Form.Item>
@@ -151,7 +153,8 @@ const UploadFileHotel = () => {
 				open={previewOpen}
 				title={previewTitle}
 				footer={null}
-				onCancel={handleCancel}>
+				onCancel={handleCancel}
+			>
 				<img
 					alt='example'
 					style={{
